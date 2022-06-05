@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">B E T</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+      (click)="isMenuCollapsed = !isMenuCollapsed"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a (click)="isMenuCollapsed = true" class="nav-link" href="#">Predict</a>
+        </li>
+        <li class="nav-item">
+          <a (click)="isMenuCollapsed = true" class="nav-link" href="#">All competitions</a>
+        </li>
+        <li class="nav-item">
+          <a (click)="isMenuCollapsed = true" class="nav-link" href="#">My profile</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
