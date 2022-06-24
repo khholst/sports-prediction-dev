@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">B E T</a>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/">B E T</a>
   <button
     class="navbar-toggler"
     type="button"
@@ -37,11 +37,24 @@
     </ul>
 
       <ul class="nav navbar-nav ms-auto">
-        <li class="nav-item">
+        <li *ngIf="!isLoggedIn" class="nav-item">
           <a class="nav-link" routerLink="/login">Login</a>
         </li>
-        <li class="nav-item">
+        <li *ngIf="!isLoggedIn" class="nav-item">
           <a class="nav-link" routerLink="/register">Register</a>
+        </li>
+        <!-- <li *ngIf="isLoggedIn" class="nav-item">
+          <a (click)="logout()" class="nav-link" routerLink="/register">Logout</a>
+        </li> -->
+        <li *ngIf="isLoggedIn" class="nav-item" ngbDropdown>
+          <a class="nav-link" tabindex="0" ngbDropdownToggle id="navbarDropdown2" role="button">
+            Static right
+          </a>
+          <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end">
+            <a ngbDropdownItem href="#" (click)="$event.preventDefault()">Profile</a>
+            <a ngbDropdownItem href="#" (click)="$event.preventDefault()">History</a>
+            <a ngbDropdownItem href="#" (click)="logout()">Logout</a>
+          </div>
         </li>
       </ul>
   </div>

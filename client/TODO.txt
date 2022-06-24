@@ -1,1 +1,2 @@
 share css with login and register components
+password match check on client side

@@ -1,6 +1,8 @@
 <main>
     <div class="row">
         <div class="col-lg-6 col-md-8 col-sm-10 col-11 center">
+            
+            <div *ngIf="!alert.closed"><ngb-alert type="danger" [dismissible]="false" (close)="alert.closed=true">{{ alert.message }}</ngb-alert></div>
             <h1>Register</h1>
             <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
@@ -24,7 +26,6 @@
                     <label for="confirm-password">Confirm password</label>
                     <input type="password" class="form-control" id="confirm-password" placeholder="Confirm password" formControlName="confirmPassword">
                 </div>
-        
                 <div class="text-center"><button type="submit" class="btn btn-primary">Create account</button></div>
             </form>
         </div>

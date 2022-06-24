@@ -6,33 +6,54 @@ const JWT = require("jsonwebtoken");
 router.post("/register", [
     //Existing username check
     check("username", "Please provide a valid username").notEmpty(),
-    check("username", "Username has to contain alphabetical characters and no spaces").isAlphanumeric(),
-    check("password", "Password has to be at least 6 characters").isLength({min: 6})
+    check("username", "Username has to contain alphabetical characters").isAlphanumeric(),
+    check("username", "Username has to be at least 8 characters").isLength({min:8}),
+    check("password", "Password has to be at least 8 characters").isLength({min: 8})
 
 ], async (req, res) => {
-    const { username, password } = req.body;
+    console.log("REGISTERING IN BACKEND");
+    const { username, password, confirmPassword } = req.body;
+    console.log(username, password, confirmPassword)
 
     //VALIDATE INPUT
     const errors = validationResult(req);
-
+    console.log(errors)
+    //If there are any validation errors
     if(!errors.isEmpty()) {
-        return res.status(400).json({
-            errors: errors.array()
+        return res.status(200).json({
+            "code":400,
+            "errors": errors.array()
+
+        })
+    }
+
+    //Password matches confirm password
+    if (password != confirmPassword) {
+        return res.status(200).json({
+            "code": 400,
+            "errors": [{
+                "msg": "Passwords must match"
+                }
+            ]
         })
     }
 
     //VALIDATE NEW USERNAME
-    console.log(username, password)
-
+    ///
+    ///
     let hasdhedPassword = await bcrypt.hash(password, 10);
     console.log(hasdhedPassword);
 
     const token = await JWT.sign({
         username
-    }, "843sdjfe8feihsdnshfue9fuf8aw0ndd", {
+    }, "843sdjfe8feihsdnshfue9fuf8aw0ndd", { //this to env variable
         expiresIn: 1000
     });
-    res.json(token);
+
+    return res.status(201).json({
+        "code": 201,
+        "token": token
+    })
 })
 
 

@@ -1,19 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { User } from '../user';
+import { FormBuilder, Validators } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../auth.service';
+import { UserRegister } from '../userRegister';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
+
 export class RegisterComponent implements OnInit {
+  private isLoggedIn: boolean = false;
+
+  userCredentials: UserRegister = new UserRegister();
+  alert = {
+    closed: true,
+    message: ""
+  }
+
 
   constructor(
     private formBuilder: FormBuilder,
+    private http: HttpClient,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
-  register = new User();
 
   registerForm = this.formBuilder.group({
     username: ["", [Validators.required]],
@@ -24,14 +38,29 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit():void {
-    if(this.registerForm.valid)
-      console.log(this.registerForm.value);
+  async onSubmit() {
+    if(this.registerForm.valid) {
+      this.userCredentials = this.registerForm.value
+      
+      const response = await this.authService.register(this.userCredentials);
+
+      //If server throws a validation error
+      if (response.code === 400) {
+        this.alert.closed = false;
+        this.alert.message = response.errors[0].msg;
+
+      } else {
+        console.log("GREAT") //SAVE TOKEN AND REDIRECT
+        localStorage.setItem("token", response.token);
+        this.authService.setLoggedIn(true);
+        this.router.navigate(["/"]);
+      }
+    }
   }
 
-  ngOnChanges(): void {
-    this.registerForm.patchValue(this.register);
-    console.log(this.register)
+
+  getIsLoggedIn() {
+    return this.isLoggedIn;
   }
 
   get username() {
