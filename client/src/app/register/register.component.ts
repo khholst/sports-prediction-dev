@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 import { UserRegister } from '../userRegister';
 import { Router } from '@angular/router';
@@ -12,7 +11,6 @@ import { Router } from '@angular/router';
 })
 
 export class RegisterComponent implements OnInit {
-  private isLoggedIn: boolean = false;
 
   userCredentials: UserRegister = new UserRegister();
   alert = {
@@ -23,7 +21,6 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private http: HttpClient,
     private authService: AuthService,
     private router: Router
   ) { }
@@ -50,17 +47,11 @@ export class RegisterComponent implements OnInit {
         this.alert.message = response.errors[0].msg;
 
       } else {
-        console.log("GREAT") //SAVE TOKEN AND REDIRECT
         localStorage.setItem("token", response.token);
         this.authService.setLoggedIn(true);
         this.router.navigate(["/"]);
       }
     }
-  }
-
-
-  getIsLoggedIn() {
-    return this.isLoggedIn;
   }
 
   get username() {

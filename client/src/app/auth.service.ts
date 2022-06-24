@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { UserRegister } from './userRegister';
+import { UserLogin } from './userLogin';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -24,8 +25,8 @@ export class AuthService {
     return await lastValueFrom(this.http.post(`${this.authUrl}/register`, credentials, httpOptions))
   }
 
-  async login() {
-
+  async login(credentials: UserLogin):Promise<any> {
+    return await lastValueFrom(this.http.post(`${this.authUrl}/login`, credentials, httpOptions))
   }
 
   logout() {

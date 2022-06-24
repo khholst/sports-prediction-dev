@@ -17,7 +17,7 @@ router.post("/register", [
 
     //VALIDATE INPUT
     const errors = validationResult(req);
-    console.log(errors)
+
     //If there are any validation errors
     if(!errors.isEmpty()) {
         return res.status(200).json({
@@ -41,8 +41,9 @@ router.post("/register", [
     //VALIDATE NEW USERNAME
     ///
     ///
-    let hasdhedPassword = await bcrypt.hash(password, 10);
-    console.log(hasdhedPassword);
+    let hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
+
 
     const token = await JWT.sign({
         username
@@ -57,13 +58,33 @@ router.post("/register", [
 })
 
 
-
+const user = {
+    username: "kasutaja",
+    password: "$2b$10$OBE5pbDc7WTseTm3S2RQ6.nLxCPAFkPaqmogetyzx9kWRjaKs.YbG"
+}
 
 router.post("/login", async(req, res) => {
     const { username, password } = req.body;
 
-    const isMatch = await bcrypt.compare(password, "$2b$10$Worq949R7G1MUxHuY3e6OeTxAuBtMpJCt7jZ2UPSpsFMB8Xo3UYaC");
-    console.log(isMatch);
+    if(username != user.username) {
+        return res.status(401).json({
+            "code": 401,
+            "errors": [
+                {"msg": "Invalid credentials"}
+            ]
+        })
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if(!isMatch) {
+        return res.status(401).json({
+            "code": 401,
+            "errors": [
+                {"msg": "Invalid credentials"}
+            ]
+        })
+    }
 
     const token = await JWT.sign({
         username
