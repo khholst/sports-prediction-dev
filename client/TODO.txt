@@ -1,0 +1,1 @@
+share css with login and register components
