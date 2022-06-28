@@ -12,12 +12,12 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class DataService {
-  private authUrl: string = "http://localhost:8080/tournaments";
+  private tourUrl: string = "http://localhost:8080/tournaments";
 
   constructor(private http: HttpClient) { };
 
   async getTournaments():Promise<any> {
-    return await lastValueFrom(this.http.get(`${this.authUrl}`))
+    return await lastValueFrom(this.http.get(`${this.tourUrl}`))
   }
 
 }
