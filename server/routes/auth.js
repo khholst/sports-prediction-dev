@@ -4,6 +4,9 @@ const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 const mongo = require("mongoose");
 
+
+
+
 router.post("/register", [
     //Existing username check
     check("username", "Please provide a valid username").notEmpty(),
@@ -41,7 +44,27 @@ router.post("/register", [
 
     //VALIDATE NEW USERNAME
     ///
-    ///
+    const Users = db.model('Users', 
+    new mongo.Schema({ username: 'string' }), 
+    'users');
+
+
+    const user = await Users.find({ username: username });
+    const userExists = user.length > 0;
+
+    console.log("moving on from find")
+    if(userExists) {
+        console.log("USER EXISTS")
+        return res.status(200).json({
+            "code": 400,
+            "errors": [{
+                "msg": "Username is already taken"}]
+        });
+    }
+
+
+
+
     let hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
 
@@ -59,10 +82,13 @@ router.post("/register", [
 })
 
 
+
 const user = {
     username: "kasutaja",
     password: "$2b$10$OBE5pbDc7WTseTm3S2RQ6.nLxCPAFkPaqmogetyzx9kWRjaKs.YbG"
 }
+
+
 
 router.post("/login", async(req, res) => {
     const { username, password } = req.body;
