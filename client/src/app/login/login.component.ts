@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
       } else {
         localStorage.setItem("token", response.token);
         this.authService.setLoggedIn(true);
+        this.authService.setUsername(this.userCredentials.username);
         this.router.navigate(["/"]);
       }
   }

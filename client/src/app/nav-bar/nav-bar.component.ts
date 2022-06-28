@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class NavBarComponent implements OnInit {
   public isMenuCollapsed = true;
   public isLoggedIn = false;
+  public username = "";
 
   constructor(
     private authService: AuthService,
@@ -21,6 +22,7 @@ export class NavBarComponent implements OnInit {
     this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
        this.isLoggedIn = this.authService.getIsLoggedIn();
+       this.username = this.authService.getUsername();
       }
     })
   }

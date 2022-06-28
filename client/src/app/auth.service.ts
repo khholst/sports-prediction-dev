@@ -16,6 +16,7 @@ const httpOptions = {
 export class AuthService {
   private authUrl: string = "http://localhost:8080/auth";
   private isLoggedIn: boolean = false;
+  private username: string = "";
 
   constructor(
     private http: HttpClient
@@ -33,6 +34,7 @@ export class AuthService {
     console.log("LOGGING OUT")
     localStorage.removeItem("token");
     this.isLoggedIn = false;
+    this.username = "";
   }
 
   getIsLoggedIn() {
@@ -41,5 +43,13 @@ export class AuthService {
 
   setLoggedIn(loggedIn: boolean): void {
     this.isLoggedIn = loggedIn;
+  }
+
+  getUsername() {
+    return this.username;
+  }
+
+  setUsername(username: string) {
+    this.username = username;
   }
 }
