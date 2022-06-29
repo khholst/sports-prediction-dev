@@ -15,23 +15,18 @@ router.post("/register", [
     check("password", "Password has to be at least 8 characters").isLength({min: 8})
 
 ], async (req, res) => {
-    console.log("REGISTERING IN BACKEND");
     const { username, password, confirmPassword } = req.body;
-    console.log(username, password, confirmPassword)
 
-    //VALIDATE INPUT
+    //Check for any validation errors
     const errors = validationResult(req);
-
-    //If there are any validation errors
     if(!errors.isEmpty()) {
         return res.status(200).json({
             "code":400,
             "errors": errors.array()
-
-        })
+        });
     }
 
-    //Password matches confirm password
+    //Check if password matches confirm password
     if (password != confirmPassword) {
         return res.status(200).json({
             "code": 400,
@@ -42,19 +37,13 @@ router.post("/register", [
         })
     }
 
-    //VALIDATE NEW USERNAME
-    ///
+    //Query users from db to validate username
     const Users = db.model('Users', 
-    new mongo.Schema({ username: 'string' }), 
+    new mongo.Schema({ username: 'string', password: 'string', rooms: 'array', is_admin: 'boolean'}), 
     'users');
+    const user = await Users.findOne({ username: username });
 
-
-    const user = await Users.find({ username: username });
-    const userExists = user.length > 0;
-
-    console.log("moving on from find")
-    if(userExists) {
-        console.log("USER EXISTS")
+    if(user) { //If username exists in db
         return res.status(200).json({
             "code": 400,
             "errors": [{
@@ -62,19 +51,20 @@ router.post("/register", [
         });
     }
 
+    //Hash the given password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
+    //Create user in database
+    await Users.create({username: username, password: hashedPassword, rooms: [], is_admin: false});
 
-
-    let hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
-
-
+    //Create a JSON Web Token
     const token = await JWT.sign({
         username
     }, "843sdjfe8feihsdnshfue9fuf8aw0ndd", { //this to env variable
         expiresIn: 1000
     });
 
+    //Return token
     return res.status(201).json({
         "code": 201,
         "token": token
@@ -83,17 +73,21 @@ router.post("/register", [
 
 
 
-const user = {
-    username: "kasutaja",
-    password: "$2b$10$OBE5pbDc7WTseTm3S2RQ6.nLxCPAFkPaqmogetyzx9kWRjaKs.YbG"
-}
-
 
 
 router.post("/login", async(req, res) => {
     const { username, password } = req.body;
 
-    if(username != user.username) {
+    //Mongo schema
+    const Users = db.model('Users', 
+    new mongo.Schema({ username: 'string', password: 'string' }), 
+    'users');
+
+
+    //Check if given username exists in database
+    const user = await Users.findOne({username: username});
+
+    if(!user) { //Username doesn't match a db entry
         return res.status(401).json({
             "code": 401,
             "errors": [
@@ -102,8 +96,10 @@ router.post("/login", async(req, res) => {
         })
     }
 
+    //Check if password matches user's password in database
     const isMatch = await bcrypt.compare(password, user.password);
 
+    //Return error if password doesn't match
     if(!isMatch) {
         return res.status(401).json({
             "code": 401,
@@ -113,16 +109,15 @@ router.post("/login", async(req, res) => {
         })
     }
 
+    //Create JSON Web Token and send it to the client
     const token = await JWT.sign({
         username
     }, "843sdjfe8feihsdnshfue9fuf8aw0ndd", {
         expiresIn: 1000
     });
+
     res.json(token);
 })
-
-
-
 
 
 module.exports = router;
