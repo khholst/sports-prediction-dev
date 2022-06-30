@@ -29,7 +29,7 @@ router.post("/register", [
     //Check if password matches confirm password
     if (password != confirmPassword) {
         return res.status(200).json({
-            "code": 400,
+            "code": 401,
             "errors": [{
                 "msg": "Passwords must match"
                 }
@@ -45,7 +45,7 @@ router.post("/register", [
 
     if(user) { //If username exists in db
         return res.status(200).json({
-            "code": 400,
+            "code": 401,
             "errors": [{
                 "msg": "Username is already taken"}]
         });
@@ -88,7 +88,7 @@ router.post("/login", async(req, res) => {
     const user = await Users.findOne({username: username});
 
     if(!user) { //Username doesn't match a db entry
-        return res.status(401).json({
+        return res.status(200).json({
             "code": 401,
             "errors": [
                 {"msg": "Invalid credentials"}

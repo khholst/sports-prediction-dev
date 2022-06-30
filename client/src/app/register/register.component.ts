@@ -42,7 +42,7 @@ export class RegisterComponent implements OnInit {
       const response = await this.authService.register(this.userCredentials);
 
       //If server throws a validation error
-      if (response.code === 400) {
+      if (response.code === 401) {
         this.alert.closed = false;
         this.alert.message = response.errors[0].msg;
 
