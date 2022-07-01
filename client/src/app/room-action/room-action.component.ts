@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { Tournament } from '../tournament';
 
@@ -14,12 +15,17 @@ export class RoomActionComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private formBuilder: FormBuilder
   ) { }
 
+  roomForm = this.formBuilder.group({
+    name: ["", [Validators.required]],
+    tournament: ["", []]
+  })
+
   ngOnInit(): void {
-    this.getTournaments();
+    this.getTournaments();    
     this.selectAction();
 
     this.router.events.subscribe(event => {
@@ -27,6 +33,24 @@ export class RoomActionComponent implements OnInit {
         this.selectAction();
       }
     })
+  }
+
+  onNewSubmit() {
+    if (this.roomForm.valid) {
+      const tournament_id = this.getTournamentIdByName(this.roomForm.value.tournament);
+      this.roomForm.patchValue({tournament: tournament_id});
+      console.log(this.roomForm.value)
+    }
+  }
+
+  private getTournamentIdByName(name: string) {
+    console.log(name)
+    const tournament = this.tournaments.find(tournament => tournament.name === name);
+    return tournament!.tournament_id;
+  }
+
+  onJoinSubmit() {
+
   }
 
   async getTournaments() {
@@ -39,7 +63,9 @@ export class RoomActionComponent implements OnInit {
       option.text = tournament.name;
       dropdown.appendChild(option);
     }
+    this.roomForm.patchValue({tournament: this.tournaments[0].name})
   }
+
 
   selectAction() {
     var url = new URL(window.location.href);
@@ -47,4 +73,10 @@ export class RoomActionComponent implements OnInit {
     if (action === "new") { this.active = 1; }
     if (action === "join") { this.active = 2; }
   }
+
+
+  get name() {
+    return this.roomForm.get("name")!;
+  }
+
 }
