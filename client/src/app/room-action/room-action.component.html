@@ -1,22 +1,21 @@
 <main>
-
-
-
-
     <div class="row container-fluid justify-content-center">
         <div class="col-lg-6 col-md-8 text-center">
             <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
                 <li [ngbNavItem]="1">
                     <a ngbNavLink>New room</a>
                     <ng-template ngbNavContent>
-                        <form>
+                        <form [formGroup]="roomForm" (ngSubmit)="onNewSubmit()">
                             <div class="container">
                                 <div class="row justify-content-center">
                                     <div class="col-lg-6 col-md-8">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Name</label>
-                                            <input type="text" class="form-control" id="name"
-                                                aria-describedby="emailHelp" placeholder="Enter name">
+                                            <label for="name">Name</label>
+                                            <input type="text" class="form-control" id="name" formControlName="name"
+                                                placeholder="Enter name"
+                                                [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+                                                [class.is-valid]="name.valid">
+                                                <div class="invalid-feedback">Please enter a room name!</div>
                                         </div>
                                     </div>
                                 </div>
@@ -24,8 +23,7 @@
                                 <div class="row justify-content-center">
                                     <div class="col-lg-6 col-md-8">
                                         <label for="tournament">Tournament</label>
-                                        <select id="tournament" class="form-select" aria-label="Default select example">
-                                            <option selected>Choose a tournament</option>
+                                        <select id="tournament" class="form-select" formControlName="tournament">
                                           </select>
                                     </div>
                                 </div>

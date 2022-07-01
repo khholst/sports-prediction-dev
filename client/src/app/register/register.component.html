@@ -8,7 +8,7 @@
                 <div class="form-group">
                   <label for="username">Username</label>
                   <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username"
-                  required minlength="6"
+                  required minlength="8"
                   [class.is-invalid]="username.invalid && (username.dirty || username.touched)"
                   [class.is-valid]="username.valid">
                   <div class="invalid-feedback">Please enter a username!</div>
