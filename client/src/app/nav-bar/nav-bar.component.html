@@ -13,9 +13,9 @@
           Rooms
         </a>
         <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end">
-          <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="$event.preventDefault()">My Rooms</a>
-          <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="$event.preventDefault()">Join</a>
-          <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="$event.preventDefault()">New</a>
+          <a (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/rooms" (click)="$event.preventDefault()">My Rooms</a>
+          <a (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/rooms/action" [queryParams]="{action: 'join'}" (click)="$event.preventDefault()">Join</a>
+          <a (click)="isMenuCollapsed = true" ngbDropdownItem routerLink="/rooms/action" [queryParams]="{action: 'new'}" (click)="$event.preventDefault()">New</a>
         </div>
       </li>
       <li class="nav-item">

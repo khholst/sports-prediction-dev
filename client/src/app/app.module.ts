@@ -13,6 +13,8 @@ import { MainPageComponent } from './main-page/main-page.component'
 import { Interceptor } from './interceptor';
 import { AuthService } from './auth.service';
 import { TournamentsComponent } from './tournaments/tournaments.component';
+import { RoomsComponent } from './rooms/rooms.component';
+import { RoomActionComponent } from './room-action/room-action.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { TournamentsComponent } from './tournaments/tournaments.component';
     LoginComponent,
     MainPageComponent,
     TournamentsComponent,
+    RoomsComponent,
+    RoomActionComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,70 @@
+<main>
+
+
+
+
+    <div class="row container-fluid justify-content-center">
+        <div class="col-lg-6 col-md-8 text-center">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>New room</a>
+                    <ng-template ngbNavContent>
+                        <form>
+                            <div class="container">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-6 col-md-8">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Name</label>
+                                            <input type="text" class="form-control" id="name"
+                                                aria-describedby="emailHelp" placeholder="Enter name">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-6 col-md-8">
+                                        <label for="tournament">Tournament</label>
+                                        <select id="tournament" class="form-select" aria-label="Default select example">
+                                            <option selected>Choose a tournament</option>
+                                          </select>
+                                    </div>
+                                </div>
+
+                                <div class="row align-items-center">
+                                    <div class="col text-center">
+                                        <button type="submit" class="btn btn-primary">Create room</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </ng-template>
+                </li>
+                
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>Join room</a>
+                    <ng-template ngbNavContent>
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 col-md-8">
+                                    <div class="form-group">
+                                        <label for="join-key">Room key</label>
+                                        <input type="text" class="form-control" id="join-key"
+                                            aria-describedby="join-key" placeholder="Enter room key">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row align-items-center">
+                                <div class="col text-center">
+                                    <button type="submit" class="btn btn-primary">Join room</button>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</main>
