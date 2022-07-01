@@ -31,6 +31,7 @@ export class TournamentsComponent implements OnInit {
   async onTournamentsRequest() {
     this.tournaments = await this.dataService.getTournaments();
     this.countries = await this.dataService.getCountries();
+    console.log(this.tournaments)
 
     let index = 0; //For keeping track of expanded tournaments
     for (let i = 0; i < this.tournaments.length; i++) {

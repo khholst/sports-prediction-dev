@@ -2,41 +2,51 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div *ngFor="let index of indexes" class="card">
-                <p>{{ tournaments[index].name }}</p>
-                <p>{{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}</p>
-                <p>
-                    <button type="button" class="btn btn-primary" (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index)"
-                        isCollapsed="!isCollapsed" aria-controls="collapseExample">
-                        Show games
-                    </button>
-                </p>
-                <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
-                    <div class="card">
-                        <div class="card-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                      <th scope="col">Team 1</th>
-                                      <th scope="col">Team 2</th>
-                                      <th scope="col">Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let game of games[index]">
-                                        <td>
-                                            <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="me-2" style="width: 20px">
-                                            {{game.team1}}
-                                        </td>
-                                        <td>
-                                            <img [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="me-2" style="width: 20px">
-                                            {{game.team2}}
-                                        </td>
-                                        <td>{{game.time}}</td>
-                                    </tr>
-                                </tbody>
-                           </table>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="tournament-name">{{ tournaments[index].name }}</p>
+                            <p>{{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}</p>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <img class="img-fluid tournament-img" src="{{ tournaments[index].img_url }}" alt="" width="320">
                         </div>
                     </div>
+                </div>
+
+                <button type="button" class="btn btn-primary"
+                    (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index)"
+                    isCollapsed="!isCollapsed" aria-controls="collapseExample">
+                    Show games ▼<br>
+                </button>
+
+                <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Team 1</th>
+                                <th style="text-align: right;" scope="col">Team 2</th>
+                                <th style="text-align: center;" scope="col">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let game of games[index]">
+                                <td>
+                                    <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="me-2"
+                                        style="width: 25px; height: 16px">
+                                    {{game.team1}}
+                                </td>
+                                <td style="text-align: right;">
+                                    {{game.team2}}
+                                    <img [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="me-2"
+                                        style="width: 25px; height: 16px">
+                                    
+                                </td>
+                                <td style="text-align: center;">{{game.time}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
