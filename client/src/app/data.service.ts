@@ -20,6 +20,10 @@ export class DataService {
     return await lastValueFrom(this.http.get(`${this.dataUrl}/tournaments`, httpOptions));
   };
 
+  async getCountries():Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.dataUrl}/countries`, httpOptions));
+  };
+
   async getGames(tourID: number):Promise<any> {
     let params: HttpParams = new HttpParams().append('tournament_id', tourID);
     let headers = httpOptions.headers;

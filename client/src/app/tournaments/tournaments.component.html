@@ -5,7 +5,7 @@
                 <p>{{ tournaments[index].name }}</p>
                 <p>{{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}</p>
                 <p>
-                    <button type="button" class="btn btn-primary" (click)="collapse.toggle()"
+                    <button type="button" class="btn btn-primary" (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index)"
                         isCollapsed="!isCollapsed" aria-controls="collapseExample">
                         Show games
                     </button>
@@ -13,7 +13,11 @@
                 <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
                     <div class="card">
                         <div class="card-body">
-                            GAMES
+                            <table>
+                                <ng-container *ngFor="let game of games[index]">
+                                    <tr><td>{{game.team1}}</td><td>{{game.team2}}</td><td>{{game.time}}</td></tr>
+                                </ng-container>
+                           </table>
                         </div>
                     </div>
                 </div>
