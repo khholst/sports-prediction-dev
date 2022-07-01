@@ -1,1 +1,23 @@
-<p>tournaments works!</p>
+<main>
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div *ngFor="let index of indexes" class="card">
+                <p>{{ tournaments[index].name }}</p>
+                <p>{{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}</p>
+                <p>
+                    <button type="button" class="btn btn-primary" (click)="collapse.toggle()"
+                        isCollapsed="!isCollapsed" aria-controls="collapseExample">
+                        Show games
+                    </button>
+                </p>
+                <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
+                    <div class="card">
+                        <div class="card-body">
+                            GAMES
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
