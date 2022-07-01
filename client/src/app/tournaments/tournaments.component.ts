@@ -16,6 +16,7 @@ export class TournamentsComponent implements OnInit {
   public tournaments: Tournament[] = [];
   public games: {[key:number]:Game[]} = {};
   public countries: Country[] = [];
+  public flags: {[key:string]:string} = {};
   public indexes: number[] = []; //For keeping track of expanded tournaments
 
   constructor(
@@ -50,6 +51,8 @@ export class TournamentsComponent implements OnInit {
         let t2: string = this.games[index][i].team2;
         let cnt1 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t1})[0].name;
         let cnt2 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t2})[0].name;
+        if(!(cnt1 in this.flags)){this.flags[cnt1]=t1};
+        if(!(cnt2 in this.flags)){this.flags[cnt2]=t2};
         this.games[index][i].team1 = cnt1;
         this.games[index][i].team2 = cnt2;
       };

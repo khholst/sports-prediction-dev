@@ -23,8 +23,14 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let game of games[index]">
-                                        <td>{{game.team1}}</td>
-                                        <td>{{game.team2}}</td>
+                                        <td>
+                                            <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="me-2" style="width: 20px">
+                                            {{game.team1}}
+                                        </td>
+                                        <td>
+                                            <img [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="me-2" style="width: 20px">
+                                            {{game.team2}}
+                                        </td>
                                         <td>{{game.time}}</td>
                                     </tr>
                                 </tbody>
