@@ -11,6 +11,16 @@ router.get("/tournaments", async(req, res) => {
     });
 });
 
+router.get("/countries", async(req, res) => {
+    let counts = db.model('Countries', 
+        new mongo.Schema({ country_id: 'string', name: 'string' }), 'countries'); 
+
+    counts.find({}, function(err, data) { 
+        if(err){console.log(err);}
+        else{res.json(data);}; 
+    });
+});
+
 router.get("/games", async(req, res) => {
     let games = db.model('Games',
         new mongo.Schema({team1: 'string', team2: 'string', score1: 'number', score2: 'number', 
