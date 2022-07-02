@@ -16,34 +16,58 @@
                 </div>
 
                 <button type="button" class="btn btn-primary"
-                    (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index)"
+                    (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index, $event.target)"
                     isCollapsed="!isCollapsed" aria-controls="collapseExample">
                     Show games ▼<br>
                 </button>
 
-                <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
+                <div class="overflow-auto" style="max-height: 300px;" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Team 1</th>
+                                <th style="text-align: center;" scope="col">Score</th>
                                 <th style="text-align: right;" scope="col">Team 2</th>
                                 <th style="text-align: center;" scope="col">Time</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let game of games[index]">
-                                <td>
+                                <td [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team1}} popover-class="increase-popover-width" triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
                                     <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="me-2"
                                         style="width: 25px; height: 16px">
                                     {{game.team1}}
                                 </td>
-                                <td style="text-align: right;">
+                                <td style="text-align: center;" *ngIf="game.score1>-1">
+                                    {{game.score1}} : {{game.score2}}
+                                </td>
+                                <td style="text-align: center;" *ngIf="game.score1==-1">
+                                   :
+                                </td>
+                                <td style="text-align: right;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team2}} triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
                                     {{game.team2}}
                                     <img [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="me-2"
                                         style="width: 25px; height: 16px">
                                     
                                 </td>
                                 <td style="text-align: center;">{{game.time}}</td>
+                                <td style="text-align: center;"><b>{{game.stage}}</b></td>
+                                <ng-template #popContent>
+                                    <table class="table table-striped">
+                                        <tr *ngFor="let game of cntGames">
+                                            <td>{{game.team1}}</td>
+                                            <td style="text-align: center; white-space:nowrap; overflow:hidden; padding: 10px;" *ngIf="game.score1>-1">
+                                                {{game.score1}} : {{game.score2}}
+                                            </td>
+                                            <td style="text-align: center; padding: 10px;" *ngIf="game.score1==-1">
+                                                vs 
+                                            </td>
+                                            <td>{{game.team2}}</td>
+                                            <td style="text-align: center;"><b>{{game.stage}}</b></td>
+                                        </tr>
+                                    </table>
+                                </ng-template>
                             </tr>
                         </tbody>
                     </table>
