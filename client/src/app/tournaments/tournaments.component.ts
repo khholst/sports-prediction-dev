@@ -15,6 +15,7 @@ export class TournamentsComponent implements OnInit {
   public isCollapsed: boolean[] = [];
   public tournaments: Tournament[] = [];
   public games: {[key:number]:Game[]} = {};
+  public cntGames: Game[] = [];
   public countries: Country[] = [];
   public flags: {[key:string]:string} = {};
   public indexes: number[] = []; //For keeping track of expanded tournaments
@@ -31,7 +32,6 @@ export class TournamentsComponent implements OnInit {
   async onTournamentsRequest() {
     this.tournaments = await this.dataService.getTournaments();
     this.countries = await this.dataService.getCountries();
-    console.log(this.tournaments)
 
     let index = 0; //For keeping track of expanded tournaments
     for (let i = 0; i < this.tournaments.length; i++) {
@@ -71,6 +71,10 @@ export class TournamentsComponent implements OnInit {
     const date = new Date(dateString);
     if(!time){return `${date.getDate()}. ${monthLookup[date.getMonth()]}`}
     else{return`${date.getDate()}. ${monthLookup[date.getMonth()]} ${date.getHours().toString().replace(/^0$/,"00")}:${date.getMinutes().toString().replace(/^0$/,"00")}`};
+  };
+
+  popUpper(team:string, index:number){
+    this.cntGames = this.games[index].filter(function(game):boolean{return game.team1==team || game.team2==team});
   };
 
 }

@@ -33,7 +33,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let game of games[index]">
-                                <td>
+                                <td [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team1}} popover-class="increase-popover-width" triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
                                     <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="me-2"
                                         style="width: 25px; height: 16px">
                                     {{game.team1}}
@@ -44,13 +44,27 @@
                                 <td style="text-align: center;" *ngIf="game.score1==-1">
                                    :
                                 </td>
-                                <td style="text-align: right;">
+                                <td style="text-align: right;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team2}} triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
                                     {{game.team2}}
                                     <img [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="me-2"
                                         style="width: 25px; height: 16px">
                                     
                                 </td>
                                 <td style="text-align: center;">{{game.time}}</td>
+                                <ng-template #popContent>
+                                    <table class="table table-striped">
+                                        <tr *ngFor="let game of cntGames">
+                                            <td>{{game.team1}}</td>
+                                            <td style="text-align: center; white-space:nowrap; overflow:hidden; padding: 10px;" *ngIf="game.score1>-1">
+                                                {{game.score1}} : {{game.score2}}
+                                            </td>
+                                            <td style="text-align: center; padding: 10px;" *ngIf="game.score1==-1">
+                                                vs 
+                                            </td>
+                                            <td>{{game.team2}}</td>
+                                        </tr>
+                                    </table>
+                                </ng-template>
                             </tr>
                         </tbody>
                     </table>
