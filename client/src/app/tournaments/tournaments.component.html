@@ -16,7 +16,7 @@
                 </div>
 
                 <button type="button" class="btn btn-primary"
-                    (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index)"
+                    (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index, $event.target)"
                     isCollapsed="!isCollapsed" aria-controls="collapseExample">
                     Show games ▼<br>
                 </button>
@@ -26,6 +26,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Team 1</th>
+                                <th style="text-align: center;" scope="col">Score</th>
                                 <th style="text-align: right;" scope="col">Team 2</th>
                                 <th style="text-align: center;" scope="col">Time</th>
                             </tr>
@@ -36,6 +37,12 @@
                                     <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="me-2"
                                         style="width: 25px; height: 16px">
                                     {{game.team1}}
+                                </td>
+                                <td style="text-align: center;" *ngIf="game.score1>-1">
+                                    {{game.score1}} : {{game.score2}}
+                                </td>
+                                <td style="text-align: center;" *ngIf="game.score1==-1">
+                                   :
                                 </td>
                                 <td style="text-align: right;">
                                     {{game.team2}}

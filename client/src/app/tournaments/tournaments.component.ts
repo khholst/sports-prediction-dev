@@ -43,20 +43,25 @@ export class TournamentsComponent implements OnInit {
     };
   };
 
-  async onGamesRequest(tournID:number, isCol:boolean, index:number) {
-    if(!isCol && !(index in this.games)){
-      this.games[index] = await this.dataService.getGames(tournID);
-      for (let i = 0; i < this.games[index].length; i++) {
-        this.games[index][i].time = this.formatDate(this.games[index][i].time, true);
-        let t1: string = this.games[index][i].team1;
-        let t2: string = this.games[index][i].team2;
-        let cnt1 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t1})[0].name;
-        let cnt2 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t2})[0].name;
-        if(!(cnt1 in this.flags)){this.flags[cnt1]=t1};
-        if(!(cnt2 in this.flags)){this.flags[cnt2]=t2};
-        this.games[index][i].team1 = cnt1;
-        this.games[index][i].team2 = cnt2;
+  async onGamesRequest(tournID:number, isCol:boolean, index:number, element:any) {
+    if(!isCol){
+      element.textContent = "Hide games";
+      if(!(index in this.games)){
+        this.games[index] = await this.dataService.getGames(tournID);
+        for (let i = 0; i < this.games[index].length; i++) {
+          this.games[index][i].time = this.formatDate(this.games[index][i].time, true);
+          let t1: string = this.games[index][i].team1;
+          let t2: string = this.games[index][i].team2;
+          let cnt1 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t1})[0].name;
+          let cnt2 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t2})[0].name;
+          if(!(cnt1 in this.flags)){this.flags[cnt1]=t1};
+          if(!(cnt2 in this.flags)){this.flags[cnt2]=t2};        
+          this.games[index][i].team1 = cnt1;
+          this.games[index][i].team2 = cnt2;
+        };
       };
+    }else{
+      element.textContent = "Show games";
     };
   };
 
