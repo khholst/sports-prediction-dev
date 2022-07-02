@@ -21,7 +21,7 @@
                     Show games ▼<br>
                 </button>
 
-                <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
+                <div class="overflow-auto" style="max-height: 300px;" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
                     <table class="table table-striped">
                         <thead>
                             <tr>
