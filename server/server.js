@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require("cors");
 const auth = require("./routes/auth");
 const data = require("./routes/data");
+const room = require("./routes/room");
 const path = require("path");
 const bodyParser = require("body-parser");
 const mongo = require("mongoose");
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/auth", auth);
 app.use("/data", data);
+app.use("/api/rooms", room);
 
 app.use(function (req, res, next){
   res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');

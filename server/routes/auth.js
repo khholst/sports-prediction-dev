@@ -116,7 +116,10 @@ router.post("/login", async(req, res) => {
         expiresIn: 1000
     });
 
-    res.json(token);
+    return res.status(200).json({
+        "code": 200,
+        "token": token
+    })
 })
 
 
