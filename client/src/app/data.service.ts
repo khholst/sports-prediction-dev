@@ -30,4 +30,16 @@ export class DataService {
     return await lastValueFrom(this.http.get(`${this.dataUrl}/games`, {headers, params}));
   };
 
+  async getUserRooms(username: string):Promise<any> {
+    let params: HttpParams = new HttpParams().append('username', username);
+    let headers = httpOptions.headers;
+    return await lastValueFrom(this.http.get(`${this.dataUrl}/userRooms`, {headers, params}));
+  };
+
+  async getRooms(roomIDs: Array<number>):Promise<any> {
+    let params: HttpParams = new HttpParams().append('room_id', roomIDs.toString());
+    let headers = httpOptions.headers;
+    return await lastValueFrom(this.http.get(`${this.dataUrl}/rooms`, {headers, params}));    
+  };
+
 }
