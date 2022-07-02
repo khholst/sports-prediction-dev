@@ -29,6 +29,7 @@
                                 <th style="text-align: center;" scope="col">Score</th>
                                 <th style="text-align: right;" scope="col">Team 2</th>
                                 <th style="text-align: center;" scope="col">Time</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,6 +52,7 @@
                                     
                                 </td>
                                 <td style="text-align: center;">{{game.time}}</td>
+                                <td style="text-align: center;"><b>{{game.stage}}</b></td>
                                 <ng-template #popContent>
                                     <table class="table table-striped">
                                         <tr *ngFor="let game of cntGames">
@@ -62,6 +64,7 @@
                                                 vs 
                                             </td>
                                             <td>{{game.team2}}</td>
+                                            <td style="text-align: center;"><b>{{game.stage}}</b></td>
                                         </tr>
                                     </table>
                                 </ng-template>

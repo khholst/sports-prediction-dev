@@ -7,6 +7,7 @@ export class Game {
         public game_id:number,
         public tournament_id:number,
         public time:string,
+        public stage:string,
         public _id:string
     ) {}
 }
