@@ -4,8 +4,7 @@ export class Game {
         public team2:string,
         public score1:number,
         public score2:number,
-        public game_id:number,
-        public tournament_id:number,
+        public tournament_id:string,
         public time:string,
         public stage:string,
         public _id:string

@@ -24,7 +24,7 @@ export class DataService {
     return await lastValueFrom(this.http.get(`${this.dataUrl}/countries`, httpOptions));
   };
 
-  async getGames(tourID: number):Promise<any> {
+  async getGames(tourID: string):Promise<any> {
     let params: HttpParams = new HttpParams().append('tournament_id', tourID);
     let headers = httpOptions.headers;
     return await lastValueFrom(this.http.get(`${this.dataUrl}/games`, {headers, params}));
@@ -36,7 +36,7 @@ export class DataService {
     return await lastValueFrom(this.http.get(`${this.dataUrl}/userRooms`, {headers, params}));
   };
 
-  async getRooms(roomIDs: Array<number>):Promise<any> {
+  async getRooms(roomIDs: Array<string>):Promise<any> {
     let params: HttpParams = new HttpParams().append('room_id', roomIDs.toString());
     let headers = httpOptions.headers;
     return await lastValueFrom(this.http.get(`${this.dataUrl}/rooms`, {headers, params}));    
