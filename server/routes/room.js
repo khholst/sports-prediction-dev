@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { response } = require("express");
 const { check, validationResult } = require("express-validator");
 const mongo = require("mongoose");
 const { v4: uuidv4 } = require('uuid');
@@ -22,28 +23,48 @@ router.post("/new", [
 
 
 
-    const randomString = uuidv4();
+    const joinKey = uuidv4(); //Generate random join key for the room
+
+    //Decode payload from the JWT token
+    const jwtPayload = req.get("token").split(".")[1];
+    const username = JSON.parse(Buffer.from(jwtPayload, "base64").toString("utf-8")).username;
 
     //Schema for rooms collection
     const Rooms = db.model('Rooms', 
-    new mongo.Schema({ name: 'string', tournament_id: 'number', creator: 'array', join_key: 'boolean'}), 
+    new mongo.Schema({ name: 'string', tournament_id: 'number', creator: 'string', join_key: 'string'}), 
     'rooms');
-
-
-
 
     
     const newRoom = {
-        name: name,
         tournament_id: tournament,
-        creator: "kakakaka",
-        join_key: randomString
+        name: name,
+        creator: username,
+        join_key: joinKey
     }
 
+   const createdRoom = await Rooms.create(newRoom);
 
+
+    //Schema for users collection
+    const Users = db.model('Users', 
+    new mongo.Schema({ username: 'string', rooms: 'array'}), 
+    'users');
+
+    const room = {
+        room_key: createdRoom._id,
+        score: 0
+    }
+
+    const user = await Users.findOneAndUpdate({ username: username },
+        { $push: { rooms: room }});
+
+
+
+
+    console.log(user)
 
     return res.json({
-        join_key: randomString
+        join_key: joinKey
     })
 
 

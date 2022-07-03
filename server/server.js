@@ -3,14 +3,17 @@ const cors = require("cors");
 const auth = require("./routes/auth");
 const data = require("./routes/data");
 const room = require("./routes/room");
-const path = require("path");
-const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
 const mongo = require("mongoose");
 
-const db_uri = "mongodb+srv://appuser:gaZsPDffU2MnFDpu0B3q@sports-prediction-dev.tpeof.mongodb.net/sports_prediction?retryWrites=true&w=majority";
+const app = express();
+dotenv.config();
+
+const db_uri = process.env.MONGOCONNECTION;
 global.db = (global.db ? global.db : mongo.createConnection(db_uri));
 
-const app = express();
+
+
 
 app.use(express.json());
 app.use(cors());

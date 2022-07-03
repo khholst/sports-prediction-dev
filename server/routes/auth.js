@@ -3,8 +3,9 @@ const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 const mongo = require("mongoose");
+const dotenv = require("dotenv");
 
-
+dotenv.config();
 
 
 router.post("/register", [
@@ -57,10 +58,11 @@ router.post("/register", [
     //Create user in database
     await Users.create({username: username, password: hashedPassword, rooms: [], is_admin: false});
 
+
     //Create a JSON Web Token
     const token = await JWT.sign({
         username
-    }, "843sdjfe8feihsdnshfue9fuf8aw0ndd", { //this to env variable
+    }, process.env.JWTSECRET, { //this to env variable
         expiresIn: 1000
     });
 
@@ -112,7 +114,7 @@ router.post("/login", async(req, res) => {
     //Create JSON Web Token and send it to the client
     const token = await JWT.sign({
         username
-    }, "843sdjfe8feihsdnshfue9fuf8aw0ndd", {
+    }, process.env.JWTSECRET, {
         expiresIn: 1000
     });
 

@@ -45,7 +45,7 @@ export class TournamentsComponent implements OnInit {
 
   async onGamesRequest(tournID:number, isCol:boolean, index:number, element:any) {
     if(!isCol){
-      element.textContent = "Hide games";
+      element.textContent = "Hide games ▲";
       if(!(index in this.games)){
         this.games[index] = await this.dataService.getGames(tournID);
         for (let i = 0; i < this.games[index].length; i++) {
@@ -61,7 +61,7 @@ export class TournamentsComponent implements OnInit {
         };
       };
     }else{
-      element.textContent = "Show games";
+      element.textContent = "Show games ▼";
     };
   };
 
