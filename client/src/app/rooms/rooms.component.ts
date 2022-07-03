@@ -27,9 +27,8 @@ export class RoomsComponent implements OnInit {
     let userRooms: Array<any> = await this.dataService.getUserRooms(usr);
     let roomIDs: Array<string> = [];
     userRooms.forEach(function(room) {
-      roomIDs.push(room._id);
+      roomIDs.push(room.room_id);
     });
-    console.log(roomIDs)
     this.rooms = await this.dataService.getRooms(roomIDs);
     console.log(this.rooms);
   };
