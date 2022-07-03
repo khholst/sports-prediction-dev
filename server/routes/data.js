@@ -5,7 +5,7 @@ router.get("/tournaments", async(req, res) => {
     let tours = db.model('Tournaments', 
         new mongo.Schema({ name: 'string', _id:'string' }), 'tournaments'); 
 
-    tours.find({}, function(err, data) { 
+    tours.find(req.query, function(err, data) { 
         if(err){console.log(err);}
         else{res.json(data);}; 
     });
@@ -29,7 +29,7 @@ router.get("/games", async(req, res) => {
     games.find(req.query,function(err, data) {
         if(err){console.log(err);}
         else{res.json(data);};
-    })
+    });
 });
 
 router.get("/userRooms", async(req, res) => {
@@ -41,11 +41,10 @@ router.get("/userRooms", async(req, res) => {
         else{
             res.json(data[0].rooms);
         };
-    })
+    });
 });
 
 router.get("/rooms", async(req, res) => {
-    console.log()
     let rooms = db.model('Rooms',
         new mongo.Schema({
             tournament_id: 'string', room_id: 'number', name: 'string', creator: 'string', join_key: 'number'}), 'rooms');
@@ -54,7 +53,20 @@ router.get("/rooms", async(req, res) => {
         else{
             res.json(data);
         };
-    })
+    });
+});
+
+router.get("/roomUsers", async(req, res) => { //ei tööta!
+    let userRooms = db.model('Users',
+        new mongo.Schema({username: 'string', _id:'string', rooms:'array'}), 'users');
+
+        console.log(req.query.room)
+    userRooms.find({"rooms.room_id": {"$in": [req.query.room]}},function(err, data) {
+        if(err){console.log(err);}
+        else{
+            res.json(data);
+        };
+    });
 });
 
 module.exports = router;

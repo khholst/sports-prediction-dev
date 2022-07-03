@@ -1,1 +1,28 @@
-<p>Rooms component works!</p>
+<main>
+    <div class="row justify-content-center">
+        <div class="col-lg-10" *ngIf="isLoggedIn">
+            <div class="card" *ngFor="let index of indexes">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p class="mt-2"><a href="/{{rooms[index]._id}}"><h4>{{ rooms[index].name }}</h4></a></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col"><i>created by</i> {{ rooms[index].creator }}</div>                   
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p *ngIf="extraData[index].status == 'Waiting to start'" style="color: orange">Waiting to start</p>              
+                            <p *ngIf="extraData[index].status == 'Active'" style="color: green">Active</p>              
+                            <p *ngIf="extraData[index].status == 'Ended'" style="color: red">Ended</p>          
+                        </div>  
+                        <div class="col">{{ extraData[index].tournament }}</div>
+                        <div class="col">{{ extraData[index].start_date }} to {{ extraData[index].end_date }}</div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+        <p *ngIf="!isLoggedIn">To see your rooms, please be so kind and <a href="/login"><b>log in</b></a> first!</p>
+    </div>
+</main>

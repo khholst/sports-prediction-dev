@@ -16,8 +16,13 @@ export class DataService {
 
   constructor(private http: HttpClient) { };
 
-  async getTournaments():Promise<any> {
-    return await lastValueFrom(this.http.get(`${this.dataUrl}/tournaments`, httpOptions));
+  async getTournaments(tourID?: string):Promise<any> {
+    let params: HttpParams = new HttpParams();
+    let headers = httpOptions.headers;
+    if(tourID){
+      params.append('_id', tourID);
+    };
+    return await lastValueFrom(this.http.get(`${this.dataUrl}/tournaments`, {headers, params}));
   };
 
   async getCountries():Promise<any> {
@@ -40,6 +45,12 @@ export class DataService {
     let params: HttpParams = new HttpParams().append('room_id', roomIDs.toString());
     let headers = httpOptions.headers;
     return await lastValueFrom(this.http.get(`${this.dataUrl}/rooms`, {headers, params}));    
+  };
+
+  async getRoomsUsers(roomID: string):Promise<any> {
+    let params: HttpParams = new HttpParams().append('room', roomID);
+    let headers = httpOptions.headers;
+    return await lastValueFrom(this.http.get(`${this.dataUrl}/roomUsers`, {headers, params}));    
   };
 
 }

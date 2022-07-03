@@ -3,6 +3,7 @@ export class Room {
         public tournament_id: string,
         public name: string,
         public creator: string,
-        public join_key: string
+        public join_key: string,
+        public _id: string
     ) {}
 }
