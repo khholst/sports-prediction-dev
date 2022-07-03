@@ -16,12 +16,12 @@
                 </div>
 
                 <button type="button" class="btn btn-primary"
-                    (click)="collapse.toggle(); onGamesRequest(tournaments[index].tournament_id, isCollapsed[tournaments[index].tournament_id], index, $event.target)"
+                    (click)="collapse.toggle(); onGamesRequest(tournaments[index]._id, isCollapsed[index], index, $event.target)"
                     isCollapsed="!isCollapsed" aria-controls="collapseExample">
                     Show games ▼<br>
                 </button>
 
-                <div class="overflow-auto" style="max-height: 300px;" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[tournaments[index].tournament_id]">
+                <div class="overflow-auto" style="max-height: 300px;" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[index]">
                     <table class="table table-striped">
                         <thead>
                             <tr>

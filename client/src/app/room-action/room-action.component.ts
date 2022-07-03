@@ -46,7 +46,7 @@ export class RoomActionComponent implements OnInit {
   private getTournamentIdByName(name: string) {
     console.log(name)
     const tournament = this.tournaments.find(tournament => tournament.name === name);
-    return tournament!.tournament_id;
+    return tournament!._id;
   }
 
   onJoinSubmit() {

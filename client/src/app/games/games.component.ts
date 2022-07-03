@@ -15,10 +15,10 @@ export class GamesComponent implements OnInit {
   ) {  }
 
   ngOnInit(): void {
-    this.onRequest(0);
+    
   };
 
-  async onRequest(tourID:number) {
+  async onRequest(tourID:string) {
     const response = await this.dataService.getGames(tourID);
     console.log(response);
   };
