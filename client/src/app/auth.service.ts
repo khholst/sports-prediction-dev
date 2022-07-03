@@ -31,7 +31,6 @@ export class AuthService {
   }
 
   logout() {
-    console.log("LOGGING OUT")
     localStorage.removeItem("token");
     this.isLoggedIn = false;
     this.username = "";

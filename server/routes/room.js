@@ -1,17 +1,16 @@
 const router = require("express").Router();
-const { response } = require("express");
 const { check, validationResult } = require("express-validator");
 const mongo = require("mongoose");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
+const authenticate = require("../middleware/authenticate");
 
 
-router.post("/new", [
+router.post("/new", authenticate, [
     //Existing username check
     check("name", "Please provide a room name").notEmpty(),
     check("tournament", "Please provide a tournament").notEmpty()
 ], async (req, res) => {
     const { name, tournament } = req.body;
-    console.log(name, tournament);
 
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -21,8 +20,6 @@ router.post("/new", [
         });
     }
 
-
-
     const joinKey = uuidv4(); //Generate random join key for the room
 
     //Decode payload from the JWT token
@@ -31,16 +28,18 @@ router.post("/new", [
 
     //Schema for rooms collection
     const Rooms = db.model('Rooms', 
-    new mongo.Schema({ name: 'string', tournament_id: 'number', creator: 'string', join_key: 'string'}), 
+    new mongo.Schema({ name: 'string', tournament_id: 'objectId', creator: 'string', join_key: 'string'}), 
     'rooms');
 
-    
+    //Construct room object to be added to the database
     const newRoom = {
         tournament_id: tournament,
         name: name,
         creator: username,
         join_key: joinKey
     }
+
+    console.log(newRoom)
 
    const createdRoom = await Rooms.create(newRoom);
 
@@ -59,16 +58,10 @@ router.post("/new", [
         { $push: { rooms: room }});
 
 
-
-
-    console.log(user)
-
-    return res.json({
+    return res.status(201).json({
+        code: 201,
         join_key: joinKey
     })
-
-
-
 })
 
 

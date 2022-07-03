@@ -1,22 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+
 import { DataService } from '../data.service';
+import { RoomService } from '../room.service';
+
 import { Tournament } from '../tournament';
+
 
 @Component({
   selector: 'app-room-action',
   templateUrl: './room-action.component.html',
   styleUrls: ['./room-action.component.css']
 })
+
+
+
 export class RoomActionComponent implements OnInit {
+  staticAlertClosed = true;
+  @ViewChild('staticAlert', {static: false}) staticAlert: NgbAlert | undefined;
+
   active: number = 1;
   tournaments: Tournament[] = [];
+  tournamentName: string = "";
+  alertIsShown: boolean = false;
 
   constructor(
     private dataService: DataService,
     private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private roomService: RoomService,
   ) { }
 
   roomForm = this.formBuilder.group({
@@ -35,18 +49,20 @@ export class RoomActionComponent implements OnInit {
     })
   }
 
-  onNewSubmit() {
+  async onNewSubmit() {
     if (this.roomForm.valid) {
+      this.tournamentName = this.roomForm.value.tournament;
       const tournament_id = this.getTournamentIdByName(this.roomForm.value.tournament);
       this.roomForm.patchValue({tournament: tournament_id});
-      console.log(this.roomForm.value)
+      const response = await this.roomService.createNewRoom(this.roomForm.value);
+      this.alertIsShown = true;
+      setTimeout(() => this.staticAlert!.close(), 3000);
+    
     }
   }
 
   private getTournamentIdByName(name: string) {
-    console.log(name)
-    const tournament = this.tournaments.find(tournament => tournament.name === name);
-    return tournament!.tournament_id;
+    return this.tournaments.find(tournament => tournament.name === name)?._id;
   }
 
   onJoinSubmit() {
@@ -72,6 +88,11 @@ export class RoomActionComponent implements OnInit {
     var action = url.searchParams.get("action");
     if (action === "new") { this.active = 1; }
     if (action === "join") { this.active = 2; }
+  }
+
+  close() {
+    this.router.navigate(["/rooms"]);
+
   }
 
 
