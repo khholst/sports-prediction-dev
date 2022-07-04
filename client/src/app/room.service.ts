@@ -23,5 +23,11 @@ export class RoomService {
     return await lastValueFrom(this.http.post(`${this.roomUrl}/new`, room, httpOptions));
   }
 
+  async findRoomByKey(room_key: string): Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.roomUrl}/key?key=${room_key}`, httpOptions));
+  }
 
+  async joinRoom(room_id: string): Promise<any> {
+    return await lastValueFrom(this.http.post(`${this.roomUrl}/join`, {room_id: room_id}, httpOptions));
+  }
 }

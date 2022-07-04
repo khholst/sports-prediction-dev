@@ -1,3 +1,11 @@
 button {
     margin-top: 15px;
 }
+
+h1 {
+    font-size: 28px;
+}
+
+#room-name {
+    font-size: 26px;
+}

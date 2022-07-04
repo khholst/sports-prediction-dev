@@ -7,13 +7,13 @@
                     <ng-template ngbNavContent>
                         <form [formGroup]="roomForm" (ngSubmit)="onNewSubmit()">
                             <div class="container">
-                                <div *ngIf="alertIsShown" class="row text-center justify-content-center">
+                                <div *ngIf="alert.isShown" class="row text-center justify-content-center">
                                     <div class="col-lg-6 col-md-8 success">
                                         <p>
                                             <ngb-alert #staticAlert [type]="alert.style" (closed)="close()">
                                                 {{ alert.message }}
                                             </ngb-alert>
-                                          </p>
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">
@@ -24,7 +24,7 @@
                                                 placeholder="Enter name"
                                                 [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
                                                 [class.is-valid]="name.valid">
-                                                <div class="invalid-feedback">Please enter a room name!</div>
+                                            <div class="invalid-feedback">Please enter a room name!</div>
                                         </div>
                                     </div>
                                 </div>
@@ -33,7 +33,7 @@
                                     <div class="col-lg-6 col-md-8">
                                         <label for="tournament">Tournament</label>
                                         <select id="tournament" class="form-select" formControlName="tournament">
-                                          </select>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -45,40 +45,73 @@
 
                             </div>
                         </form>
-
                     </ng-template>
                 </li>
-                
-
-
-
 
 
                 <li [ngbNavItem]="2">
                     <a ngbNavLink>Join room</a>
                     <ng-template ngbNavContent>
                         <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-6 col-md-8">
-                                    <div class="form-group">
-                                        <label for="join-key">Room key</label>
-                                        <input type="text" class="form-control" id="join-key"
-                                            aria-describedby="join-key" placeholder="Enter room key">
+                            <form [formGroup]="joinRoomForm" (ngSubmit)="onJoinSubmit()">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-6 col-md-8">
+                                        <div class="form-group">
+                                            <label for="join-key">Room key</label>
+                                            <input type="text" class="form-control" id="join-key" formControlName="join_key"
+                                                aria-describedby="join-key" placeholder="Enter room key"
+                                                [class.is-invalid]="join_key.invalid && (join_key.dirty || join_key.touched)"
+                                                [class.is-valid]="join_key.valid">
+                                            <div class="invalid-feedback">Please enter a join key!</div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row align-items-center">
-                                <div class="col text-center">
-                                    <button type="submit" class="btn btn-primary">Join room</button>
+                                <div class="row align-items-center">
+                                    <div class="col text-center">
+                                        <button type="submit" class="btn btn-primary">Find</button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </ng-template>
                 </li>
             </ul>
         </div>
     </div>
+
+    <ng-template #content let-modal id="modal">
+        <div class="modal-header">
+          <h1 class="modal-title" id="modal-basic-title">{{ room.info.name }}</h1>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row text-center">
+                <div class="col">
+                    <p><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                      </svg> Created by {{ room.info.creator }}</p>
+                </div>
+            </div>
+            <div class="row text-center">
+                <div class="col">
+                    <p><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                        <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                      </svg> Total members: {{ room.info.members }}</p>
+                </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close();joinRoom();">Join</button>
+        </div>
+      </ng-template>
+      
+      
+
 
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </main>

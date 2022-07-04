@@ -19,8 +19,8 @@ export class MainPageComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log("mksdmsklmdsld")
     this.isLoggedIn = this.authService.getIsLoggedIn();
+    
     this.subscription = this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
         console.log(event)

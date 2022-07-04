@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbAlert } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlert, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 import { DataService } from '../data.service';
 import { RoomService } from '../room.service';
@@ -20,31 +20,45 @@ import { Tournament } from '../tournament';
 export class RoomActionComponent implements OnInit {
   staticAlertClosed = true;
   @ViewChild('staticAlert', {static: false}) staticAlert: NgbAlert | undefined;
+  @ViewChild('content') content: any;
+  alert = {
+    isShown: false,
+    style: "success",
+    message: "Prediction room created!"
+  }
 
   active: number = 1;
   tournaments: Tournament[] = [];
   tournamentName: string = "";
-  alertIsShown: boolean = false;
-  alert = {
-    style: "success",
-    message: "Prediction room created!"
+  room = {
+    response: false,
+    exists: false,
+    info: {name: "", creator: "", members: "", _id: ""}
   }
+  closeResult = "";
+
 
   constructor(
     private dataService: DataService,
     private router: Router,
     private formBuilder: FormBuilder,
     private roomService: RoomService,
+    private modalService: NgbModal
   ) { }
 
   roomForm = this.formBuilder.group({
     name: ["", [Validators.required]],
     tournament: ["", []]
+  });
+
+  joinRoomForm = this.formBuilder.group({
+    join_key: ["", [Validators.required]]
   })
 
   ngOnInit(): void {
     this.getTournaments();    
     this.selectAction();
+
 
     this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
@@ -53,6 +67,7 @@ export class RoomActionComponent implements OnInit {
     })
   }
 
+
   async onNewSubmit() {
     if (this.roomForm.valid) {
       this.tournamentName = this.roomForm.value.tournament;
@@ -60,14 +75,14 @@ export class RoomActionComponent implements OnInit {
       this.roomForm.patchValue({tournament: tournament_id});
       const response = await this.roomService.createNewRoom(this.roomForm.value);
 
-      this.alertIsShown = true;
+      this.alert.isShown = true;
       if (response.code === 401) {
         this.alert.message = "Something went wrong. Your session has probably timed out!";
         this.alert.style = "danger";
         setTimeout(() => this.router.navigate(["/login"]), 2500);
       } else {
         setTimeout(() => this.router.navigate(["/rooms"]), 2500);  
-      }  
+      }
     }
   }
 
@@ -75,7 +90,28 @@ export class RoomActionComponent implements OnInit {
     return this.tournaments.find(tournament => tournament.name === name)?._id;
   }
 
-  onJoinSubmit() {
+  async onJoinSubmit() {
+    if (this.joinRoomForm.valid) {
+      const response = await this.roomService.findRoomByKey(this.joinRoomForm.value.join_key);
+      this.room.response = true;
+      console.log(response);
+
+      if (response.code === 200) {
+        this.room.exists = true;
+        this.room.info = response;
+        this.open(this.content);
+      } else {
+        this.room.exists = false;
+      }
+    }
+  }
+
+  async joinRoom() {
+    const response = await this.roomService.joinRoom(this.room.info._id);
+
+    if (response.code === 201) {
+      this.router.navigate(["/rooms"]);
+    }
 
   }
 
@@ -104,9 +140,17 @@ export class RoomActionComponent implements OnInit {
     this.router.navigate(["/rooms"]);
   }
 
+  open(content: any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
+  }
+
 
   get name() {
     return this.roomForm.get("name")!;
+  }
+
+  get join_key() {
+    return this.joinRoomForm.get("join_key")!;
   }
 
 }

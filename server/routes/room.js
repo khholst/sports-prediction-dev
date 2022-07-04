@@ -48,7 +48,7 @@ router.post("/new", authenticate, [
     'users');
 
     const room = {
-        room_key: createdRoom._id,
+        room_id: createdRoom._id,
         score: 0
     }
 
@@ -63,6 +63,67 @@ router.post("/new", authenticate, [
 })
 
 
+
+//Route for searching room based on it's key
+router.get("/key", authenticate, async(req, res) =>{
+    console.log(req.query.key);
+    const Rooms = db.model('Rooms', 
+    new mongo.Schema({ name: 'string', tournament_id: 'objectId', creator: 'string', join_key: 'string'}), 
+    'rooms');
+
+    const room = await Rooms.findOne({join_key: req.query.key});
+
+
+    const Users = db.model('Users',
+    new mongo.Schema({username: 'string', _id:'objectId', rooms:'array'}), 'users');
+
+    let members = 0;
+    
+    if (room) {
+        const members = await Users.countDocuments({"rooms.room_key": room._id})
+        res.status(200).json({
+            code: 200,
+            name: room.name,
+            creator: room.creator,
+            members: members,
+            _id: room._id
+        });
+    } else {
+        res.status(200).json({
+            code: 404,
+            msg: "Room not found"
+        });
+    }
+
+
+})
+
+router.post("/join", authenticate, async (req, res) => {
+    
+    const room_id = mongo.Types.ObjectId(req.body.room_id);
+
+    const room = {
+        room_key: room_id,
+        score: 0
+    }
+
+    const Users = db.model('Users',
+    new mongo.Schema({username: 'string', _id:'objectId', rooms:'array'}), 'users');
+    
+    const jwtPayload = req.get("token").split(".")[1];
+    const username = JSON.parse(Buffer.from(jwtPayload, "base64").toString("utf-8")).username;
+
+    const user = await Users.findOneAndUpdate(
+        { username: username }, 
+        { $push: { rooms:  room} })
+
+        ////CHECK IF USER IS ALREADY IN THIS ROOM
+
+    res.status(201).json({
+        code: 201,
+        message: "Room joined successfully"
+    })
+})
 
 
 module.exports = router;
