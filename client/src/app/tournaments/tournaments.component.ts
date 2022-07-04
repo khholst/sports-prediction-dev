@@ -52,8 +52,8 @@ export class TournamentsComponent implements OnInit {
           this.games[index][i].time = this.formatDate(this.games[index][i].time, true);
           let t1: string = this.games[index][i].team1;
           let t2: string = this.games[index][i].team2;
-          let cnt1 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t1})[0].name;
-          let cnt2 = this.countries.filter(function(cnt):boolean{return cnt.country_id==t2})[0].name;
+          let cnt1: string = this.countries.filter(function(cnt):boolean{return cnt.country_id==t1})[0].name;
+          let cnt2: string = this.countries.filter(function(cnt):boolean{return cnt.country_id==t2})[0].name;
           if(!(cnt1 in this.flags)){this.flags[cnt1]=t1};
           if(!(cnt2 in this.flags)){this.flags[cnt2]=t2};        
           this.games[index][i].team1 = cnt1;

@@ -20,8 +20,9 @@ export class DataService {
     let params: HttpParams = new HttpParams();
     let headers = httpOptions.headers;
     if(tourID){
-      params.append('_id', tourID);
+      params = params.append('_id', tourID);
     };
+    console.log(params);
     return await lastValueFrom(this.http.get(`${this.dataUrl}/tournaments`, {headers, params}));
   };
 
@@ -47,8 +48,8 @@ export class DataService {
     return await lastValueFrom(this.http.get(`${this.dataUrl}/rooms`, {headers, params}));    
   };
 
-  async getRoomsUsers(roomID: string):Promise<any> {
-    let params: HttpParams = new HttpParams().append('room', roomID);
+  async getRoomUsers(roomID: Array<string>):Promise<any> {
+    let params: HttpParams = new HttpParams().append('room', roomID.toString());
     let headers = httpOptions.headers;
     return await lastValueFrom(this.http.get(`${this.dataUrl}/roomUsers`, {headers, params}));    
   };

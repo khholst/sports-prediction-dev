@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
 import { Room } from '../room';
+import { Tournament } from '../tournament';
+import { User } from '../user';
 
 @Component({
   selector: 'app-rooms',
@@ -35,22 +37,20 @@ export class RoomsComponent implements OnInit {
       roomIDs.push(room.room_key);
     };
 
-
     this.rooms = await this.dataService.getRooms(roomIDs);
-
-    const roomOne = this.rooms[0];
-    let roomUsers = await this.dataService.getRoomsUsers(roomOne._id);
-    console.log(roomUsers)
-
+    let allTourns: Array<Tournament> = await this.dataService.getTournaments(); 
     for (let i = 0; i < this.rooms.length; i++) {
-      let tourns = await this.dataService.getTournaments(this.rooms[i]._id);
-      let roomUsers = await this.dataService.getRoomsUsers(this.rooms[i]._id);
-      console.log(roomUsers);
+      let room: Room = this.rooms[i];
+      let tourns: Array<Tournament> = allTourns.filter(function(tourn):boolean{return tourn._id == room.tournament_id});
+
       this.extraData[i] = {
         "tournament": tourns[0].name,
         "start_date": this.formatDate(tourns[0].start_date),
         "end_date": this.formatDate(tourns[0].end_date),
-        "status": ""
+        "status": "",
+        "numUsers": 0,
+        "leader": "",
+        "userPos": 0
       };
 
       const now = new Date();
@@ -65,6 +65,12 @@ export class RoomsComponent implements OnInit {
           this.extraData[i].status = "Ended";
         };
       };
+    };
+    let roomUsers: Array<User> = await this.dataService.getRoomUsers(roomIDs);
+    for(let j=0;j<this.rooms.length;j++){
+      console.log(roomUsers)
+      let users: Array<User> = roomUsers.filter(function(user):boolean{return user.rooms.room_id == roomIDs[j]}); //see ei tööta - user.rooms on array ja seda tuleb filtreerida
+      this.extraData[j].numUsers = users.length;
     };
     this.indexes = Array.from(Array(this.rooms.length).keys());
   };
