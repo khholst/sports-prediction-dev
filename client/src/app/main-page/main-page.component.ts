@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main-page',
@@ -9,20 +10,26 @@ import { Router } from '@angular/router';
 })
 export class MainPageComponent implements OnInit {
   public isLoggedIn: boolean = false;
+  public subscription: Subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) { }
 
+
   ngOnInit(): void {
-    console.log("bhkdnhdsjnsdjn")
+    console.log("mksdmsklmdsld")
     this.isLoggedIn = this.authService.getIsLoggedIn();
-    this.router.events.subscribe(event => {
-      console.log(event)
-      //if (event.constructor.name === "NavigationEnd") {
-       this.isLoggedIn = this.authService.getIsLoggedIn();
-      //}
+    this.subscription = this.router.events.subscribe(event => {
+      if (event.constructor.name === "NavigationEnd") {
+        console.log(event)
+        this.isLoggedIn = this.authService.getIsLoggedIn();
+      }
     })
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }

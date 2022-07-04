@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { UserRegister } from './userRegister';
 import { UserLogin } from './userLogin';
+import jwtDecode from "jwt-decode";
+import { Router } from '@angular/router';
+
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,7 +22,8 @@ export class AuthService {
   private username: string = "";
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   async register(credentials:UserRegister):Promise<any> {
@@ -37,7 +41,35 @@ export class AuthService {
   }
 
   getIsLoggedIn() {
+    this.checkJwtToken();
     return this.isLoggedIn;
+  }
+
+  checkJwtToken() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode<any>(token);
+
+      if (this.JwtIsExpired(decodedToken.exp!)) {
+        this.setLoggedIn(false);
+        this.navigateToLogin();
+      } else {
+        this.setUsername(decodedToken.username!)
+        this.setLoggedIn(true);
+      }
+
+    } else {
+      this.setLoggedIn(false);
+      this.navigateToLogin();
+    }
+  }
+
+  private navigateToLogin() {
+    this.router.navigate(["/login"]);
+  }
+
+  private JwtIsExpired(expiry: number) {
+    return expiry < Date.now() / 1000;
   }
 
   setLoggedIn(loggedIn: boolean): void {

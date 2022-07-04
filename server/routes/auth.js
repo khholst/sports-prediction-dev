@@ -60,10 +60,10 @@ router.post("/register", [
 
 
     //Create a JSON Web Token
-    const token = await JWT.sign({
+    const token = JWT.sign({
         username
     }, process.env.JWTSECRET, { //this to env variable
-        expiresIn: 1000
+        expiresIn: 1800
     });
 
     //Return token
@@ -112,10 +112,10 @@ router.post("/login", async(req, res) => {
     }
 
     //Create JSON Web Token and send it to the client
-    const token = await JWT.sign({
+    const token = JWT.sign({
         username
     }, process.env.JWTSECRET, {
-        expiresIn: 1000
+        expiresIn: 10
     });
 
     return res.status(200).json({

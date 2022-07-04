@@ -7,8 +7,6 @@ module.exports = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWTSECRET);
         next();
     } catch (error) {
-        console.log(error.name)
-
         if (error.name === "TokenExpiredError") {
             res.status(200).json({
                 code: 401,
@@ -18,16 +16,15 @@ module.exports = (req, res, next) => {
                     }
                 ]
             })
+        } else {
+            res.status(200).json({
+                code: 401,
+                errors: [
+                    {
+                        msg: "Invalid request"
+                    }
+                ]
+            })
         }
-
-        
-        res.status(200).json({
-            code: 401,
-            errors: [
-                {
-                    msg: "Invalid request"
-                }
-            ]
-        })
     }
 }

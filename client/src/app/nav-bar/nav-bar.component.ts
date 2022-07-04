@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-bar',
@@ -11,6 +12,7 @@ export class NavBarComponent implements OnInit {
   public isMenuCollapsed = true;
   public isLoggedIn = false;
   public username = "";
+  public subscription = new Subscription();
 
   constructor(
     private authService: AuthService,
@@ -18,11 +20,13 @@ export class NavBarComponent implements OnInit {
   ) {
   }
 
-  ngOnInit(): void {    
-    this.router.events.subscribe(event => {
+  ngOnInit(): void {
+    this.isLoggedIn = this.authService.getIsLoggedIn();
+    this.subscription = this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
-       this.isLoggedIn = this.authService.getIsLoggedIn();
-       this.username = this.authService.getUsername();
+        console.log("RUNNING")
+        this.isLoggedIn = this.authService.getIsLoggedIn();
+        this.username = this.authService.getUsername();
       }
     })
   }
@@ -36,5 +40,9 @@ export class NavBarComponent implements OnInit {
     this.router.navigateByUrl('/register', {skipLocationChange: true}).then(() => {
         this.router.navigate(["/"]);
     });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 }
