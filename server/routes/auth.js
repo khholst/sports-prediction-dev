@@ -63,7 +63,7 @@ router.post("/register", [
     const token = JWT.sign({
         username
     }, process.env.JWTSECRET, { //this to env variable
-        expiresIn: 1800
+        expiresIn: 900
     });
 
     //Return token
@@ -115,7 +115,7 @@ router.post("/login", async(req, res) => {
     const token = JWT.sign({
         username
     }, process.env.JWTSECRET, {
-        expiresIn: 10
+        expiresIn: 900
     });
 
     return res.status(200).json({

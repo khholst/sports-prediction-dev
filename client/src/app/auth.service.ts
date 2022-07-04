@@ -52,7 +52,6 @@ export class AuthService {
 
       if (this.JwtIsExpired(decodedToken.exp!)) {
         this.setLoggedIn(false);
-        this.navigateToLogin();
       } else {
         this.setUsername(decodedToken.username!)
         this.setLoggedIn(true);
@@ -60,7 +59,6 @@ export class AuthService {
 
     } else {
       this.setLoggedIn(false);
-      this.navigateToLogin();
     }
   }
 
