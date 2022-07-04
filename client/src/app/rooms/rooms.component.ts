@@ -21,21 +21,28 @@ export class RoomsComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.getIsLoggedIn();
-    if(this.isLoggedIn){
+    if (this.isLoggedIn) {
       this.onRoomRequest();
     };
   };
 
   async onRoomRequest() {
-    let usr: string = await this.authService.getUsername();
+    let usr: string = this.authService.getUsername();
     let userRooms: Array<any> = await this.dataService.getUserRooms(usr);
     
     let roomIDs: Array<string> = [];
     for (let room of userRooms){
-      roomIDs.push(room.room_id);
+      roomIDs.push(room.room_key);
     };
+
+
     this.rooms = await this.dataService.getRooms(roomIDs);
-    for (let i=0;i<this.rooms.length;i++){
+
+    const roomOne = this.rooms[0];
+    let roomUsers = await this.dataService.getRoomsUsers(roomOne._id);
+    console.log(roomUsers)
+
+    for (let i = 0; i < this.rooms.length; i++) {
       let tourns = await this.dataService.getTournaments(this.rooms[i]._id);
       let roomUsers = await this.dataService.getRoomsUsers(this.rooms[i]._id);
       console.log(roomUsers);
@@ -45,6 +52,7 @@ export class RoomsComponent implements OnInit {
         "end_date": this.formatDate(tourns[0].end_date),
         "status": ""
       };
+
       const now = new Date();
       let start_date = new Date(tourns[0].start_date);
       let end_date = new Date(tourns[0].end_date);

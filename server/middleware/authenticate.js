@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
         }
 
         
-        res.status(401).json({
+        res.status(200).json({
             code: 401,
             errors: [
                 {

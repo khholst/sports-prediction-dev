@@ -10,10 +10,8 @@
                                 <div *ngIf="alertIsShown" class="row text-center justify-content-center">
                                     <div class="col-lg-6 col-md-8 success">
                                         <p>
-                                            <ngb-alert #staticAlert type="success" (closed)="close()">
-                                                Prediction room for {{ tournamentName }} created successfully!
-                                                <br>
-                                                You will now be redirected to the room page.
+                                            <ngb-alert #staticAlert [type]="alert.style" (closed)="close()">
+                                                {{ alert.message }}
                                             </ngb-alert>
                                           </p>
                                     </div>

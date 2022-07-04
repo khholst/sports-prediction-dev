@@ -39,8 +39,6 @@ router.post("/new", authenticate, [
         join_key: joinKey
     }
 
-    console.log(newRoom)
-
    const createdRoom = await Rooms.create(newRoom);
 
 

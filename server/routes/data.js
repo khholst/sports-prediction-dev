@@ -57,11 +57,13 @@ router.get("/rooms", async(req, res) => {
 });
 
 router.get("/roomUsers", async(req, res) => { //ei tööta!
-    let userRooms = db.model('Users',
-        new mongo.Schema({username: 'string', _id:'string', rooms:'array'}), 'users');
 
-        console.log(req.query.room)
-    userRooms.find({"rooms.room_id": {"$in": [req.query.room]}},function(err, data) {
+    let userRooms = db.model('Users',
+        new mongo.Schema({username: 'string', _id:'objectId', rooms:'array'}), 'users');
+
+    const objectId = mongo.Types.ObjectId(req.query.room);
+
+    userRooms.find({"rooms.room_key": objectId}, "username",function(err, data) {
         if(err){console.log(err);}
         else{
             res.json(data);

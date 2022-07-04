@@ -25,6 +25,10 @@ export class RoomActionComponent implements OnInit {
   tournaments: Tournament[] = [];
   tournamentName: string = "";
   alertIsShown: boolean = false;
+  alert = {
+    style: "success",
+    message: "Prediction room created!"
+  }
 
   constructor(
     private dataService: DataService,
@@ -55,9 +59,15 @@ export class RoomActionComponent implements OnInit {
       const tournament_id = this.getTournamentIdByName(this.roomForm.value.tournament);
       this.roomForm.patchValue({tournament: tournament_id});
       const response = await this.roomService.createNewRoom(this.roomForm.value);
+
       this.alertIsShown = true;
-      setTimeout(() => this.staticAlert!.close(), 3000);
-    
+      if (response.code === 401) {
+        this.alert.message = "Something went wrong. Your session has probably timed out!";
+        this.alert.style = "danger";
+        setTimeout(() => this.router.navigate(["/login"]), 2500);
+      } else {
+        setTimeout(() => this.router.navigate(["/rooms"]), 2500);  
+      }  
     }
   }
 
@@ -92,7 +102,6 @@ export class RoomActionComponent implements OnInit {
 
   close() {
     this.router.navigate(["/rooms"]);
-
   }
 
 
