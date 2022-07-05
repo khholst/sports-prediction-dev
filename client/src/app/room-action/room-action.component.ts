@@ -2,12 +2,11 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
 import { DataService } from '../data.service';
 import { RoomService } from '../room.service';
 
 import { Tournament } from '../tournament';
-
+import { faBasketball, faFutbol } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-room-action',
@@ -33,10 +32,14 @@ export class RoomActionComponent implements OnInit {
   room = {
     response: false,
     exists: false,
-    info: { name: "", creator: "", members: "", _id: " "}
+    info: { name: "", tournament: "", sport: "", creator: "", members: "", _id: " "}
   }
   closeResult = "";
   joinResult = { error: false, msg: "" };
+
+  //Icons
+  faBasketball = faBasketball;
+  faFootball = faFutbol;
 
 
   constructor(

@@ -82,7 +82,7 @@ router.get("/key", authenticate, async(req, res) =>{
 
     //Torunaments schema
     const Tournaments = db.model('Users',
-    new mongo.Schema({name: 'string', _id:'objectId'}), 'tournaments');
+    new mongo.Schema({name: 'string', _id:'objectId', sport: 'string'}), 'tournaments');
 
 
 
@@ -90,12 +90,13 @@ router.get("/key", authenticate, async(req, res) =>{
     if (room) {
         members = await Users.countDocuments({"rooms.room_id": room._id});
         const tournament = await Tournaments.findOne({_id: room.tournament_id})
-
         console.log(tournament)
 
         res.status(200).json({
             code: 200,
             name: room.name,
+            tournament: tournament.name,
+            sport: tournament.sport,
             creator: room.creator,
             members: members,
             _id: room._id

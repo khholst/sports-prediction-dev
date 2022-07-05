@@ -15,6 +15,7 @@ import { AuthService } from './auth.service';
 import { TournamentsComponent } from './tournaments/tournaments.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomActionComponent } from './room-action/room-action.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { RoomActionComponent } from './room-action/room-action.component';
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FontAwesomeModule
   ],
   providers: [
     AuthService,
