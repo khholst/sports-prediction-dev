@@ -5,21 +5,23 @@
                 <div class="container">
                     <div class="row">
                         <div class="col">
-                            <p class="mt-2"><a href="/{{rooms[index]._id}}"><h4>{{ rooms[index].name }}</h4></a></p>
+                            <p class="mt-2"><a href="/{{rooms[index]._id}}"><h4>{{ rooms[index].name }}</h4></a> <i>created by</i> {{ rooms[index].creator }} </p>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col"><i>created by</i> {{ rooms[index].creator }}</div>  
-                        <div class="col">Number of users: {{ extraData[index].numUsers }}</div>                  
+                        <div class="col mt-1">
+                            <p *ngIf="extraData[index].status == 'W'" style="color: orange">Waiting to start</p>              
+                            <p *ngIf="extraData[index].status == 'A'" style="color: green">Active</p>              
+                            <p *ngIf="extraData[index].status == 'E'" style="color: red">Ended</p>          
+                        </div>  
+                        <div class="col mt-1">{{ extraData[index].tournament }}</div>
+                        <div class="col mt-1">{{ extraData[index].start_date }} to {{ extraData[index].end_date }}</div>
+                                      
                     </div>
                     <div class="row">
-                        <div class="col">
-                            <p *ngIf="extraData[index].status == 'Waiting to start'" style="color: orange">Waiting to start</p>              
-                            <p *ngIf="extraData[index].status == 'Active'" style="color: green">Active</p>              
-                            <p *ngIf="extraData[index].status == 'Ended'" style="color: red">Ended</p>          
-                        </div>  
-                        <div class="col">{{ extraData[index].tournament }}</div>
-                        <div class="col">{{ extraData[index].start_date }} to {{ extraData[index].end_date }}</div>
+                        <div class="col mt-1 mb-2">Number of users: {{ extraData[index].numUsers }}</div>
+                        <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Room leader: {{ extraData[index].leader }}</div>  
+                        <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Your position: {{ extraData[index].userPos }}.</div>                        
                     </div>                    
                 </div>
             </div>

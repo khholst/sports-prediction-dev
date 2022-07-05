@@ -57,20 +57,32 @@ export class RoomsComponent implements OnInit {
       let start_date = new Date(tourns[0].start_date);
       let end_date = new Date(tourns[0].end_date);
       if(now < start_date){
-        this.extraData[i].status = "Waiting to start";
+        this.extraData[i].status = "W";
       }else{
         if(now < end_date){
-          this.extraData[i].status = "Active";
+          this.extraData[i].status = "A";
         }else{
-          this.extraData[i].status = "Ended";
+          this.extraData[i].status = "E";
         };
       };
     };
     let roomUsers: Array<User> = await this.dataService.getRoomUsers(roomIDs);
     for(let j=0;j<this.rooms.length;j++){
-      console.log(roomUsers)
-      let users: Array<User> = roomUsers.filter(function(user):boolean{return user.rooms.room_id == roomIDs[j]}); //see ei tööta - user.rooms on array ja seda tuleb filtreerida
+      let users: Array<User> = roomUsers.filter(
+        function(user):boolean{
+          return user.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]}).length>0;
+      });
       this.extraData[j].numUsers = users.length;
+
+      users.sort(
+        (firsUser: User, secondUser: User) =>
+          (firsUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score > secondUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score) ? -1 : 1
+      );
+      this.extraData[j].leader = users[0].username;
+      this.extraData[j].userPos = users.findIndex(object => {
+        return object.username === usr;
+      }) + 1;
+      
     };
     this.indexes = Array.from(Array(this.rooms.length).keys());
   };

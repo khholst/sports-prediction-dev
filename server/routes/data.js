@@ -63,6 +63,14 @@ router.get("/roomUsers", async(req, res) => {
     userRooms.find({"rooms.room_id": { "$in": req.query.room.split(",") }},function(err, data) {
         if(err){console.log(err);}
         else{
+            data = data.map((user) => {
+                return {
+                  '_id':user._id,
+                  'username':user.username,
+                  'rooms':user.rooms,
+
+                };
+              });            
             res.json(data);
         };
     });
