@@ -67,20 +67,32 @@ router.post("/new", authenticate, [
 //Route for searching room based on it's key
 router.get("/key", authenticate, async(req, res) =>{
     console.log(req.query.key);
+
+    //Room schema
     const Rooms = db.model('Rooms', 
     new mongo.Schema({ name: 'string', tournament_id: 'objectId', creator: 'string', join_key: 'string'}), 
     'rooms');
 
+    //Find room
     const room = await Rooms.findOne({join_key: req.query.key});
 
 
     const Users = db.model('Users',
     new mongo.Schema({username: 'string', _id:'objectId', rooms:'array'}), 'users');
 
+    //Torunaments schema
+    const Tournaments = db.model('Users',
+    new mongo.Schema({name: 'string', _id:'objectId'}), 'tournaments');
+
+
+
     let members = 0;
-    
     if (room) {
-        const members = await Users.countDocuments({"rooms.room_key": room._id})
+        members = await Users.countDocuments({"rooms.room_id": room._id});
+        const tournament = await Tournaments.findOne({_id: room.tournament_id})
+
+        console.log(tournament)
+
         res.status(200).json({
             code: 200,
             name: room.name,
@@ -94,16 +106,17 @@ router.get("/key", authenticate, async(req, res) =>{
             msg: "Room not found"
         });
     }
-
-
 })
 
+
+
+//Route for joining a room. Room ID comes in with request body
 router.post("/join", authenticate, async (req, res) => {
     
     const room_id = mongo.Types.ObjectId(req.body.room_id);
 
     const room = {
-        room_key: room_id,
+        room_id: room_id,
         score: 0
     }
 
@@ -113,16 +126,23 @@ router.post("/join", authenticate, async (req, res) => {
     const jwtPayload = req.get("token").split(".")[1];
     const username = JSON.parse(Buffer.from(jwtPayload, "base64").toString("utf-8")).username;
 
-    const user = await Users.findOneAndUpdate(
-        { username: username }, 
-        { $push: { rooms:  room} })
 
-        ////CHECK IF USER IS ALREADY IN THIS ROOM
+    const user = await Users.findOne({username: username});
+    const userInRoom = user.rooms.some(room => room.room_id.equals(room_id));
 
-    res.status(201).json({
-        code: 201,
-        message: "Room joined successfully"
-    })
+    if (userInRoom) {
+        res.status(403).json({
+            code: 403,
+            message: "You have already joined this room"
+        })
+
+    } else {
+        const userUpdate = await user.updateOne({$push: {rooms: room}})
+        res.status(201).json({
+            code: 201,
+            message: "Room joined successfully"
+        })
+    }
 })
 
 

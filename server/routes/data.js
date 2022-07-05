@@ -56,11 +56,11 @@ router.get("/rooms", async(req, res) => {
 });
 
 router.get("/roomUsers", async(req, res) => {
-    const subschema = new mongo.Schema({room_key:'ObjectID', score:'number'});
+    const subschema = new mongo.Schema({room_id:'ObjectID', score:'number'});
     let userRooms = db.model('Users',
         new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
 
-    userRooms.find({"rooms.room_key": { "$in": req.query.room.split(",") }},function(err, data) {
+    userRooms.find({"rooms.room_id": { "$in": req.query.room.split(",") }},function(err, data) {
         if(err){console.log(err);}
         else{
             res.json(data);

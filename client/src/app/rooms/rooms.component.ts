@@ -34,7 +34,7 @@ export class RoomsComponent implements OnInit {
     
     let roomIDs: Array<string> = [];
     for (let room of userRooms){
-      roomIDs.push(room.room_key);
+      roomIDs.push(room.room_id);
     };
 
     this.rooms = await this.dataService.getRooms(roomIDs);

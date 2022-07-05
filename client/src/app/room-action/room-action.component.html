@@ -81,6 +81,9 @@
     </div>
 
     <ng-template #content let-modal id="modal">
+            <ngb-alert *ngIf="joinResult.error" [dismissible]="false" type="danger" >
+              {{ joinResult.msg }}
+            </ngb-alert>
         <div class="modal-header">
           <h1 class="modal-title" id="modal-basic-title">{{ room.info.name }}</h1>
           <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
@@ -106,7 +109,7 @@
             
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-dark" (click)="modal.close();joinRoom();">Join</button>
+          <button type="button" class="btn btn-outline-dark" (click)="joinRoom();">Join</button>
         </div>
       </ng-template>
       

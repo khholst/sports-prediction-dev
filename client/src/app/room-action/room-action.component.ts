@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgbAlert, NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { DataService } from '../data.service';
 import { RoomService } from '../room.service';
@@ -18,9 +18,9 @@ import { Tournament } from '../tournament';
 
 
 export class RoomActionComponent implements OnInit {
-  staticAlertClosed = true;
-  @ViewChild('staticAlert', {static: false}) staticAlert: NgbAlert | undefined;
+
   @ViewChild('content') content: any;
+  modalReference: any;
   alert = {
     isShown: false,
     style: "success",
@@ -33,9 +33,10 @@ export class RoomActionComponent implements OnInit {
   room = {
     response: false,
     exists: false,
-    info: {name: "", creator: "", members: "", _id: ""}
+    info: { name: "", creator: "", members: "", _id: " "}
   }
   closeResult = "";
+  joinResult = { error: false, msg: "" };
 
 
   constructor(
@@ -99,7 +100,8 @@ export class RoomActionComponent implements OnInit {
       if (response.code === 200) {
         this.room.exists = true;
         this.room.info = response;
-        this.open(this.content);
+        this.joinResult.error = false;
+        this.modalReference = this.modalService.open(this.content);
       } else {
         this.room.exists = false;
       }
@@ -107,11 +109,23 @@ export class RoomActionComponent implements OnInit {
   }
 
   async joinRoom() {
-    const response = await this.roomService.joinRoom(this.room.info._id);
 
-    if (response.code === 201) {
-      this.router.navigate(["/rooms"]);
+    try {
+      const response = await this.roomService.joinRoom(this.room.info._id);
+
+    
+      this.modalReference.close();
+    } catch (error: any) {
+      this.joinResult.error = true;
+      this.joinResult.msg = error.error.message;
     }
+
+
+
+
+    // if (response.code === 201) {
+    //   this.router.navigate(["/rooms"]);
+    // }
 
   }
 
@@ -136,9 +150,11 @@ export class RoomActionComponent implements OnInit {
     if (action === "join") { this.active = 2; }
   }
 
+
   close() {
     this.router.navigate(["/rooms"]);
   }
+
 
   open(content: any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'});
