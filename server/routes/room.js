@@ -102,9 +102,13 @@ router.get("/key", authenticate, async(req, res) =>{
             _id: room._id
         });
     } else {
-        res.status(200).json({
+        res.status(404).json({
             code: 404,
-            msg: "Room not found"
+            errors: [
+                {
+                    msg: "Room not found"
+                }
+            ]
         });
     }
 })
@@ -134,7 +138,9 @@ router.post("/join", authenticate, async (req, res) => {
     if (userInRoom) {
         res.status(403).json({
             code: 403,
-            message: "You have already joined this room"
+            errors: [{
+                msg: "You have already joined this room"
+            }]
         })
 
     } else {

@@ -7,13 +7,11 @@
                     <ng-template ngbNavContent>
                         <form [formGroup]="roomForm" (ngSubmit)="onNewSubmit()">
                             <div class="container">
-                                <div *ngIf="alert.isShown" class="row text-center justify-content-center">
+                                <div *ngIf="newAlert.isShown" class="row text-center justify-content-center">
                                     <div class="col-lg-6 col-md-8 success">
-                                        <p>
-                                            <ngb-alert #staticAlert [type]="alert.style" (closed)="close()">
-                                                {{ alert.message }}
-                                            </ngb-alert>
-                                        </p>
+                                        <ngb-alert #staticAlert [type]="newAlert.style" (closed)="close()">
+                                            {{ newAlert.message }}
+                                        </ngb-alert>
                                     </div>
                                 </div>
                                 <div class="row justify-content-center">
@@ -53,9 +51,12 @@
                     <a ngbNavLink>Join room</a>
                     <ng-template ngbNavContent>
                         <div class="container">
-                            <form [formGroup]="joinRoomForm" (ngSubmit)="onJoinSubmit()">
+                            <form [formGroup]="joinRoomForm" (ngSubmit)="findRoom()">
                                 <div class="row justify-content-center">
                                     <div class="col-lg-6 col-md-8">
+                                        <ngb-alert [dismissible]="false" *ngIf="findAlert.isShown" #staticAlert type="danger">
+                                            {{ findAlert.message }}
+                                        </ngb-alert>
                                         <div class="form-group">
                                             <label for="join-key">Room key</label>
                                             <input type="text" class="form-control" id="join-key" formControlName="join_key"
@@ -69,7 +70,7 @@
 
                                 <div class="row align-items-center">
                                     <div class="col text-center">
-                                        <button type="submit" class="btn btn-primary">Find</button>
+                                        <button type="submit" class="btn btn-primary">Find room</button>
                                     </div>
                                 </div>
                             </form>
@@ -81,8 +82,8 @@
     </div>
 
     <ng-template #content let-modal id="modal">
-            <ngb-alert *ngIf="joinResult.error" [dismissible]="false" type="danger" >
-              {{ joinResult.msg }}
+            <ngb-alert *ngIf="joinAlert.isShown" [dismissible]="false" [type]="joinAlert.style" >
+              {{ joinAlert.message }}
             </ngb-alert>
         <div class="modal-header">
           <h1 class="modal-title" id="modal-basic-title">{{ room.info.name }}</h1>

@@ -8,20 +8,20 @@ module.exports = (req, res, next) => {
         next();
     } catch (error) {
         if (error.name === "TokenExpiredError") {
-            res.status(200).json({
+            res.status(401).json({
                 code: 401,
                 errors: [
                     {
-                        msg: "Session expired"
+                        msg: "Your session has expired"
                     }
                 ]
             })
         } else {
-            res.status(200).json({
+            res.status(401).json({
                 code: 401,
                 errors: [
                     {
-                        msg: "Invalid request"
+                        msg: "You are not authenticated"
                     }
                 ]
             })

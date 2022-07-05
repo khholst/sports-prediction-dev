@@ -20,10 +20,15 @@ export class RoomActionComponent implements OnInit {
 
   @ViewChild('content') content: any;
   modalReference: any;
-  alert = {
+  newAlert = {
     isShown: false,
     style: "success",
     message: "Prediction room created!"
+  }
+
+  findAlert = {
+    isShown: false,
+    message: ""
   }
 
   active: number = 1;
@@ -35,7 +40,7 @@ export class RoomActionComponent implements OnInit {
     info: { name: "", tournament: "", sport: "", creator: "", members: "", _id: " "}
   }
   closeResult = "";
-  joinResult = { error: false, msg: "" };
+  joinAlert = { isShown: false, style: "", message: "" };
 
   //Icons
   faBasketball = faBasketball;
@@ -77,50 +82,80 @@ export class RoomActionComponent implements OnInit {
       this.tournamentName = this.roomForm.value.tournament;
       const tournament_id = this.getTournamentIdByName(this.roomForm.value.tournament);
       this.roomForm.patchValue({tournament: tournament_id});
-      const response = await this.roomService.createNewRoom(this.roomForm.value);
 
-      this.alert.isShown = true;
-      if (response.code === 401) {
-        this.alert.message = "Something went wrong. Your session has probably timed out!";
-        this.alert.style = "danger";
-        setTimeout(() => this.router.navigate(["/login"]), 2500);
-      } else {
-        setTimeout(() => this.router.navigate(["/rooms"]), 2500);  
+      try {
+        const response = await this.roomService.createNewRoom(this.roomForm.value);
+        setTimeout(() => this.router.navigate(["/rooms"]), 2500); 
+      } catch (error: any) {
+        this.newAlert.style = "danger";
+        this.newAlert.message = error.error.errors[0].msg;
+        setTimeout(() => this.router.navigate(["/login"]), 2500); 
+      } finally {
+        this.newAlert.isShown = true;
       }
     }
   }
+
 
   private getTournamentIdByName(name: string) {
     return this.tournaments.find(tournament => tournament.name === name)?._id;
   }
 
-  async onJoinSubmit() {
-    if (this.joinRoomForm.valid) {
-      const response = await this.roomService.findRoomByKey(this.joinRoomForm.value.join_key);
-      this.room.response = true;
-      console.log(response);
 
-      if (response.code === 200) {
+  async findRoom() {
+    if (this.joinRoomForm.valid) {
+
+      try {
+        const response = await this.roomService.findRoomByKey(this.joinRoomForm.value.join_key);
         this.room.exists = true;
         this.room.info = response;
-        this.joinResult.error = false;
+        this.joinAlert.isShown = false;
         this.modalReference = this.modalService.open(this.content);
-      } else {
+
+      } catch (error: any) {
         this.room.exists = false;
+        this.findAlert.isShown = true;
+        this.findAlert.message = error.error.errors[0].msg;
+
+        if (this.findAlert.message === "Your session has expired") {
+          setTimeout(() => this.router.navigate(["/login"]), 2500);
+        }
+        
+      } finally {
+        this.room.response = true;
       }
     }
   }
+
+
+
+
 
   async joinRoom() {
 
     try {
       const response = await this.roomService.joinRoom(this.room.info._id);
+      this.joinAlert.style = "success";
+      this.joinAlert.message = `You have joined room ${this.room.info.name}!`;
 
-    
-      this.modalReference.close();
+      setTimeout(() => {
+        this.router.navigate(["/rooms"]);
+        this.modalReference.close();
+      }, 2500)
+
     } catch (error: any) {
-      this.joinResult.error = true;
-      this.joinResult.msg = error.error.message;
+      this.joinAlert.style = "danger"
+      this.joinAlert.message = error.error.errors[0].msg;
+
+      if (this.joinAlert.message === "Your session has expired") {
+        setTimeout(() => {
+          this.router.navigate(["/login"]); 
+          this.modalReference.close();
+        }, 2500);
+      }
+
+    } finally {
+      this.joinAlert.isShown = true;
     }
 
 
