@@ -31,7 +31,6 @@ export class RoomsComponent implements OnInit {
   async onRoomRequest() {
     const usr: string = this.authService.getUsername();
     this.rooms = await this.roomService.getRooms(usr);
-    console.log(this.rooms)
 
     const allTourns: Array<Tournament> = await this.dataService.getTournaments(); 
     for (let i = 0; i < this.rooms.length; i++) {
@@ -45,15 +44,20 @@ export class RoomsComponent implements OnInit {
         "status": "",
         "numUsers": 0,
         "leader": "",
-        "userPos": 0
+        "userPos": 0,
+        "timeUntil": 0
       };
 
       const now = new Date();
       const start_date = new Date(tournament.start_date);
       const end_date = new Date(tournament.end_date);
 
+
       if (now < start_date) {
         this.extraData[i].status = "W";
+        let diffInMs: number = Math.abs(start_date.valueOf() - now.valueOf());
+        let diff: number =  diffInMs / (1000 * 60 * 60 * 24);
+        this.extraData[i].timeUntil = Math.ceil(diff);
       } else if (now < end_date) {
           this.extraData[i].status = "A";
       } else {
