@@ -16,6 +16,7 @@ import { TournamentsComponent } from './tournaments/tournaments.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomActionComponent } from './room-action/room-action.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RoomComponent } from './room/room.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     TournamentsComponent,
     RoomsComponent,
     RoomActionComponent,
+    RoomComponent,
   ],
   imports: [
     BrowserModule,

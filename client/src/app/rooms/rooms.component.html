@@ -1,31 +1,32 @@
 <main>
-    <div class="row justify-content-center">
-        <div class="col-lg-10" *ngIf="isLoggedIn">
-            <div class="card" *ngFor="let index of indexes">
-                <div class="container">
-                    <div class="row">
-                        <div class="col">
-                            <p class="mt-2"><a href="/rooms/{{rooms[index]._id}}"><h4>{{ rooms[index].name }}</h4></a> <i>created by</i> {{ rooms[index].creator }} </p>
+<div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-10">
+                    <div class="card" *ngFor="let index of indexes">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col">
+                                    <p class="mt-2"><a class="stretched-link" routerLink="/rooms/{{rooms[index]._id}}"><h4>{{ rooms[index].name }}</h4></a> <i>created by</i> {{ rooms[index].creator }} </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p *ngIf="extraData[index].status == 'W'" style="color: orange">Starts in xxx days</p>              
+                                    <p *ngIf="extraData[index].status == 'A'" style="color: green">Active</p>              
+                                    <p *ngIf="extraData[index].status == 'E'" style="color: red">Ended</p>          
+                                </div>  
+                                <div class="col">{{ extraData[index].tournament }}</div>
+                                <div class="col">{{ extraData[index].start_date }} to {{ extraData[index].end_date }}</div>
+                                              
+                            </div>
+                            <div class="row">
+                                <div class="col mt-1 mb-2">Number of users: {{ extraData[index].numUsers }}</div>
+                                <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Room leader: {{ extraData[index].leader }}</div>  
+                                <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Your position: {{ extraData[index].userPos }}.</div>                        
+                            </div>                    
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col mt-1">
-                            <p *ngIf="extraData[index].status == 'W'" style="color: orange">Waiting to start</p>              
-                            <p *ngIf="extraData[index].status == 'A'" style="color: green">Active</p>              
-                            <p *ngIf="extraData[index].status == 'E'" style="color: red">Ended</p>          
-                        </div>  
-                        <div class="col mt-1">{{ extraData[index].tournament }}</div>
-                        <div class="col mt-1">{{ extraData[index].start_date }} to {{ extraData[index].end_date }}</div>
-                                      
-                    </div>
-                    <div class="row">
-                        <div class="col mt-1 mb-2">Number of users: {{ extraData[index].numUsers }}</div>
-                        <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Room leader: {{ extraData[index].leader }}</div>  
-                        <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Your position: {{ extraData[index].userPos }}.</div>                        
-                    </div>                    
-                </div>
             </div>
         </div>
-        <p *ngIf="!isLoggedIn">To see your rooms, please be so kind and <a href="/login"><b>log in</b></a> first!</p>
-    </div>
+</div>
 </main>
