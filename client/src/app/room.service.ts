@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Room } from './room';
 import { lastValueFrom } from 'rxjs';
 
@@ -23,11 +23,24 @@ export class RoomService {
     return await lastValueFrom(this.http.post(`${this.roomUrl}/new`, room, httpOptions));
   }
 
+
   async findRoomByKey(room_key: string): Promise<any> {
-    return await lastValueFrom(this.http.get(`${this.roomUrl}/key?key=${room_key}`, httpOptions));
+    console.log(`${this.roomUrl}/${room_key}/joindata`)
+    return await lastValueFrom(this.http.get(`${this.roomUrl}/${room_key}/joindata`, httpOptions));
   }
 
+
   async joinRoom(room_id: string): Promise<any> {
-    return await lastValueFrom(this.http.post(`${this.roomUrl}/join`, {room_id: room_id}, httpOptions));
+    return await lastValueFrom(this.http.post(`${this.roomUrl}/${room_id}/join`, httpOptions));
   }
+
+  async getRooms(username: string):Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.roomUrl}/${username}/all`)); 
+  };
+
+  async getRoomUsers(roomID: Array<string>):Promise<any> {
+    let params: HttpParams = new HttpParams().append('room', roomID.toString());
+    let headers = httpOptions.headers;
+    return await lastValueFrom(this.http.get(`${this.roomUrl}/members`, {headers, params}));
+  };
 }

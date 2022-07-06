@@ -14,6 +14,7 @@ const httpOptions = {
 export class DataService {
   private dataUrl: string = "http://localhost:8080/data";
 
+  
   constructor(private http: HttpClient) { };
 
   async getTournaments(tourID?: string):Promise<any> {
@@ -35,23 +36,4 @@ export class DataService {
     let headers = httpOptions.headers;
     return await lastValueFrom(this.http.get(`${this.dataUrl}/games`, {headers, params}));
   };
-
-  async getUserRooms(username: string):Promise<any> {
-    let params: HttpParams = new HttpParams().append('username', username);
-    let headers = httpOptions.headers;
-    return await lastValueFrom(this.http.get(`${this.dataUrl}/userRooms`, {headers, params}));
-  };
-
-  async getRooms(roomIDs: Array<string>):Promise<any> {
-    let params: HttpParams = new HttpParams().append('room_id', roomIDs.toString());
-    let headers = httpOptions.headers;
-    return await lastValueFrom(this.http.get(`${this.dataUrl}/rooms`, {headers, params}));    
-  };
-
-  async getRoomUsers(roomID: Array<string>):Promise<any> {
-    let params: HttpParams = new HttpParams().append('room', roomID.toString());
-    let headers = httpOptions.headers;
-    return await lastValueFrom(this.http.get(`${this.dataUrl}/roomUsers`, {headers, params}));    
-  };
-
 }

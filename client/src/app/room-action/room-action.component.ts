@@ -2,10 +2,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Location } from '@angular/common';
+
+//SERVICES
 import { DataService } from '../data.service';
 import { RoomService } from '../room.service';
 
+//DATA MODELS
 import { Tournament } from '../tournament';
+
+//ICONS
 import { faBasketball, faFutbol } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -52,7 +58,8 @@ export class RoomActionComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private roomService: RoomService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private location: Location
   ) { }
 
   roomForm = this.formBuilder.group({
@@ -144,6 +151,7 @@ export class RoomActionComponent implements OnInit {
       }, 2500)
 
     } catch (error: any) {
+      console.log(error)
       this.joinAlert.style = "danger"
       this.joinAlert.message = error.error.errors[0].msg;
 
@@ -157,14 +165,6 @@ export class RoomActionComponent implements OnInit {
     } finally {
       this.joinAlert.isShown = true;
     }
-
-
-
-
-    // if (response.code === 201) {
-    //   this.router.navigate(["/rooms"]);
-    // }
-
   }
 
   async getTournaments() {
@@ -184,8 +184,18 @@ export class RoomActionComponent implements OnInit {
   selectAction() {
     var url = new URL(window.location.href);
     var action = url.searchParams.get("action");
-    if (action === "new") { this.active = 1; }
-    if (action === "join") { this.active = 2; }
+    if (action === "new")   { this.active = 1; }
+    if (action === "join")  { this.active = 2; }
+  }
+
+
+  joinTabActivated() {
+    this.location.go("/rooms/action?action=join"); 
+  }
+
+  
+  newTabActivated() {
+    this.location.go("/rooms/action?action=new"); 
   }
 
 

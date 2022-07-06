@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { DataService } from '../data.service';
+import { RoomService } from '../room.service';
 import { Room } from '../room';
 import { Tournament } from '../tournament';
 import { User } from '../user';
+
 
 @Component({
   selector: 'app-rooms',
@@ -18,7 +20,8 @@ export class RoomsComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private dataService: DataService
+    private dataService: DataService,
+    private roomService: RoomService
   ) { }
 
   ngOnInit(): void {
@@ -29,24 +32,19 @@ export class RoomsComponent implements OnInit {
   };
 
   async onRoomRequest() {
-    let usr: string = this.authService.getUsername();
-    let userRooms: Array<any> = await this.dataService.getUserRooms(usr);
-    
-    let roomIDs: Array<string> = [];
-    for (let room of userRooms){
-      roomIDs.push(room.room_id);
-    };
+    const usr: string = this.authService.getUsername();
+    this.rooms = await this.roomService.getRooms(usr);
+    console.log(this.rooms)
 
-    this.rooms = await this.dataService.getRooms(roomIDs);
-    let allTourns: Array<Tournament> = await this.dataService.getTournaments(); 
+    const allTourns: Array<Tournament> = await this.dataService.getTournaments(); 
     for (let i = 0; i < this.rooms.length; i++) {
       let room: Room = this.rooms[i];
-      let tourns: Array<Tournament> = allTourns.filter(function(tourn):boolean{return tourn._id == room.tournament_id});
+      let tournament: Tournament = allTourns.find(function(tourn) {return tourn._id === room.tournament_id})!;
 
       this.extraData[i] = {
-        "tournament": tourns[0].name,
-        "start_date": this.formatDate(tourns[0].start_date),
-        "end_date": this.formatDate(tourns[0].end_date),
+        "tournament": tournament.name,
+        "start_date": this.formatDate(tournament.start_date),
+        "end_date": this.formatDate(tournament.end_date),
         "status": "",
         "numUsers": 0,
         "leader": "",
@@ -54,30 +52,36 @@ export class RoomsComponent implements OnInit {
       };
 
       const now = new Date();
-      let start_date = new Date(tourns[0].start_date);
-      let end_date = new Date(tourns[0].end_date);
-      if(now < start_date){
+      const start_date = new Date(tournament.start_date);
+      const end_date = new Date(tournament.end_date);
+
+      if (now < start_date) {
         this.extraData[i].status = "W";
-      }else{
-        if(now < end_date){
+      } else if (now < end_date) {
           this.extraData[i].status = "A";
-        }else{
+      } else {
           this.extraData[i].status = "E";
-        };
       };
     };
-    let roomUsers: Array<User> = await this.dataService.getRoomUsers(roomIDs);
-    for(let j=0;j<this.rooms.length;j++){
+
+    let roomIDs: string[] = [];
+    for (const room of this.rooms) {
+      roomIDs.push(room._id);
+    }
+
+    let roomUsers: Array<User> = await this.roomService.getRoomUsers(roomIDs);
+    for (let j=0;j<this.rooms.length;j++) {
       let users: Array<User> = roomUsers.filter(
         function(user):boolean{
-          return user.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]}).length>0;
+          return user.rooms.filter(function(room):boolean{return room.room_id === roomIDs[j]}).length>0;
       });
       this.extraData[j].numUsers = users.length;
 
       users.sort(
         (firsUser: User, secondUser: User) =>
-          (firsUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score > secondUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score) ? -1 : 1
+          (firsUser.rooms.filter(function(room):boolean{return room.room_id === roomIDs[j]})[0].score > secondUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score) ? -1 : 1
       );
+
       this.extraData[j].leader = users[0].username;
       this.extraData[j].userPos = users.findIndex(object => {
         return object.username === usr;
@@ -93,5 +97,4 @@ export class RoomsComponent implements OnInit {
     const date = new Date(dateString);
     return `${date.getDate()}. ${monthLookup[date.getMonth()]}`
   };
-
 }

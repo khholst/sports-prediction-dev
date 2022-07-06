@@ -3,7 +3,7 @@
         <div class="col-lg-6 col-md-8 text-center">
             <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
                 <li [ngbNavItem]="1">
-                    <a ngbNavLink>New room</a>
+                    <a ngbNavLink (click)="newTabActivated()">New room</a>
                     <ng-template ngbNavContent>
                         <form [formGroup]="roomForm" (ngSubmit)="onNewSubmit()">
                             <div class="container">
@@ -48,7 +48,7 @@
 
 
                 <li [ngbNavItem]="2">
-                    <a ngbNavLink>Join room</a>
+                    <a ngbNavLink (click)="joinTabActivated()">Join room</a>
                     <ng-template ngbNavContent>
                         <div class="container">
                             <form [formGroup]="joinRoomForm" (ngSubmit)="findRoom()">
@@ -115,15 +115,10 @@
                       </svg> Total members: {{ room.info.members }}</p>
                 </div>
             </div>
-            
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-dark" (click)="joinRoom();">Join</button>
         </div>
       </ng-template>
-      
-      
-
-
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </main>
