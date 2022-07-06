@@ -11,7 +11,7 @@
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <p *ngIf="extraData[index].status == 'W'" style="color: orange">Starts in xxx days</p>              
+                                    <p *ngIf="extraData[index].status == 'W'" style="color: orange">Starts in {{ extraData[index].timeUntil }} days</p>              
                                     <p *ngIf="extraData[index].status == 'A'" style="color: green">Active</p>              
                                     <p *ngIf="extraData[index].status == 'E'" style="color: red">Ended</p>          
                                 </div>  
