@@ -60,7 +60,7 @@ export class RoomsComponent implements OnInit {
         this.extraData[i].status = "W";
         let diffInMs: number = Math.abs(start_date.valueOf() - now.valueOf());
         let diff: number =  diffInMs / (1000 * 60 * 60 * 24);
-        this.extraData[i].timeUntil = Math.floor(diff);
+        this.extraData[i].timeUntil = Math.ceil(diff);
       } else if (now < end_date) {
           this.extraData[i].status = "A";
       } else {
