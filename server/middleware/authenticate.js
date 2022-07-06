@@ -5,6 +5,7 @@ module.exports = (req, res, next) => {
     try {
         const token = req.get("token");
         const decoded = jwt.verify(token, process.env.JWTSECRET);
+        res.locals.decodedToken = decoded;
         next();
     } catch (error) {
         if (error.name === "TokenExpiredError") {

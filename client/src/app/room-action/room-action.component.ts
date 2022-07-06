@@ -92,7 +92,7 @@ export class RoomActionComponent implements OnInit {
 
       try {
         const response = await this.roomService.createNewRoom(this.roomForm.value);
-        setTimeout(() => this.router.navigate(["/rooms"]), 2500); 
+        setTimeout(() => this.router.navigate([`/rooms/${response.room_id}`]), 2500); 
       } catch (error: any) {
         this.newAlert.style = "danger";
         this.newAlert.message = error.error.errors[0].msg;
@@ -142,16 +142,16 @@ export class RoomActionComponent implements OnInit {
 
     try {
       const response = await this.roomService.joinRoom(this.room.info._id);
+      console.log(response);
       this.joinAlert.style = "success";
       this.joinAlert.message = `You have joined room ${this.room.info.name}!`;
 
       setTimeout(() => {
-        this.router.navigate(["/rooms"]);
+        this.router.navigate([`/rooms/${response.room_id}`]);
         this.modalReference.close();
       }, 2500)
 
     } catch (error: any) {
-      console.log(error)
       this.joinAlert.style = "danger"
       this.joinAlert.message = error.error.errors[0].msg;
 

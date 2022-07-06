@@ -53,7 +53,8 @@ exports.new = (async (req, res) => {
 
     return res.status(201).json({
         code: 201,
-        join_key: joinKey
+        join_key: joinKey,
+        room_id: createdRoom._id
     })
 })
 
@@ -131,7 +132,8 @@ exports.join = (async (req, res) => {
         const userUpdate = await user.updateOne({$push: {rooms: room}})
         res.status(201).json({
             code: 201,
-            message: "Room joined successfully"
+            message: "Room joined successfully",
+            room_id: room_id
         })
     }
 })
@@ -175,7 +177,6 @@ exports.roomUsers = (async (req, res) => {
                   '_id':user._id,
                   'username':user.username,
                   'rooms':user.rooms,
-
                 };
               });            
             res.json(data);

@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { check } = require("express-validator");
-const mongo = require("mongoose");
 const authenticate = require("../middleware/authenticate");
+const canViewRoom = require("../middleware/can-access-room");
 const roomController = require("../controllers/roomController");
 
 
@@ -18,10 +18,10 @@ router.post("/:id/join", authenticate, roomController.join);
 router.get("/:key/joindata", authenticate, roomController.findByKey)
 
 //Route for getting all rooms the user is in
-router.get("/:username/all", roomController.all);
+router.get("/:username/all", authenticate, roomController.all);
 
 //Route for getting all users in rooms
-router.get("/members", roomController.roomUsers);
+router.get("/members", authenticate, canViewRoom, roomController.roomUsers);
 
 
 module.exports = router;
