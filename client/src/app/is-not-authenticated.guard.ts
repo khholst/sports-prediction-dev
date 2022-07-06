@@ -7,24 +7,21 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class IsAuthenticatedGuard implements CanActivate {
+export class IsNotAuthenticatedGuard implements CanActivate {
 
   constructor(
     private authService: AuthService,
     private router: Router
-    ) {
-
-  }
-
+    ) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this.authService.getIsLoggedIn()) {
-      return true;
-    } else {
-      this.router.navigate(["/login"]);
-    }
-    return false;
+      if (!this.authService.getIsLoggedIn()) {
+        return true;
+      } else {
+        this.router.navigate(["/"]);
+      }
+      return false;
   }
 }

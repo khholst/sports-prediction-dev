@@ -14,7 +14,6 @@ import { User } from '../user';
 })
 export class RoomsComponent implements OnInit {
   public rooms: Room[]= [];
-  public isLoggedIn: boolean = false;
   public indexes: number[] = [];
   public extraData: {[key:number]:any} = {};
 
@@ -25,10 +24,8 @@ export class RoomsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isLoggedIn = this.authService.getIsLoggedIn();
-    if (this.isLoggedIn) {
-      this.onRoomRequest();
-    };
+    this.onRoomRequest();
+
   };
 
   async onRoomRequest() {
