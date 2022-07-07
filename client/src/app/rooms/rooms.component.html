@@ -5,22 +5,41 @@
                     <div class="card" *ngFor="let index of indexes">
                         <div class="container-fluid">
                             <div class="row">
-                                <div class="col">
-                                    <p class="mt-2"><a class="stretched-link" routerLink="/rooms/{{rooms[index]._id}}"><h4>{{ rooms[index].name }}</h4></a> <i>created by</i> {{ rooms[index].creator }} </p>
+                                <div class="col-sm-6">
+                                    <p class="mt-2"><a class="stretched-link" routerLink="/rooms/{{rooms[index]._id}}"><h1>{{ rooms[index].name }}</h1></a> <i>created by</i> {{ rooms[index].creator }} </p>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
+                                <div class="col-sm-6 text-sm-end date">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+                                      </svg>
+                                    {{ extraData[index].start_date }} to {{ extraData[index].end_date }}
                                     <p *ngIf="extraData[index].status == 'W'" style="color: orange">Starts in {{ extraData[index].timeUntil }} <span *ngIf="extraData[index].timeUntil>1">days</span><span *ngIf="extraData[index].timeUntil==1">day</span></p>              
                                     <p *ngIf="extraData[index].status == 'A'" style="color: green">Active</p>              
-                                    <p *ngIf="extraData[index].status == 'E'" style="color: red">Ended</p>          
-                                </div>  
-                                <div class="col">{{ extraData[index].tournament }}</div>
-                                <div class="col">{{ extraData[index].start_date }} to {{ extraData[index].end_date }}</div>
+                                    <p *ngIf="extraData[index].status == 'E'" style="color: red">Ended</p>  
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                
+                                <div class="col-sm-6">
+                                        <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
+                                        {{ extraData[index].tournament }}
+                                </div>
+
+                                <div class="col-sm-6 text-sm-end my-auto">
+                                    
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                                            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                                          </svg>
+                                        {{ extraData[index].numUsers }} members
+                                    
+                                </div>
                                               
                             </div>
+
                             <div class="row">
-                                <div class="col mt-1 mb-2">Number of users: {{ extraData[index].numUsers }}</div>
                                 <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Room leader: {{ extraData[index].leader }}</div>  
                                 <div *ngIf="extraData[index].status == 'A' || extraData[index].status == 'E'" class="col mt-1 mb-2">Your position: {{ extraData[index].userPos }}.</div>                        
                             </div>                    

@@ -5,6 +5,7 @@ import { RoomService } from '../room.service';
 import { Room } from '../room';
 import { Tournament } from '../tournament';
 import { User } from '../user';
+import { faTrophy } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class RoomsComponent implements OnInit {
   public rooms: Room[]= [];
   public indexes: number[] = [];
   public extraData: {[key:number]:any} = {};
+  public faTrophy = faTrophy;
 
   constructor(
     private authService: AuthService,

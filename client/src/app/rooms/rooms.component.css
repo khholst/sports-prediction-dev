@@ -1,3 +1,27 @@
+@media (max-width: 540px) {
+    .date { 
+        margin-top: 0px;
+    }
+}
+
+@media (min-width: 540px) {
+    .date {
+        margin-top: 10px;
+    }
+}
+
+.card:hover {
+    background-color: rgb(209, 220, 255) !important;
+    transition-duration: 0.25s;
+  }
+
 .card {
     margin-bottom: 15px;
+}
+
+
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 0px;
 }
