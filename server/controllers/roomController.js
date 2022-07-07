@@ -172,6 +172,9 @@ exports.roomUsers = (async (req, res) => {
     userRooms.find({"rooms.room_id": { "$in": req.query.room.split(",") }},function(err, data) {
         if(err){console.log(err);}
         else{
+            for(let i=0;i<data.length;i++){
+                data[i].rooms = data[i].rooms.filter(function(room){return req.query.room.split(",").includes(room.room_id.toString())});
+            };
             data = data.map((user) => {
                 return {
                   '_id':user._id,
