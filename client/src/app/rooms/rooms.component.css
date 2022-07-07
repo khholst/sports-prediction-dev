@@ -10,13 +10,23 @@
     }
 }
 
+.btn:focus, .btn:active:focus, .btn.active:focus{
+    outline:none;
+    box-shadow:none;
+}
+
+
 .card:hover {
     background-color: rgb(209, 220, 255) !important;
-    transition-duration: 0.25s;
+    transition-duration: 100ms;
   }
 
 .card {
     margin-bottom: 15px;
+}
+
+.btn-group {
+    margin-bottom: 10px;
 }
 
 

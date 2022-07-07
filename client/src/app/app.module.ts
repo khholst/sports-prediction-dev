@@ -37,7 +37,7 @@ import { RoomComponent } from './room/room.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
   providers: [
     AuthService,

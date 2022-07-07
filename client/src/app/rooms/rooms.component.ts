@@ -6,6 +6,8 @@ import { Room } from '../room';
 import { Tournament } from '../tournament';
 import { User } from '../user';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { FormBuilder, FormControl } from '@angular/forms';
+
 
 
 @Component({
@@ -15,20 +17,46 @@ import { faTrophy } from '@fortawesome/free-solid-svg-icons';
 })
 export class RoomsComponent implements OnInit {
   public rooms: Room[]= [];
+  public filteredRooms: Room[] = [];
   public indexes: number[] = [];
   public extraData: {[key:number]:any} = {};
   public faTrophy = faTrophy;
+  public selectedFilter = "ALL";
 
   constructor(
     private authService: AuthService,
     private dataService: DataService,
-    private roomService: RoomService
+    private roomService: RoomService,
   ) { }
+
+  filter = new FormControl();
 
   ngOnInit(): void {
     this.onRoomRequest();
-
   };
+
+  // radio = this.formBuilder.group({
+  //   filter: "ALL"
+  // });
+
+
+  onFilter(filter: string) {
+    const now = new Date().getTime();
+
+    if (filter === "ALL") {
+      this.filteredRooms = this.rooms;
+    } else if (filter === "FINISHED"){
+      this.filteredRooms = this.rooms.filter(room => new Date(room.end_date).getTime() < now);
+    } else if (filter === "UPCOMING"){
+      this.filteredRooms = this.rooms.filter(room => new Date(room.start_date).getTime() > now);
+    } else {
+      this.filteredRooms = this.rooms.filter(room =>  new Date(room.end_date).getTime() > now &&
+                                                      new Date(room.start_date).getTime() < now);
+    }
+
+    this.indexes = Array.from(Array(this.filteredRooms.length).keys());
+  }
+
 
   async onRoomRequest() {
     const usr: string = this.authService.getUsername();
@@ -41,8 +69,8 @@ export class RoomsComponent implements OnInit {
 
       this.extraData[i] = {
         "tournament": tournament.name,
-        "start_date": this.formatDate(tournament.start_date),
-        "end_date": this.formatDate(tournament.end_date),
+        "start_date": tournament.start_date,
+        "end_date": tournament.end_date,
         "status": "",
         "numUsers": 0,
         "leader": "",
@@ -73,7 +101,7 @@ export class RoomsComponent implements OnInit {
     }
 
     let roomUsers: Array<User> = await this.roomService.getRoomUsers(roomIDs);
-    for (let j=0;j<this.rooms.length;j++) {
+    for (let j=0; j<this.rooms.length; j++) {
       let users: Array<User> = roomUsers.filter(
         function(user):boolean{
           return user.rooms.filter(function(room):boolean{return room.room_id === roomIDs[j]}).length>0;
@@ -89,12 +117,15 @@ export class RoomsComponent implements OnInit {
       this.extraData[j].userPos = users.findIndex(object => {
         return object.username === usr;
       }) + 1;
-      
+
+      this.rooms[j] = Object.assign(this.rooms[j], this.extraData[j])      
     };
     this.indexes = Array.from(Array(this.rooms.length).keys());
+    this.filteredRooms = this.rooms;
   };
 
-  private formatDate(dateString: string): string {
+
+  formatDate(dateString: string): string {
     const monthLookup: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
                                   "October", "November", "December"];
     const date = new Date(dateString);
