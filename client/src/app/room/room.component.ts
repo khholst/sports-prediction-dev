@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../user';
 import { RoomService } from '../room.service';
@@ -10,7 +9,7 @@ import { RoomService } from '../room.service';
   styleUrls: ['./room.component.css']
 })
 export class RoomComponent implements OnInit {
-
+  public roomUsers: User[] = [];
   constructor(
     private route: ActivatedRoute,
     private roomService: RoomService
@@ -22,8 +21,11 @@ export class RoomComponent implements OnInit {
 
   async onRoomRequest(){
     let roomID: string = this.route.snapshot.paramMap.get("id")!;
-    let roomUsers: Array<User> = await this.roomService.getRoomUsers([roomID]);
-    console.log(roomUsers)
+    this.roomUsers = await this.roomService.getRoomUsers([roomID]);
+    this.roomUsers.sort(
+      (firsUser: User, secondUser: User) =>
+        (firsUser.rooms[0].score > secondUser.rooms[0].score) ? -1 : 1
+    );
   };
 
 }

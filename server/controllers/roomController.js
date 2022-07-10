@@ -35,8 +35,6 @@ exports.new = (async (req, res) => {
     }
 
    const createdRoom = await Rooms.create(newRoom);
-
-
     //Schema for users collection
     const Users = db.model('Users', 
     new mongo.Schema({ username: 'string', rooms: 'array'}), 
@@ -138,10 +136,6 @@ exports.join = (async (req, res) => {
     }
 })
 
-
-
-
-
 exports.all = (async (req, res) => {
     const username = req.params.username;
 
@@ -161,8 +155,6 @@ exports.all = (async (req, res) => {
 
     res.status(200).json(roomData);
 })
-
-
 
 exports.roomUsers = (async (req, res) => {
     const subschema = new mongo.Schema({room_id:'ObjectID', score:'number'});
