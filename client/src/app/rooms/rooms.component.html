@@ -22,20 +22,20 @@
       </div>
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-10">
-                    <div class="card" *ngFor="let index of indexes">
+                    <div class="card" *ngFor="let filteredRoom of filteredRooms">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <p class="mt-2"><a class="stretched-link" routerLink="/rooms/{{filteredRooms[index]._id}}"><h1>{{ filteredRooms[index].name }}</h1></a> <i>created by</i> {{ filteredRooms[index].creator }} </p>
+                                    <p class="mt-2"><a class="stretched-link" routerLink="/rooms/{{filteredRoom._id}}"><h1>{{ filteredRoom.name }}</h1></a> <i>created by</i> {{ filteredRoom.creator }} </p>
                                 </div>
                                 <div class="col-sm-6 text-sm-end date">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
                                         <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
                                       </svg>
-                                    {{ formatDate(filteredRooms[index].start_date) }} to {{ formatDate(filteredRooms[index].end_date) }}
-                                    <p *ngIf="filteredRooms[index].status == 'W'" style="color: orange">Starts in {{ filteredRooms[index].timeUntil }} <span *ngIf="filteredRooms[index].timeUntil>1">days</span><span *ngIf="filteredRooms[index].timeUntil==1">day</span></p>              
-                                    <p *ngIf="filteredRooms[index].status == 'A'" style="color: green">Active</p>              
-                                    <p *ngIf="filteredRooms[index].status == 'E'" style="color: red">Finished</p>  
+                                    {{ formatDate(filteredRoom.start_date) }} to {{ formatDate(filteredRoom.end_date) }}
+                                    <p *ngIf="filteredRoom.status == 'W'" style="color: orange">Starts in {{ filteredRoom.timeUntil }} <span *ngIf="filteredRoom.timeUntil>1">days</span><span *ngIf="filteredRoom.timeUntil==1">day</span></p>              
+                                    <p *ngIf="filteredRoom.status == 'A'" style="color: green">Active</p>              
+                                    <p *ngIf="filteredRoom.status == 'E'" style="color: red">Finished</p>  
                                 </div>
                             </div>
 
@@ -43,7 +43,7 @@
                                 
                                 <div class="col-sm-6">
                                         <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
-                                        {{ filteredRooms[index].tournament }}
+                                        {{ filteredRoom.tournament }}
                                 </div>
 
                                 <div class="col-sm-6 text-sm-end my-auto">
@@ -53,15 +53,15 @@
                                             <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
                                             <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
                                           </svg>
-                                        {{ filteredRooms[index].numUsers }} members
+                                        {{ filteredRoom.numUsers }} members
                                     
                                 </div>
                                               
                             </div>
 
                             <div class="row">
-                                <div *ngIf="filteredRooms[index].status == 'A' || filteredRooms[index].status == 'E'" class="col mt-1 mb-2">Room leader: {{ filteredRooms[index].leader }}</div>  
-                                <div *ngIf="filteredRooms[index].status == 'A' || filteredRooms[index].status == 'E'" class="col mt-1 mb-2">Your position: {{ filteredRooms[index].userPos }}.</div>                        
+                                <div *ngIf="filteredRoom.status == 'A' || filteredRoom.status == 'E'" class="col mt-1 mb-2">Room leader: {{ filteredRoom.leader }}</div>  
+                                <div *ngIf="filteredRoom.status == 'A' || filteredRoom.status == 'E'" class="col mt-1 mb-2">Your position: {{ filteredRoom.userPos }}.</div>                        
                             </div>                    
                         </div>
                     </div>

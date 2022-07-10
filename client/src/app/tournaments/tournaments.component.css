@@ -11,12 +11,16 @@ img {
 }
 
 .tournament-img {
-    border-radius: 35px;
+    border-radius: 10px;
 }
 
 
 .tournament-name {
     font-size: 25px;
+}
+
+.period {
+    margin-top: 5px;
 }
 
 
