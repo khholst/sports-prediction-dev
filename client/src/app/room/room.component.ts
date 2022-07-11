@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../user';
+import { Room } from '../room';
 import { RoomService } from '../room.service';
 
 @Component({
@@ -10,6 +11,8 @@ import { RoomService } from '../room.service';
 })
 export class RoomComponent implements OnInit {
   public roomUsers: User[] = [];
+  public roomName: string = "";
+
   constructor(
     private route: ActivatedRoute,
     private roomService: RoomService
@@ -20,7 +23,9 @@ export class RoomComponent implements OnInit {
   };
 
   async onRoomRequest(){
-    let roomID: string = this.route.snapshot.paramMap.get("id")!;
+    const roomID: string = this.route.snapshot.paramMap.get("id")!;
+    const room = await this.roomService.getRoom(roomID);
+    this.roomName = room[0].name
     this.roomUsers = await this.roomService.getRoomUsers([roomID]);
     this.roomUsers.sort(
       (firsUser: User, secondUser: User) =>
