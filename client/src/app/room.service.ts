@@ -38,6 +38,10 @@ export class RoomService {
     return await lastValueFrom(this.http.get(`${this.roomUrl}/${username}/all`)); 
   };
 
+  async getRoom(room_id: string):Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.roomUrl}/${room_id}/room`, httpOptions));
+  };
+
   async getRoomUsers(roomID: Array<string>):Promise<any> {
     let params: HttpParams = new HttpParams().append('room', roomID.toString());
     let headers = httpOptions.headers;

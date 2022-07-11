@@ -20,6 +20,9 @@ router.get("/:key/joindata", authenticate, roomController.findByKey)
 //Route for getting all rooms the user is in
 router.get("/:username/all", authenticate, roomController.all);
 
+//Route for searching room based on it's id
+router.get("/:id/room", authenticate, roomController.room);
+
 //Route for getting all users in rooms
 router.get("/members", authenticate, canViewRoom, roomController.roomUsers);
 
