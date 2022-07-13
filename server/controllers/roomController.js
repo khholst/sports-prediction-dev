@@ -168,7 +168,7 @@ exports.room = (async (req, res) => {
 })
 
 exports.roomUsers = (async (req, res) => {
-    const subschema = new mongo.Schema({room_id:'ObjectID', score:'Array'});
+    const subschema = new mongo.Schema({room_id:'ObjectID', score:'array'});
     let userRooms = db.model('Users',
         new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
 
@@ -184,7 +184,7 @@ exports.roomUsers = (async (req, res) => {
                   'username':user.username,
                   'rooms':user.rooms,
                 };
-              });            
+              });
             res.json(data);
         };
     });
