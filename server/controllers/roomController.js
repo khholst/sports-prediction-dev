@@ -157,6 +157,7 @@ exports.all = (async (req, res) => {
 })
 
 exports.room = (async (req, res) => {
+    console.log(req.params)
     const room_id = mongo.Types.ObjectId(req.params.id);
     const rooms = db.model('Rooms',
         new mongo.Schema({ tournament_id: 'string', _id: 'ObjectId', name: 'string', creator: 'string', join_key: 'number' }), 'rooms');
