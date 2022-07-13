@@ -90,7 +90,7 @@ router.post("/login", async(req, res) => {
     const user = await Users.findOne({username: username});
 
     if(!user) { //Username doesn't match a db entry
-        return res.status(200).json({
+        return res.status(401).json({
             "code": 401,
             "errors": [
                 {"msg": "Invalid credentials"}

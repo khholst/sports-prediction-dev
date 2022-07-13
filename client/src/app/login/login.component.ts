@@ -36,22 +36,22 @@ export class LoginComponent implements OnInit {
 
 
   async onSubmit() {
+    try {
       this.userCredentials = this.loginForm.value
       
       const response = await this.authService.login(this.userCredentials);
-
-      //If server throws a validation error
-      if (response.code === 401) {
-        console.log("Credentials don't match");
-        this.alert.closed = false;
-        this.alert.message = "Credentials don't match";
-
-      } else {
+      
         localStorage.setItem("token", response.token);
         this.authService.setLoggedIn(true);
         this.authService.setUsername(this.userCredentials.username);
         this.router.navigate(["/"]);
-      }
+      
+    } catch(error: any) { //If server throws a validation error
+      if (error.status === 401) {
+        this.alert.closed = false;
+        this.alert.message = "Credentials don't match";
+      } 
+    }
   }
 
 
