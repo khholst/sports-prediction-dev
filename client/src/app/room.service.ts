@@ -39,7 +39,7 @@ export class RoomService {
   };
 
   async getRoom(room_id: string):Promise<any> {
-    return await lastValueFrom(this.http.get(`${this.roomUrl}/${room_id}/room`, httpOptions));
+    return await lastValueFrom(this.http.get(`${this.roomUrl}/${room_id}`, httpOptions));
   };
 
   async getRoomUsers(roomID: Array<string>):Promise<any> {
