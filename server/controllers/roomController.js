@@ -42,7 +42,7 @@ exports.new = (async (req, res) => {
 
     const room = {
         room_id: createdRoom._id,
-        score: 0
+        score: [0]
     }
 
     const user = await Users.findOneAndUpdate({ username: username },
@@ -105,7 +105,7 @@ exports.join = (async (req, res) => {
 
     const room = {
         room_id: room_id,
-        score: 0
+        score: [0]
     }
 
     const Users = db.model('Users',
@@ -167,7 +167,7 @@ exports.room = (async (req, res) => {
 })
 
 exports.roomUsers = (async (req, res) => {
-    const subschema = new mongo.Schema({room_id:'ObjectID', score:'number'});
+    const subschema = new mongo.Schema({room_id:'ObjectID', score:'Array'});
     let userRooms = db.model('Users',
         new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
 

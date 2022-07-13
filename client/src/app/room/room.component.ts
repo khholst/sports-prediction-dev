@@ -59,7 +59,7 @@ export class RoomComponent implements OnInit {
     this.roomUsers = await this.roomService.getRoomUsers([roomID]);
     this.roomUsers.sort(
       (firsUser: User, secondUser: User) =>
-        (firsUser.rooms[0].score > secondUser.rooms[0].score) ? -1 : 1
+        (firsUser.rooms[0].score[firsUser.rooms[0].score.length -1] > secondUser.rooms[0].score[secondUser.rooms[0].score.length -1]) ? -1 : 1
     );
   };
 

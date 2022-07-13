@@ -103,9 +103,10 @@ export class RoomsComponent implements OnInit {
       });
       this.extraData[j].numUsers = users.length;
 
+      const lastIndex: number = users[0].rooms.filter(function(room):boolean{return room.room_id === roomIDs[j]})[0].score.length - 1;
       users.sort(
         (firsUser: User, secondUser: User) =>
-          (firsUser.rooms.filter(function(room):boolean{return room.room_id === roomIDs[j]})[0].score > secondUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score) ? -1 : 1
+          (firsUser.rooms.filter(function(room):boolean{return room.room_id === roomIDs[j]})[0].score[lastIndex] > secondUser.rooms.filter(function(room):boolean{return room.room_id == roomIDs[j]})[0].score[lastIndex]) ? -1 : 1
       );
 
       this.extraData[j].leader = users[0].username;

@@ -48,7 +48,7 @@
                                             </td>
                                             <td *ngIf="indexOfelement>2" style="text-align: center;">{{ indexOfelement +1}}.</td>
                                             <td style="text-align: center;">{{ user.username }}</td>
-                                            <td style="text-align: center;">{{ user.rooms[0].score }}</td>
+                                            <td style="text-align: center;">{{ user.rooms[0].score[user.rooms[0].score.length - 1] }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
