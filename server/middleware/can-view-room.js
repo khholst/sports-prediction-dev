@@ -2,7 +2,7 @@ const mongo = require("mongoose");
 
 
 module.exports = async (req, res, next) => {
-    const subschema = new mongo.Schema({room_id:'ObjectID', score:'number'});
+    const subschema = new mongo.Schema({room_id:'ObjectID', score:'Array'});
     const userRooms = db.model('Users',
     new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
 
