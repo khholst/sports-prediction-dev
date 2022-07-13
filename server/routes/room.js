@@ -27,5 +27,7 @@ router.get("/members", authenticate, canViewRooms, roomController.roomUsers);
 //Route for searching room based on it's id
 router.get("/:id", authenticate, canViewRoom, roomController.room);
 
+//Route for searching room based on it's id
+router.get("/:id", authenticate, roomController.room);
 
 module.exports = router;

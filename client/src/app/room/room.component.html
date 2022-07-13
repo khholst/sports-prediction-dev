@@ -1,25 +1,71 @@
 <main>
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div style="max-height: 300px;" class="overflow-auto">
-                <h1 class="mb-3">{{ roomName }}</h1>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th style="text-align: center;" scope="col">#</th>
-                            <th style="text-align: center;" scope="col">User</th>
-                            <th style="text-align: center;" scope="col">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let user of roomUsers; let indexOfelement=index;">
-                            <td style="text-align: center;">{{ indexOfelement +1}}.</td>
-                            <td style="text-align: center;">{{ user.username }}</td>
-                            <td style="text-align: center;">{{ user.rooms[0].score }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
+                <li [ngbNavItem]="1">
+                    <a ngbNavLink>Overview</a>
+                    <ng-template ngbNavContent>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p class="mt-2"> <a><h1>{{ room.name }}</h1></a><i>created by</i> {{ room.creator }} </p>
+                                </div>
+                                <div class="col-sm-6 text-sm-end date">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
+                                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
+                                    </svg>
+                                    {{ formatDate(room.start_date) }} to {{ formatDate(room.end_date) }}
+                                    <p *ngIf="room.status == 'W'" style="color: orange">Starts in {{ room.timeUntil }} <span *ngIf="room.timeUntil>1">days</span><span *ngIf="room.timeUntil==1">day</span></p>              
+                                    <p *ngIf="room.status == 'A'" style="color: green">Active</p>              
+                                    <p *ngIf="room.status == 'E'" style="color: red">Finished</p>  
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                            <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
+                                            {{ room.tournament }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="max-height: 300px;" class="overflow-auto">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center;" scope="col">#</th>
+                                            <th style="text-align: center;" scope="col">User</th>
+                                            <th style="text-align: center;" scope="col">Score</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of roomUsers; let indexOfelement=index;">
+                                            <td *ngIf="indexOfelement==0" style="text-align: center;">
+                                                <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:Gold"></fa-icon>
+                                            </td>
+                                            <td *ngIf="indexOfelement==1" style="text-align: center;">
+                                                <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:Silver"></fa-icon>
+                                            </td>
+                                            <td *ngIf="indexOfelement==2" style="text-align: center;">
+                                                <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:rgb(151, 110, 5)"></fa-icon>
+                                            </td>
+                                            <td *ngIf="indexOfelement>2" style="text-align: center;">{{ indexOfelement +1}}.</td>
+                                            <td style="text-align: center;">{{ user.username }}</td>
+                                            <td style="text-align: center;">{{ user.rooms[0].score }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                    <a ngbNavLink>Statistics</a>
+                    <ng-template ngbNavContent>
+                        <div class="container">
+                            <div>TERE!!</div>
+                        </div>
+                    </ng-template>
+                </li>
+            </ul>
         </div>
     </div>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
 </main>
