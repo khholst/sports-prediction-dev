@@ -54,14 +54,15 @@ exports.new = (async (req, res) => {
     possiblePredictions.forEach((e) => {
         e.score1 = -1,
         e.score2 = -1,
-        e.points = -999
+        e.points = (new Date(e.time).getTime() > new Date().getTime()) ? -999:-1 //-999: game not started; -1: game started but not predicted
     })
 
-    possiblePredictions = possiblePredictions.map((e) => { return {'score1': e.score1, 'score2': e.score2, 'points': e.points} })
-
+    possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} })
+        console.log(possiblePredictions)
     const tournaments = {
         tournament_id: tournament,
-        predictions: {lol: "lmao", xd: "xd"}
+        scores: [],
+        predictions: possiblePredictions
     }
 
     const user = await Users.findOneAndUpdate({ username: username },
