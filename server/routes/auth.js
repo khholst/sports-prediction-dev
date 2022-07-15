@@ -56,7 +56,7 @@ router.post("/register", [
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //Create user in database
-    await Users.create({username: username, password: hashedPassword, rooms: [], tournaments: [], is_admin: false});
+    await Users.create({username: username, password: hashedPassword, rooms: [], scores: [], tournaments: [], is_admin: false});
 
 
     //Create a JSON Web Token

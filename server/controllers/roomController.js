@@ -59,6 +59,7 @@ exports.new = (async (req, res) => {
 
     possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} })
         console.log(possiblePredictions)
+        
     const tournaments = {
         tournament_id: tournament,
         scores: [],
