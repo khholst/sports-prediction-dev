@@ -59,10 +59,19 @@ exports.new = (async (req, res) => {
 
     possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} })
         console.log(possiblePredictions)
-        
+    
+
+    let scores = [];
+    let i = 0;
+    while (possiblePredictions[i].points === -1) {
+        scores.push(0);
+        i++;
+    }
+
+
     const tournaments = {
         tournament_id: tournament,
-        scores: [],
+        scores: scores,
         predictions: possiblePredictions
     }
 
@@ -97,7 +106,8 @@ exports.findByKey = (async (req, res) => {
 
     let members = 0;
     if (room) {
-        members = await Users.countDocuments({"rooms.room_id": room._id});
+        members = await Users.countDocuments({"rooms": { $in: [room._id]}});
+        
         const tournament = await Tournaments.findOne({_id: room.tournament_id})
 
         res.status(200).json({
@@ -124,20 +134,17 @@ exports.findByKey = (async (req, res) => {
 exports.join = (async (req, res) => {
     const room_id = mongo.Types.ObjectId(req.params.id);
 
-    const room = {
-        room_id: room_id,
-        score: [0]
-    }
 
     const Users = db.model('Users',
     new mongo.Schema({username: 'string', _id:'objectId', rooms:'array'}), 'users');
     
     const jwtPayload = req.get("token").split(".")[1];
     const username = JSON.parse(Buffer.from(jwtPayload, "base64").toString("utf-8")).username;
+    console.log(res.locals.token)
 
 
     const user = await Users.findOne({username: username});
-    const userInRoom = user.rooms.some(room => room.room_id.equals(room_id));
+    const userInRoom = user.rooms.some(room => room.equals(room_id));
 
     if (userInRoom) {
         res.status(403).json({
@@ -148,7 +155,7 @@ exports.join = (async (req, res) => {
         })
 
     } else {
-        const userUpdate = await user.updateOne({$push: {rooms: room}})
+        const userUpdate = await user.updateOne({$push: {rooms: room_id}})
         res.status(201).json({
             code: 201,
             message: "Room joined successfully",
