@@ -40,7 +40,7 @@ router.post("/register", [
 
     //Query users from db to validate username
     const Users = db.model('Users', 
-    new mongo.Schema({ username: 'string', password: 'string', rooms: 'array', is_admin: 'boolean'}), 
+    new mongo.Schema({ username: 'string', password: 'string', rooms: 'array', tournaments: 'array', is_admin: 'boolean'}), 
     'users');
     const user = await Users.findOne({ username: username });
 
@@ -56,7 +56,7 @@ router.post("/register", [
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //Create user in database
-    await Users.create({username: username, password: hashedPassword, rooms: [], is_admin: false});
+    await Users.create({username: username, password: hashedPassword, rooms: [], tournaments: [], is_admin: false});
 
 
     //Create a JSON Web Token

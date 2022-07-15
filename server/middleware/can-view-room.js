@@ -2,14 +2,13 @@ const mongo = require("mongoose");
 
 
 module.exports = async (req, res, next) => {
-    const subschema = new mongo.Schema({room_id:'ObjectID', score:'Array'});
     const userRooms = db.model('Users',
-    new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
+    new mongo.Schema({_id:'ObjectId', username: 'string', rooms:'array'}), 'users')
 
     try {
         const rooms = await userRooms.findOne({ username: res.locals.decodedToken.username }, { rooms: 1, _id: 0 });
         const roomID = req.params.id;
-        const userIsInRoom = rooms.rooms.some(e => e.room_id.equals(mongo.Types.ObjectId(roomID)));
+        const userIsInRoom = rooms.rooms.some(e => e.equals(mongo.Types.ObjectId(roomID)));
 
         if (!userIsInRoom) {
             res.status(404).json({

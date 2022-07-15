@@ -7,13 +7,13 @@ const mongo = require("mongoose");
 module.exports = async (req, res, next) => {
     const subschema = new mongo.Schema({room_id:'ObjectID', score:'array'});
     const userRooms = db.model('Users',
-    new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
+    new mongo.Schema({_id:'ObjectId', username: 'string', rooms:'array'}), 'users')
 
     try {
         const rooms = await userRooms.findOne({ username: res.locals.decodedToken.username }, { rooms: 1, _id: 0 });
         const inputRooms = req.query.room.split(",");
         let roomIDs = [];
-        rooms.rooms.forEach(element => roomIDs.push(element.room_id.toString()));
+        rooms.rooms.forEach(element => roomIDs.push(element.toString()));
 
         let valuesExist = true;
         for (const inputRoom of inputRooms) {

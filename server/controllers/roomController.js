@@ -37,16 +37,35 @@ exports.new = (async (req, res) => {
    const createdRoom = await Rooms.create(newRoom);
     //Schema for users collection
     const Users = db.model('Users', 
-    new mongo.Schema({ username: 'string', rooms: 'array'}), 
+    new mongo.Schema({ username: 'string', rooms: 'array', tournaments: 'array'}), 
     'users');
 
-    const room = {
-        room_id: createdRoom._id,
-        score: [0]
+    const room = createdRoom._id
+
+
+    const games = db.model('Games',
+    new mongo.Schema({team1: 'string', team2: 'string', score1: 'number', score2: 'number', 
+        time: 'date', tournament_id: 'ObjectID',  _id:'ObjectID'}), 'games');
+
+
+    let possiblePredictions = await games.find({tournament_id: mongo.Types.ObjectId(tournament)})
+                                            .select({"_id": 1, "time": 1});
+
+    possiblePredictions.forEach((e) => {
+        e.score1 = -1,
+        e.score2 = -1,
+        e.points = -999
+    })
+
+    possiblePredictions = possiblePredictions.map((e) => { return {'score1': e.score1, 'score2': e.score2, 'points': e.points} })
+
+    const tournaments = {
+        tournament_id: tournament,
+        predictions: {lol: "lmao", xd: "xd"}
     }
 
     const user = await Users.findOneAndUpdate({ username: username },
-        { $push: { rooms: room }});
+        { $push: { rooms: room, tournaments: tournaments }});
 
 
     return res.status(201).json({
