@@ -63,10 +63,10 @@ exports.new = (async (req, res) => {
 
     let scores = [];
     let i = 0;
-    while (possiblePredictions[i].points === -1) {
-        scores.push(0);
-        i++;
-    }
+    // while (possiblePredictions[i].points === -1) {
+    //     scores.push(0);
+    //     i++;
+    // }
 
 
     const tournaments = {
