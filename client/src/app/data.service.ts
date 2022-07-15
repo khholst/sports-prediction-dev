@@ -23,7 +23,6 @@ export class DataService {
     if(tourID){
       params = params.append('_id', tourID);
     };
-    console.log(params);
     return await lastValueFrom(this.http.get(`${this.dataUrl}/tournaments`, {headers, params}));
   };
 
