@@ -38,11 +38,11 @@ export class RoomComponent implements OnInit {
     this.room.tournament = tournaments[0].name;
     this.room.start_date = tournaments[0].start_date;
     this.room.end_date = tournaments[0].end_date;
+    this.room.tournament_id = tournaments[0]._id;
 
     const now = new Date();
     const start_date = new Date(this.room.start_date);
     const end_date = new Date(this.room.end_date);
-
 
     if (now < start_date) {
       this.room.status = "W";
@@ -56,10 +56,13 @@ export class RoomComponent implements OnInit {
     };
     
     this.roomUsers = await this.roomService.getRoomUsers([roomID]);
-    this.roomUsers.sort(
-      (firsUser: User, secondUser: User) =>
-        (firsUser.rooms[0].score[firsUser.rooms[0].score.length-1] > secondUser.rooms[0].score[secondUser.rooms[0].score.length-1]) ? -1 : 1
-    );
+    const isThereAnyScore: Array<number> = this.roomUsers[0].tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores;
+    if(isThereAnyScore.length>0){
+      const lastIndex: number = isThereAnyScore.length - 1;
+      this.roomUsers.sort(
+        (firsUser: User, secondUser: User) =>
+          (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex]) ? -1 : 1);
+    };
   };
 
   formatDate(dateString: string): string {

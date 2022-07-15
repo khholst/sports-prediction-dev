@@ -168,12 +168,12 @@ exports.all = (async (req, res) => {
     const username = req.params.username;
 
     let userRooms = db.model('Users',
-    new mongo.Schema({username: 'string', password: 'string', rooms: 'array', is_admin: 'boolean',  _id:'ObjectId'}), 'users');
+    new mongo.Schema({username: 'string', password: 'string', rooms: 'array', tournaments: 'array', is_admin: 'boolean',  _id:'ObjectId'}), 'users');
     const userRoomIds = await userRooms.findOne({username: username}, {rooms:1, _id: 0});
     let roomIds = [];
 
     for (let room of userRoomIds.rooms){
-      roomIds.push(room.room_id);
+      roomIds.push(room);
     };
 
     const rooms = db.model('Rooms',
@@ -185,7 +185,6 @@ exports.all = (async (req, res) => {
 })
 
 exports.room = (async (req, res) => {
-    console.log(req.params)
     const room_id = mongo.Types.ObjectId(req.params.id);
     const rooms = db.model('Rooms',
         new mongo.Schema({ tournament_id: 'string', _id: 'ObjectId', name: 'string', creator: 'string', join_key: 'number' }), 'rooms');
@@ -196,23 +195,25 @@ exports.room = (async (req, res) => {
 })
 
 exports.roomUsers = (async (req, res) => {
-    const subschema = new mongo.Schema({room_id:'ObjectID', score:'array'});
+    const predSchema = new mongo.Schema({game_id:'ObjectID', score1:'number', score2:'number', points:'number'})
+    const subschema = new mongo.Schema({tournament_id:'ObjectID', scores:'array', predictions:[predSchema]});
     let userRooms = db.model('Users',
-        new mongo.Schema({_id:'ObjectId', username: 'string', rooms:[subschema]}), 'users')
-
-    userRooms.find({"rooms.room_id": { "$in": req.query.room.split(",") }},function(err, data) {
+        new mongo.Schema({_id:'ObjectId', username: 'string', rooms: ['ObjectId'], tournaments: [subschema]}), 'users')
+    userRooms.find({"rooms": { "$elemMatch": { "$in": req.query.room.split(",")} }},function(err, data) {
         if(err){console.log(err);}
         else{
             for(let i=0;i<data.length;i++){
-                data[i].rooms = data[i].rooms.filter(function(room){return req.query.room.split(",").includes(room.room_id.toString())});
+                data[i].rooms = data[i].rooms.filter(function(room){return req.query.room.split(",").includes(room.toString())});
             };
             data = data.map((user) => {
                 return {
                   '_id':user._id,
                   'username':user.username,
                   'rooms':user.rooms,
+                  'tournaments':user.tournaments
                 };
               });
+            
             res.json(data);
         };
     });

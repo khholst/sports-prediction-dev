@@ -48,7 +48,8 @@
                                             </td>
                                             <td *ngIf="indexOfelement>2" style="text-align: center;">{{ indexOfelement +1}}.</td>
                                             <td style="text-align: center;">{{ user.username }}</td>
-                                            <td style="text-align: center;">{{ user.rooms[0].score[user.rooms[0].score.length - 1] }}</td>
+                                            <td *ngIf="room.status == 'A' || room.status == 'E'" style="text-align: center;">traaaaa</td>
+                                            <td *ngIf="room.status == 'W'" style="text-align: center;">-</td>
                                         </tr>
                                     </tbody>
                                 </table>
