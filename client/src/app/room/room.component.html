@@ -47,8 +47,9 @@
                                                 <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:rgb(151, 110, 5)"></fa-icon>
                                             </td>
                                             <td *ngIf="indexOfelement>2" style="text-align: center;">{{ indexOfelement +1}}.</td>
-                                            <td style="text-align: center;">{{ user.username }}</td>
-                                            <td *ngIf="room.status == 'A' || room.status == 'E'" style="text-align: center;">{{ findPoints(user.username) }}</td>
+                                            <td *ngIf="user.username==activeUser" style="text-align: center;"><b>{{ user.username }}</b></td>
+                                            <td *ngIf="user.username!=activeUser" style="text-align: center;">{{ user.username }}</td>
+                                            <td *ngIf="room.status == 'A' || room.status == 'E'" style="text-align: center;">{{ findStats(user.username) }}</td>
                                             <td *ngIf="room.status == 'W'" style="text-align: center;">-</td>
                                         </tr>
                                     </tbody>
@@ -61,7 +62,36 @@
                     <a ngbNavLink>Statistics</a>
                     <ng-template ngbNavContent>
                         <div class="container">
-                            <div>TERE!!</div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p class="mt-2"> <a><h1>{{ room.name }}</h1></a></p>
+                                </div>
+                            </div>
+                            <div style="max-height: 300px;" class="overflow-auto">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center;" scope="col">User</th>
+                                            <th style="text-align: center;" scope="col">Pos.</th>
+                                            <th style="text-align: center;" scope="col">Score</th>
+                                            <th style="text-align: center;" scope="col">Total predict.</th>
+                                            <th style="text-align: center;" scope="col">Accurate predict.</th>
+                                            <th style="text-align: center;" scope="col">Avg. points/game</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let user of roomUsers; let indexOfelement=index;">
+                                            <td *ngIf="user.username==activeUser" style="text-align: center;"><b>{{ user.username }}</b></td>
+                                            <td *ngIf="user.username!=activeUser" style="text-align: center;">{{ user.username }}</td>
+                                            <td style="text-align: center;">{{ indexOfelement +1}}.</td>
+                                            <td style="text-align: center;">{{ findStats(user.username) }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].totalPredsMade }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].accPred }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].averPnts }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </ng-template>
                 </li>
