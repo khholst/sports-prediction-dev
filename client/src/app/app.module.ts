@@ -17,6 +17,8 @@ import { RoomsComponent } from './rooms/rooms.component';
 import { RoomActionComponent } from './room-action/room-action.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RoomComponent } from './room/room.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -38,6 +40,8 @@ import { RoomComponent } from './room/room.component';
     ReactiveFormsModule,
     HttpClientModule,
     FontAwesomeModule,
+    NgxChartsModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AuthService,

@@ -92,6 +92,22 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div>
+                                <ngx-charts-line-chart
+                                [view]="chartData['view']"
+                                [scheme]="chartData['colorScheme']"
+                                [legend]="chartData['legend']"
+                                [showXAxisLabel]="chartData['showXAxisLabel']"
+                                [showYAxisLabel]="chartData['showYAxisLabel']"
+                                [xAxis]="chartData['xAxis']"
+                                [yAxis]="chartData['yAxis']"
+                                [xAxisLabel]="chartData['xAxisLabel']"
+                                [yAxisLabel]="chartData['yAxisLabel']"
+                                [timeline]="chartData['timeline']"
+                                [results]="chartData['users']"
+                                >
+                              </ngx-charts-line-chart>
+                            </div>
                         </div>
                     </ng-template>
                 </li>

@@ -7,6 +7,7 @@ import { RoomService } from '../room.service';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-room',
@@ -21,6 +22,7 @@ export class RoomComponent implements OnInit {
   public active: number = 1;
   public statDict: {[username:string]:any} = {};
   public activeUser: string = this.authService.getUsername();
+  public chartData: {[prop:string]:any} = {};
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +33,7 @@ export class RoomComponent implements OnInit {
 
   ngOnInit(): void {
     this.onRoomRequest();
+    this.generateChartProps();
   };
 
   async onRoomRequest(){
@@ -67,6 +70,7 @@ export class RoomComponent implements OnInit {
         (firsUser: User, secondUser: User) =>
           (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex]) ? -1 : 1);
     };
+    this.generateChartData();
   };
 
   formatDate(dateString: string): string {
@@ -88,6 +92,48 @@ export class RoomComponent implements OnInit {
       "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
     };
     return pnts
+  };
+
+  generateChartProps() {
+    this.chartData = {
+      "view": [700, 300],
+      "legend": true,
+      "showLabels": true,
+      "animations": true,
+      "xAxis": true,
+      "yAxis": true,
+      "showYAxisLabel": true,
+      "showXAxisLabel": true,
+      "xAxisLabel": 'Games',
+      "yAxisLabel": 'Score',
+      "timeline": false,
+      "colorScheme": {
+        "domain": ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+      },
+    };
+  };
+
+  generateChartData() {
+    console.log(this.roomUsers);
+    let usersData: Array<object> = [];
+    const tournament_id: string = this.room.tournament_id;
+    this.roomUsers.forEach(function (user) {
+      const scores: Array<number> = user.tournaments.filter(function(trn):boolean{return trn.tournament_id == tournament_id})[0].scores;
+      let series: Array<any> = [];
+      for(let i=0;i<scores.length;i++){
+        const serr: object = {
+          "name": i,
+          "value": scores[i]
+        };
+        series.push(serr);
+      };
+      const userObj: object = {
+        "name": user.username,
+        "series": series
+      };
+      usersData.push(userObj);
+    }); 
+    this.chartData["users"] = usersData;
   };
 
 }
