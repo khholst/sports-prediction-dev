@@ -72,4 +72,11 @@ export class RoomComponent implements OnInit {
     return `${date.getDate()}. ${monthLookup[date.getMonth()]}`
   };
 
+  findPoints(username: string): number {
+    const trn_id: string = this.room.tournament_id;
+    const usr: User = this.roomUsers.filter(function(user):boolean{return user.username == username})[0];
+    const scores: Array<number> = usr.tournaments.filter(function(trn):boolean{return trn.tournament_id == trn_id})[0].scores;
+    return scores[scores.length-1];
+  };
+
 }
