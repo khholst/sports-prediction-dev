@@ -153,7 +153,19 @@ exports.join = (async (req, res) => {
 
     } else {
         const tournamentID = await Rooms.findOne({_id: roomID}, {tournament_id: 1, _id: 0});
+        let userInTournament = false;
 
+        user.tournaments.forEach(element => {
+            console.log(element.tournament_id);
+            console.log(tournamentID.tournament_id.toString());
+            if(element.tournament_id === tournamentID.tournament_id.toString()) {
+                userInTournament = true;
+            }
+        })
+
+        if (userInTournament) {
+            //IF USER IS ALREADY IN THIS TOURNAMENT
+        }
 
         const tournaments = {
             tournament_id: tournamentID.tournament_id,
