@@ -23,6 +23,9 @@ export class RoomComponent implements OnInit {
   public statDict: {[username:string]:any} = {};
   public activeUser: string = this.authService.getUsername();
   public chartData: {[prop:string]:any} = {};
+  public dropdownSettings:object = {};
+  public dropdownList: Array<object> = [];
+  public selectedItems: Array<any> = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +37,7 @@ export class RoomComponent implements OnInit {
   ngOnInit(): void {
     this.onRoomRequest();
     this.generateChartProps();
+    this.generateDropdown();
   };
 
   async onRoomRequest(){
@@ -70,7 +74,8 @@ export class RoomComponent implements OnInit {
         (firsUser: User, secondUser: User) =>
           (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex]) ? -1 : 1);
     };
-    this.generateChartData();
+    this.generateDropdownData();
+    this.generateChartData(this.selectedItems);
   };
 
   formatDate(dateString: string): string {
@@ -96,7 +101,6 @@ export class RoomComponent implements OnInit {
 
   generateChartProps() {
     this.chartData = {
-      "view": [700, 300],
       "legend": true,
       "showLabels": true,
       "animations": true,
@@ -113,27 +117,85 @@ export class RoomComponent implements OnInit {
     };
   };
 
-  generateChartData() {
-    console.log(this.roomUsers);
+  generateChartData(selectedUsers: Array<object>) {
     let usersData: Array<object> = [];
-    const tournament_id: string = this.room.tournament_id;
-    this.roomUsers.forEach(function (user) {
-      const scores: Array<number> = user.tournaments.filter(function(trn):boolean{return trn.tournament_id == tournament_id})[0].scores;
-      let series: Array<any> = [];
-      for(let i=0;i<scores.length;i++){
-        const serr: object = {
-          "name": i,
-          "value": scores[i]
+    const tournament_id: string = this.room.tournament_id;;
+    let rUsers: Array<any> = [];
+
+    if(selectedUsers.length>0){
+      rUsers = this.roomUsers.filter((usr:any)=> {
+        return selectedUsers.some((f:any)=> {
+          return f.itemName == usr.username;
+        });
+      });
+
+      rUsers.forEach(function (user) {
+        const scores: Array<number> = user.tournaments.filter(function(trn:any):boolean{return trn.tournament_id == tournament_id})[0].scores;
+        let series: Array<any> = [];
+        series.push({"name":"0","value":0});
+        for(let i=0;i<scores.length;i++){
+          const serr: object = {
+            "name": (i+1).toString(),
+            "value": scores[i]
+          };
+          series.push(serr);
         };
-        series.push(serr);
-      };
-      const userObj: object = {
-        "name": user.username,
-        "series": series
-      };
-      usersData.push(userObj);
-    }); 
+        const userObj: object = {
+          "name": user.username,
+          "series": series
+        };
+        usersData.push(userObj);
+      });
+    }else{
+      usersData.push({"name":"","series":[{"name":"","value":0}]});
+    }
     this.chartData["users"] = usersData;
   };
 
+  generateDropdownData() {
+    let dropdownData: Array<object> = [];
+    let ind: number = 1;
+    this.roomUsers.forEach(function (user) {
+      dropdownData.push({"id": ind, "itemName": user.username});
+      ind++;
+    });
+    this.dropdownList = dropdownData;  
+    this.selectedItems = dropdownData; 
+  };
+
+  generateDropdown() {
+    this.dropdownSettings = {
+      singleSelection: false, 
+      text:"Select Users",
+      selectAllText:'Select All',
+      unSelectAllText:'Deselect All',
+      enableSearchFilter: true,
+      classes:"myclass custom-class",
+      autoPosition: false
+    };
+  };
+
+  onItemSelect(item:any){
+    this.generateChartData(this.selectedItems);
+  };
+
+  onItemDeSelect(item:any){
+      this.generateChartData(this.selectedItems);
+  };
+
+  onSelectAll(items: any){
+    this.generateChartData(this.selectedItems);
+  };
+
+  onDeSelectAll(items: any){
+    this.generateChartData(this.selectedItems);
+  };
+
+  onFilterSelectAll(items: any){
+    this.generateChartData(this.selectedItems);
+  };
+
+  onFilterDeSelectAll(items: any){
+    this.generateChartData(this.selectedItems);
+  };
 }
