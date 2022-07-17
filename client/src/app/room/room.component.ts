@@ -146,7 +146,9 @@ export class RoomComponent implements OnInit {
         };
         usersData.push(userObj);
       });
+      this.chartData["legend"] = true;
     }else{
+      this.chartData["legend"] = false;
       usersData.push({"name":"","series":[{"name":"","value":0}]});
     }
     this.chartData["users"] = usersData;
