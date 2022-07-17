@@ -58,7 +58,7 @@
                         </div>
                     </ng-template>
                 </li>
-                <li [ngbNavItem]="2">
+                <li *ngIf="room.status == 'A' || room.status == 'E'" [ngbNavItem]="2">
                     <a ngbNavLink>Statistics</a>
                     <ng-template ngbNavContent>
                         <div class="container">
