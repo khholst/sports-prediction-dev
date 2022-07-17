@@ -74,6 +74,7 @@ export class RoomComponent implements OnInit {
         (firsUser: User, secondUser: User) =>
           (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex]) ? -1 : 1);
     };
+    this.findStats();
     this.generateDropdownData();
     this.generateChartData(this.selectedItems);
   };
@@ -85,18 +86,20 @@ export class RoomComponent implements OnInit {
     return `${date.getDate()}. ${monthLookup[date.getMonth()]}`
   };
 
-  findStats(username: string): number {
+  findStats() {
     const trn_id: string = this.room.tournament_id;
-    const usr: User = this.roomUsers.filter(function(user):boolean{return user.username == username})[0];
-    const trns: Array<any> = usr.tournaments.filter(function(trn):boolean{return trn.tournament_id == trn_id});
-    const pnts: number = trns[0].scores[trns[0].scores.length-1];
-    const totalPredsMade: Array<any> = trns[0].predictions.filter(function(pred:any):boolean{return pred.points > -999});
-    this.statDict[username] = {
-      "totalPredsMade": totalPredsMade.length,
-      "accPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==3}).length,
-      "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
+    const usrs: Array<User> = this.roomUsers;
+    for(let i=0;i<usrs.length;i++){
+      const trns: Array<any> = usrs[i].tournaments.filter(function(trn):boolean{return trn.tournament_id == trn_id});
+      const pnts: number = trns[0].scores[trns[0].scores.length-1];
+      const totalPredsMade: Array<any> = trns[0].predictions.filter(function(pred:any):boolean{return pred.points > -999});
+      this.statDict[usrs[i].username] = {
+        "points": pnts,
+        "totalPredsMade": totalPredsMade.length,
+        "accPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==3}).length,
+        "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
+      };
     };
-    return pnts
   };
 
   generateChartProps() {

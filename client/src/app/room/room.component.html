@@ -49,7 +49,7 @@
                                             <td *ngIf="indexOfelement>2" style="text-align: center;">{{ indexOfelement +1}}.</td>
                                             <td *ngIf="user.username==activeUser" style="text-align: center;"><b>{{ user.username }}</b></td>
                                             <td *ngIf="user.username!=activeUser" style="text-align: center;">{{ user.username }}</td>
-                                            <td *ngIf="room.status == 'A' || room.status == 'E'" style="text-align: center;">{{ findStats(user.username) }}</td>
+                                            <td *ngIf="room.status == 'A' || room.status == 'E'" style="text-align: center;">{{ statDict[user.username].points }}</td>
                                             <td *ngIf="room.status == 'W'" style="text-align: center;">-</td>
                                         </tr>
                                     </tbody>
@@ -84,7 +84,7 @@
                                             <td *ngIf="user.username==activeUser" style="text-align: center;"><b>{{ user.username }}</b></td>
                                             <td *ngIf="user.username!=activeUser" style="text-align: center;">{{ user.username }}</td>
                                             <td style="text-align: center;">{{ indexOfelement +1}}.</td>
-                                            <td style="text-align: center;">{{ findStats(user.username) }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].points }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].totalPredsMade }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].accPred }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].averPnts }}</td>
