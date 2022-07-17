@@ -76,6 +76,8 @@
                                             <th style="text-align: center;" scope="col">Score</th>
                                             <th style="text-align: center;" scope="col">Total predict.</th>
                                             <th style="text-align: center;" scope="col">Accurate predict.</th>
+                                            <th style="text-align: center;" scope="col">Halfway predict.</th>
+                                            <th style="text-align: center;" scope="col">Incorrect predict.</th>
                                             <th style="text-align: center;" scope="col">Avg. points/game</th>
                                         </tr>
                                     </thead>
@@ -87,6 +89,8 @@
                                             <td style="text-align: center;">{{ statDict[user.username].points }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].totalPredsMade }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].accPred }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].hlfPred }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].missPred }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].averPnts }}</td>
                                         </tr>
                                     </tbody>

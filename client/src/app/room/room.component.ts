@@ -97,6 +97,8 @@ export class RoomComponent implements OnInit {
         "points": pnts,
         "totalPredsMade": totalPredsMade.length,
         "accPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==3}).length,
+        "hlfPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==1}).length,
+        "missPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==0}).length,
         "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
       };
     };
