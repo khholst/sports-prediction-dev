@@ -25,7 +25,6 @@ export class RoomService {
 
 
   async findRoomByKey(room_key: string): Promise<any> {
-    console.log(`${this.roomUrl}/${room_key}/joindata`)
     return await lastValueFrom(this.http.get(`${this.roomUrl}/${room_key}/joindata`, httpOptions));
   }
 

@@ -22,7 +22,7 @@
         </div>
       </li>
       <li class="nav-item">
-        <a *ngIf="isLoggedIn" (click)="isMenuCollapsed = true" class="nav-link" href="#">Predictions</a>
+        <a *ngIf="isLoggedIn" (click)="isMenuCollapsed = true" class="nav-link" routerLink="/predictions">Predictions</a>
       </li>
       <li class="nav-item">
         <a (click)="isMenuCollapsed = true" class="nav-link" routerLink="/tournaments">Tournaments</a>

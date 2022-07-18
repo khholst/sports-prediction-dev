@@ -20,6 +20,7 @@ import { RoomComponent } from './room/room.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
+import { PredictionsComponent } from './predictions/predictions.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
     RoomsComponent,
     RoomActionComponent,
     RoomComponent,
+    PredictionsComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,7 @@ import { RoomComponent } from './room/room.component';
 import { RoomActionComponent } from './room-action/room-action.component';
 import { IsAuthenticatedGuard } from './is-authenticated.guard';
 import { IsNotAuthenticatedGuard } from './is-not-authenticated.guard';
+import { PredictionsComponent } from './predictions/predictions.component';
 
 
 const routes: Routes = [
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'tournaments', component: TournamentsComponent},
   { path: 'rooms', component: RoomsComponent, canActivate: [IsAuthenticatedGuard] },
   { path: 'rooms/action', component: RoomActionComponent, canActivate: [IsAuthenticatedGuard] },
-  { path: 'rooms/:id', component: RoomComponent, canActivate: [IsAuthenticatedGuard] }
+  { path: 'rooms/:id', component: RoomComponent, canActivate: [IsAuthenticatedGuard] },
+  { path: 'predictions', component: PredictionsComponent, canActivate: [IsAuthenticatedGuard] }
 ];
 
 @NgModule({

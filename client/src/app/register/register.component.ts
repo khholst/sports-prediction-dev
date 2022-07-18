@@ -38,7 +38,6 @@ export class RegisterComponent implements OnInit {
   async onSubmit() {
     if(this.registerForm.valid) {
       this.userCredentials = this.registerForm.value
-      
       const response = await this.authService.register(this.userCredentials);
 
       //If server throws a validation error

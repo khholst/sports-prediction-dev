@@ -59,7 +59,6 @@ exports.new = (async (req, res) => {
     })
 
     possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} })
-        console.log(possiblePredictions)
     
 
     let scores = [];
@@ -156,25 +155,41 @@ exports.join = (async (req, res) => {
         let userInTournament = false;
 
         user.tournaments.forEach(element => {
-            console.log(element.tournament_id);
-            console.log(tournamentID.tournament_id.toString());
-            if(element.tournament_id === tournamentID.tournament_id.toString()) {
+            console.log(element.tournament_id)
+            console.log(tournamentID.tournament_id)
+            if(element.tournament_id.equals(tournamentID.tournament_id)) {
                 userInTournament = true;
             }
         })
+        console.log(userInTournament)
 
-        if (userInTournament) {
+        let possiblePredictions = [];
+        if (!userInTournament) {
             //IF USER IS ALREADY IN THIS TOURNAMENT
+            const games = db.model('Games', new mongo.Schema(gamesSchema), 'games');
+
+
+            possiblePredictions = await games.find({tournament_id: tournamentID.tournament_id})
+                                                    .select({"_id": 1, "time": 1});
+
+            possiblePredictions.forEach((e) => {
+                e.score1 = -1,
+                e.score2 = -1,
+                e.points = (new Date(e.time).getTime() > new Date().getTime()) ? -999:-1 //-999: game not started; -1: game started but not predicted
+            })
+
+            possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} });
+
+            const tournaments = {
+                tournament_id: tournamentID.tournament_id,
+                scores: [],
+                predictions: possiblePredictions
+            }
+    
+            const userUpdate = await user.updateOne({$push: {rooms: roomID, tournaments: tournaments}})
+        } else {
+            const userUpdate = await user.updateOne({$push: {rooms: roomID}})
         }
-
-        const tournaments = {
-            tournament_id: tournamentID.tournament_id,
-            scores: [],
-            predictions: []
-        }
-
-
-        const userUpdate = await user.updateOne({$push: {rooms: roomID, tournaments: tournaments}})
         res.status(201).json({
             code: 201,
             message: "Room joined successfully",

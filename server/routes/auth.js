@@ -11,7 +11,6 @@ dotenv.config();
 router.post("/register", [
     //Existing username check
     check("username", "Please provide a valid username").notEmpty(),
-    check("username", "Username has to contain alphabetical characters").isAlphanumeric(),
     check("username", "Username has to be at least 8 characters").isLength({min:8}),
     check("password", "Password has to be at least 8 characters").isLength({min: 8})
 
@@ -56,8 +55,7 @@ router.post("/register", [
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //Create user in database
-    await Users.create({username: username, password: hashedPassword, rooms: [], tournaments: [], is_admin: false});
-
+    const userz = await Users.create({username: username, password: hashedPassword, rooms: [], tournaments: [], is_admin: false});
 
     //Create a JSON Web Token
     const token = JWT.sign({
@@ -66,6 +64,7 @@ router.post("/register", [
         expiresIn: 900
     });
 
+    console.log(token)
     //Return token
     return res.status(201).json({
         "code": 201,

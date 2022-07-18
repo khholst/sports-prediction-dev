@@ -1,0 +1,22 @@
+<main>
+    <div class="container-fluid row text-center justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+                <ng-container *ngFor="let index of numTournaments">
+                        <li [ngbNavItem]="index">
+                          <a ngbNavLink>{{predictions.predictions[index].tournament_id.name}}</a>
+                          <ng-template ngbNavContent>
+                            <p *ngFor="let game of predictions.predictions[index].predictions">
+                                {{game.game_id.team1}} vs {{game.game_id.team2}}
+
+                            </p>
+                          </ng-template>
+                        </li>
+                </ng-container>
+
+            </ul>
+        </div>
+    </div>
+</main>
+  
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
