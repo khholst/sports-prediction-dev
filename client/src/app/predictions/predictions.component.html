@@ -1,20 +1,50 @@
 <main>
-    <div class="container-fluid row text-center justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
-                <ng-container *ngFor="let index of numTournaments">
-                        <li [ngbNavItem]="index">
-                          <a ngbNavLink>{{predictions.predictions[index].tournament_id.name}}</a>
-                          <ng-template ngbNavContent>
-                            <p *ngFor="let game of predictions.predictions[index].predictions">
-                                {{game.game_id.team1}} vs {{game.game_id.team2}}
+    <div class="container">
+        <div class="row text-center justify-content-center">
+            <div class="col-lg-8">
+                <ng-container *ngFor="let index of numTournaments"></ng-container>
+                <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+                    <ng-container *ngFor="let index of numTournaments">
+                            <li [ngbNavItem]="index">
+                              <a ngbNavLink>{{predictions.predictions[index].tournament_id.name}}</a>
+                              <ng-template ngbNavContent>
+                                <div class="container">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8">
+                                            <div *ngFor="let game of predictions.predictions[index].predictions" class="card">
+                                                <div class="card-body">
 
-                            </p>
-                          </ng-template>
-                        </li>
-                </ng-container>
-
-            </ul>
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <span style="float:right" class="badge bg-dark">{{ getStageName(game.game_id.stage)}}</span>
+                                                                <p>{{game.game_id.time}}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-6 text-sm-end">
+                                                                <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team1" class="flag">
+                                                                {{game.game_id.team1.toUpperCase()}}
+                                                                
+                                                                <input type="text" style="width: 38px">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" style="width: 38px">
+                                                                {{game.game_id.team2.toUpperCase()}}
+                                                                <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
+                                                            </div>
+                                                        </div>
+                                                    </div>                                                                                                                                                        </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                              </ng-template>
+                            </li>
+                    </ng-container>
+    
+                </ul>
+            </div>
         </div>
     </div>
 </main>

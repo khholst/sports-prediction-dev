@@ -8,7 +8,7 @@ import { PredictionService } from '../prediction.service';
 })
 export class PredictionsComponent implements OnInit {
 
-  public active: number = 1;
+  public active: number = 0;
   public predictions: any = {}
   public numTournaments: number[] = [];
 
@@ -21,14 +21,27 @@ export class PredictionsComponent implements OnInit {
   }
 
   private async getPredictions() {
-    const response: any = await this.predictionService.getPredictions();
-    this.predictions = response;
-    console.log(this.predictions)
+    this.predictions = await this.predictionService.getPredictions();
+    
 
-    for(let i = 0; i < response.predictions.length; i++) {
-      this.numTournaments.push(i)
+    for(let i = 0; i < this.predictions.predictions.length; i++) {
+      this.numTournaments.push(i);
+      this.predictions.predictions[i].predictions.forEach((element: any) => {
+        element.game_id.time = this.formatTime(new Date(element.game_id.time));
+      })
     }
-    console.log(this.numTournaments)
+  }
+
+  formatTime(time: Date): string {
+    return `${time.getDate() < 10 ? "0" + time.getDate(): time.getDate()}/${time.getMonth() < 10 ? "0" + time.getMonth(): time.getMonth()}/${time.getFullYear()}` ;
+  }
+
+  getStageName(key: string): string {
+    switch (key) {
+      case "G":
+        return "GROUP"
+    }
+    return "";
   }
 
 }

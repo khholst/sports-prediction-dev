@@ -20,7 +20,6 @@ export class GamesComponent implements OnInit {
 
   async onRequest(tourID:string) {
     const response = await this.dataService.getGames(tourID);
-    console.log(response);
   };
 
 }

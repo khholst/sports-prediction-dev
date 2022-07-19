@@ -34,11 +34,11 @@ exports.all = (async(req, res) => {
 
 
     try {
-        const userPredictions = await User.findOne({username: "rääbis123"})
-                              .populate("tournaments.predictions.game_id")
-                              .populate("tournaments.tournament_id");
+        const userPredictions = await User.findOne({username: "rääbis123"}, {username: 0, password: 0, is_admin: 0, _id: 0, rooms: 0, __v: 0})
+                              .populate("tournaments.predictions.game_id", "-tournament_id -_id")
+                              .populate("tournaments.tournament_id", "-start_date -end_date -img_url -sport -_id");
 
-
+        console.log(userPredictions.tournaments[0].predictions)
         res.status(200).json({
             predictions: userPredictions.tournaments
         })
