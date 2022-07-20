@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Prediction } from '../prediction';
 import { PredictionService } from '../prediction.service';
 
 @Component({
@@ -42,6 +43,43 @@ export class PredictionsComponent implements OnInit {
         return "GROUP"
     }
     return "";
+  }
+
+  async onPrediction(game_id: string) {
+    const score1: any = document.getElementById(game_id + ":team1");
+    const score2: any = document.getElementById(game_id + ":team2");
+
+    if(score1.value === "" || isNaN(score1.value)) {
+      score1.classList.add("invalid-input");
+    }
+
+    if (score2.value === "" || isNaN(score2.value)) {
+      score2.classList.add("invalid-input");
+      return;
+    }
+
+    score1.classList.remove("invalid-input");
+    score2.classList.remove("invalid-input");
+    score1.setAttribute("disabled", "true");
+    score2.setAttribute("disabled", "true");
+
+
+    const card: any = document.getElementById(game_id + ":card");
+    card.classList.add("predicted-card");
+
+    const button: any = document.getElementById(game_id + ":submit");
+    button.classList.add("predicted-button");
+
+    //SAVE TO DB
+
+    const prediction: Prediction = {
+      game_id: game_id,
+      score1: parseInt(score1.value),
+      score2: parseInt(score2.value)
+    }
+    const response = await this.predictionService.newPrediction(prediction);
+    console.log(response);
+
   }
 
 }

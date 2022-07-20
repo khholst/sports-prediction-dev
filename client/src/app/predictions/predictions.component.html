@@ -12,7 +12,7 @@
                                     <div class="row justify-content-center">
                                         <div class="col-lg-8">
                                             <div *ngFor="let game of predictions.predictions[index].predictions" class="card">
-                                                <div class="card-body">
+                                                <div id="{{game.game_id._id + ':card'}}" class="card-body">
 
                                                     <div class="container">
                                                         <div class="row">
@@ -21,19 +21,29 @@
                                                                 <p>{{game.game_id.time}}</p>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-6 text-sm-end">
-                                                                <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team1" class="flag">
-                                                                {{game.game_id.team1.toUpperCase()}}
-                                                                
-                                                                <input type="text" style="width: 38px">
+                                                        <form>
+                                                            <div class="row">
+                                                                    <div class="col-sm-5 text-sm-end">
+                                                                        <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team1" class="flag">
+                                                                        {{game.game_id.team1.toUpperCase()}}
+                                                                        <input id="{{game.game_id._id + ':team1'}}" type="number" min="0" value="0">
+                                                                        
+                                                                    </div>
+                                                                    <div class="col-sm-2 text-center">
+                                                                        <span>VS</span>
+                                                                    </div>
+                                                                    <div class="col-sm-5">
+                                                                        <input id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
+                                                                        {{game.game_id.team2.toUpperCase()}}
+                                                                        <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
+                                                                    </div>
                                                             </div>
-                                                            <div class="col-sm-6">
-                                                                <input type="text" style="width: 38px">
-                                                                {{game.game_id.team2.toUpperCase()}}
-                                                                <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
+                                                            <div class="row text-center">
+                                                                <div class="col">
+                                                                    <button type="submit" id="{{game.game_id._id + ':submit'}}" class="btn btn-primary" (click)="onPrediction(game.game_id._id)">Save</button>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        </form>
                                                     </div>                                                                                                                                                        </div>
                                             </div>
                                         </div>
