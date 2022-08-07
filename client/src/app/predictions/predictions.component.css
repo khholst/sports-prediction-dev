@@ -1,7 +1,8 @@
 .flag {
     width: 30px; 
     height: 30px; 
-    border-radius: 30px; 
+    border-radius: 30px;
+    border: solid 1px rgb(224, 224, 224);
     vertical-align: middle;
 }
 
