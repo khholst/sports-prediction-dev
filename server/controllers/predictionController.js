@@ -48,7 +48,6 @@ exports.all = (async(req, res) => {
 
 
 exports.new = (async (req, res) => {
-    console.log(req.body);
     const prediction = req.body;
     prediction.game_id = mongo.Types.ObjectId(prediction.game_id);
     prediction.points = -1;
@@ -83,18 +82,28 @@ exports.new = (async (req, res) => {
 
 
     const username = res.locals.decodedToken.username;
-    // const user = await Users.updateOne({username: username, "tournaments.predictions.game_id": prediction.game_id},
-    // {
-    //     "$set": {"tournaments.predictions.$": prediction}
-    // })
-    delete prediction.username;
+
+    console.log(req.body)
+
+    const user = await Users.updateOne(
+    { username: username },
+    { 
+        "$set": {
+            "tournaments.$[tournament].predictions.$[prediction].score1": req.body.score1, 
+            "tournaments.$[tournament].predictions.$[prediction].score2": req.body.score2
+        },
+    },
+    { "arrayFilters": [
+        { "tournament.tournament_id": game.tournament_id },
+        { "prediction.game_id": game._id }
+    ]}
+    )
 
 
 
-    const Predictions = db.model('Predictions',
-    new mongo.Schema({user_id: 'ObjectId', game_id: 'ObjectId', score1: 'number', score2: 'number'}), 'predictions');
 
-    //const newPrediction = await Predictions.create(prediction)
+
+
 
     res.status(200).json({
         msg: "YAAAAS"

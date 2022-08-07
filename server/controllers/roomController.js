@@ -55,7 +55,7 @@ exports.new = (async (req, res) => {
     possiblePredictions.forEach((e) => {
         e.score1 = -1,
         e.score2 = -1,
-        e.points = (new Date(e.time).getTime() > new Date().getTime()) ? -999:-1 //-999: game not started; -1: game started but not predicted
+        e.points = (new Date(e.time).getTime() > new Date().getTime()) ? -999:-1 //-999: game not started; -1: game not predicted
     })
 
     possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} })

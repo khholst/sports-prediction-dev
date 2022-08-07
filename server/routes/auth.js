@@ -59,7 +59,8 @@ router.post("/register", [
 
     //Create a JSON Web Token
     const token = JWT.sign({
-        username
+        username,
+        is_admin: false
     }, process.env.JWTSECRET, { //this to env variable
         expiresIn: 900
     });
@@ -81,7 +82,7 @@ router.post("/login", async(req, res) => {
 
     //Mongo schema
     const Users = db.model('Users', 
-    new mongo.Schema({ username: 'string', password: 'string' }), 
+    new mongo.Schema({ username: 'string', password: 'string', is_admin: 'boolean' }), 
     'users');
 
 
@@ -112,11 +113,13 @@ router.post("/login", async(req, res) => {
 
     //Create JSON Web Token and send it to the client
     const token = JWT.sign({
-        username
+        username: username,
+        admin: user.is_admin
     }, process.env.JWTSECRET, {
         expiresIn: 900
     });
 
+    console.log(token)
     return res.status(200).json({
         "code": 200,
         "token": token
