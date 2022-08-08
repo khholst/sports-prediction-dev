@@ -12,6 +12,7 @@ export class PredictionsComponent implements OnInit {
   public active: number = 0;
   public predictions: any = {}
   public numTournaments: number[] = [];
+  public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"]
 
   constructor(
     private predictionService: PredictionService
@@ -23,18 +24,61 @@ export class PredictionsComponent implements OnInit {
 
   private async getPredictions() {
     this.predictions = await this.predictionService.getPredictions();
-    
+    this.predictions.predictions[0].predictions.sort(this.sortPredictions);
+    const now = new Date();
+
+    console.log(this.predictions.predictions[0].predictions)
+
+    let appended = [];
+    let spliced = [];
+    for (let i = 0; i < this.predictions.predictions[0].predictions.length; i++) {
+      const game = this.predictions.predictions[0].predictions[i];
+
+      if (new Date(game.game_id.time).getTime() < now.getTime() + 86400000) { //games in past 24 hours will still remain on top
+        console.log(new Date(game.game_id.time), now)
+        spliced.push(i)
+        appended.push(game);
+      }
+    }
+
+    spliced.forEach(element => {
+      this.predictions.predictions[0].predictions.splice(element, 1);
+    });
+
+    for (let i = 0; i < appended.length; i++) {
+      this.predictions.predictions[0].predictions.splice(spliced[i], 1);
+      this.predictions.predictions[0].predictions.push(appended[i]);
+      
+    }
+
 
     for(let i = 0; i < this.predictions.predictions.length; i++) {
       this.numTournaments.push(i);
       this.predictions.predictions[i].predictions.forEach((element: any) => {
+        element.game_id.hasStarted = now.getTime() > new Date(element.game_id.time).getTime();
         element.game_id.time = this.formatTime(new Date(element.game_id.time));
       })
     }
   }
 
+  private sortPredictions(a: any, b: any): number {
+    const aDate = new Date(a.game_id.time);
+    const bDate = new Date(b.game_id.time);
+
+    if (aDate.getTime() > bDate.getTime()) {
+      return 1
+    } else if (aDate.getTime() < bDate.getTime()) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
   formatTime(time: Date): string {
-    return `${time.getDate() < 10 ? "0" + time.getDate(): time.getDate()}/${time.getMonth() < 10 ? "0" + time.getMonth(): time.getMonth()}/${time.getFullYear()}` ;
+    const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
+    const month = time.getMonth() + 1;
+    return `${time.getDate() < 10 ? "0" + time.getDate(): time.getDate()}/${month < 10 ? "0" + 
+              month: month}/${time.getFullYear()} ${time.getHours()}:${minutes}` ;
   }
 
   getStageName(key: string): string {
@@ -44,6 +88,9 @@ export class PredictionsComponent implements OnInit {
     }
     return "";
   }
+
+
+
 
   async onPrediction(game_id: string) {
     const score1: any = document.getElementById(game_id + ":team1");

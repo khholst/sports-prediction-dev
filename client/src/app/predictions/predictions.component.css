@@ -1,3 +1,4 @@
+
 .flag {
     width: 30px; 
     height: 30px; 
@@ -10,7 +11,10 @@
     margin-bottom: 15px;
 }
 
-
+p {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
 
 input {
     width: 55px;
@@ -29,4 +33,39 @@ input {
 
 .predicted-button {
     display: none;
+}
+
+button {
+    margin-top: 10px;
+}
+
+.country {
+    margin-top: 10px;
+}
+
+.game-status {
+    margin-bottom: 5px;
+}
+
+.rounded-pill {
+    font-size: 15px; 
+    font-weight: normal; 
+    margin-top: 3px;
+}
+
+.bg-danger {
+    background-color: rgb(255, 69, 69)!important;
+}
+
+.bg-warning {
+    background-color: rgb(248, 217, 62)!important;
+}
+
+.bg-primary {
+    background-color: rgb(138, 199, 26)!important;
+}
+
+.bg-success {
+    background-color: rgb(81, 182, 82)!important;
+    vertical-align: middle!important;
 }

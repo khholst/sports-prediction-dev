@@ -12,39 +12,74 @@
                                     <div class="row justify-content-center">
                                         <div class="col-lg-8">
                                             <div *ngFor="let game of predictions.predictions[index].predictions" class="card">
-                                                <div id="{{game.game_id._id + ':card'}}" class="card-body">
+                                                <div [ngClass]="game.score1 != -1 || game.game_id.hasStarted  ? 'predicted-card' : ''" 
+                                                
+                                                id="{{game.game_id._id + ':card'}}" class="card-body">
 
                                                     <div class="container">
                                                         <div class="row">
-                                                            <div class="col">
-                                                                <span style="float:right" class="badge bg-dark">{{ getStageName(game.game_id.stage)}}</span>
-                                                                <p>{{game.game_id.time}}</p>
+                                                            <div class="col-sm-4 text-sm-end text-center order-sm-1">
+                                                                <p><span class="badge bg-dark">{{ getStageName(game.game_id.stage)}}</span></p>
+                                                            </div>
+                                                            <div class="col-sm-4 text-sm-start text-center">
+                                                                <p>{{game.game_id.time.split(" ")[0]}}</p>
+                                                            </div>
+                                                            <div class="col-sm-4 text-center">
+                                                                <p><b>{{game.game_id.time.split(" ")[1]}}</b></p>
                                                             </div>
                                                         </div>
                                                         <form>
                                                             <div class="row">
-                                                                    <div class="col-sm-5 text-sm-end">
+                                                                    <div class="col-sm-5 text-sm-end text-center">
                                                                         <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team1" class="flag">
                                                                         {{game.game_id.team1.toUpperCase()}}
-                                                                        <input id="{{game.game_id._id + ':team1'}}" type="number" min="0" value="0">
-                                                                        
+                                                                        <input *ngIf="game.score1 != -1 && game.score1 != -999" value="{{ game.score1 }}" disabled>
+                                                                        <input *ngIf="game.score1 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team1'}}" type="number" min="0" value="0">
+                                                                        <input *ngIf="game.score1 == -999 || (game.game_id.hasStarted && game.score1 == -1)" value="" disabled>
                                                                     </div>
-                                                                    <div class="col-sm-2 text-center">
+                                                                
+                                                                    <div class="col-sm-2 text-center d-none d-sm-block">
                                                                         <span>VS</span>
                                                                     </div>
-                                                                    <div class="col-sm-5">
-                                                                        <input id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
-                                                                        {{game.game_id.team2.toUpperCase()}}
+                                                                    <div class="col-sm-5 d-none d-sm-block text-start">
+                                                                        
+                                                                            <input *ngIf="game.score2 != -1 && game.score2 != -999" value="{{ game.score2 }}" disabled>
+                                                                            <input *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
+                                                                            <input *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>
+                                                                            {{game.game_id.team2.toUpperCase()}}
+                                                                            <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
+                                                                        
+                                                                    </div>
+
+                                                                    <div class="col-sm-5 d-sm-block d-block d-sm-none text-center country">
                                                                         <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
+                                                                        {{game.game_id.team2.toUpperCase()}}
+                                                                        <input *ngIf="game.score2 != -1 && game.score2 != -999" value="{{ game.score2 }}" disabled>
+                                                                        <input *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
+                                                                        <input *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>                                                                        
                                                                     </div>
                                                             </div>
+
                                                             <div class="row text-center">
                                                                 <div class="col">
-                                                                    <button type="submit" id="{{game.game_id._id + ':submit'}}" class="btn btn-primary" (click)="onPrediction(game.game_id._id)">Save</button>
+                                                                    <button [ngClass]="game.score1 != -1 || game.game_id.hasStarted ? 'predicted-button' : ''"  type="submit" id="{{game.game_id._id + ':submit'}}" class="btn btn-primary" (click)="onPrediction(game.game_id._id)">Save</button>
                                                                 </div>
                                                             </div>
+
+                                                            
                                                         </form>
-                                                    </div>                                                                                                                                                        </div>
+                                                        <div *ngIf="game.points != -1 && game.points != -999">
+                                                            <hr>
+                                                            <div class="row text-center">
+                                                                <p>Result:
+                                                                <b>{{ game.game_id.score1 }} : {{ game.game_id.score2 }}</b>
+                                                                <br>
+                                                                <span *ngIf="game.points == 1; else notOne" class="badge rounded-pill bg-warning">{{ game.points }} POINT</span>
+                                                                <ng-template #notOne><span [ngClass]="badgeClasses[game.points]" class="badge rounded-pill">{{ game.points }} POINTS</span> </ng-template>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
