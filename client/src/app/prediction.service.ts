@@ -19,7 +19,7 @@ export class PredictionService {
     private http: HttpClient
   ) { }
 
-  async getPredictions() {
+  async getPredictions(): Promise<any> {
     return await lastValueFrom(this.http.get(this.predictionsUrl, httpOptions));
   }
 

@@ -11,6 +11,18 @@
     margin-bottom: 15px;
 }
 
+.container {
+    padding: 1vw;
+}
+
+.card-body {
+    padding: 0.5vw;
+}
+
+.result {
+    margin-top: 0px;
+}
+
 p {
     margin-bottom: 10px;
     margin-top: 10px;
@@ -68,4 +80,9 @@ button {
 .bg-success {
     background-color: rgb(81, 182, 82)!important;
     vertical-align: middle!important;
+}
+
+.btn-group  {
+    margin-top: 0px;
+    margin-bottom: 10px;
 }

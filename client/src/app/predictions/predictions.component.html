@@ -6,12 +6,28 @@
                 <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
                     <ng-container *ngFor="let index of numTournaments">
                             <li [ngbNavItem]="index">
-                              <a ngbNavLink>{{predictions.predictions[index].tournament_id.name}}</a>
+                              <a ngbNavLink (click)="tournamentChange(index)">{{filteredPredictions[index].tournament_id.name}}</a>
+                              
                               <ng-template ngbNavContent>
                                 <div class="container">
                                     <div class="row justify-content-center">
                                         <div class="col-lg-8">
-                                            <div *ngFor="let game of predictions.predictions[index].predictions" class="card">
+                                            <div class="btn-group flex-wrap" role="group" aria-label="Basic radio toggle button group">
+                                                <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('UPCOMING', index)" id="btnradio1" autocomplete="off" checked>
+                                                <label class="btn btn-outline-primary" for="btnradio1">UPCOMING</label>
+                                              
+                                                <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('FINISHED', index)" id="btnradio2" autocomplete="off">
+                                                <label class="btn btn-outline-primary" for="btnradio2">FINISHED</label>
+                                              
+                                                <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('ALL', index)" id="btnradio3" autocomplete="off">
+                                                <label class="btn btn-outline-primary" for="btnradio3">ALL</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-8">
+                                            <div *ngFor="let game of filteredPredictions[index].predictions" class="card">
                                                 <div [ngClass]="game.score1 != -1 || game.game_id.hasStarted  ? 'predicted-card' : ''" 
                                                 
                                                 id="{{game.game_id._id + ':card'}}" class="card-body">
@@ -22,10 +38,10 @@
                                                                 <p><span class="badge bg-dark">{{ getStageName(game.game_id.stage)}}</span></p>
                                                             </div>
                                                             <div class="col-sm-4 text-sm-start text-center">
-                                                                <p>{{game.game_id.time.split(" ")[0]}}</p>
+                                                                <p>{{game.game_id.printTime.split(" ")[0]}}</p>
                                                             </div>
                                                             <div class="col-sm-4 text-center">
-                                                                <p><b>{{game.game_id.time.split(" ")[1]}}</b></p>
+                                                                <p><b>{{game.game_id.printTime.split(" ")[1]}}</b></p>
                                                             </div>
                                                         </div>
                                                         <form>
@@ -71,7 +87,7 @@
                                                         <div *ngIf="game.points != -1 && game.points != -999">
                                                             <hr>
                                                             <div class="row text-center">
-                                                                <p>Result:
+                                                                <p class="result">Result:
                                                                 <b>{{ game.game_id.score1 }} : {{ game.game_id.score2 }}</b>
                                                                 <br>
                                                                 <span *ngIf="game.points == 1; else notOne" class="badge rounded-pill bg-warning">{{ game.points }} POINT</span>

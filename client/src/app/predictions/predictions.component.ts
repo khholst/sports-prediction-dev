@@ -10,7 +10,8 @@ import { PredictionService } from '../prediction.service';
 export class PredictionsComponent implements OnInit {
 
   public active: number = 0;
-  public predictions: any = {}
+  public predictions: any = {};
+  public filteredPredictions: any = {};
   public numTournaments: number[] = [];
   public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"]
 
@@ -22,41 +23,31 @@ export class PredictionsComponent implements OnInit {
     this.getPredictions();
   }
 
+
   private async getPredictions() {
     this.predictions = await this.predictionService.getPredictions();
-    this.predictions.predictions[0].predictions.sort(this.sortPredictions);
+    this.predictions = this.predictions.predictions;
+    this.filteredPredictions = this.predictions.map((element: any) => {return {...element}});
+
+    
     const now = new Date();
-
-    console.log(this.predictions.predictions[0].predictions)
-
-    let appended = [];
-    let spliced = [];
-    for (let i = 0; i < this.predictions.predictions[0].predictions.length; i++) {
-      const game = this.predictions.predictions[0].predictions[i];
-
-      if (new Date(game.game_id.time).getTime() < now.getTime() + 86400000) { //games in past 24 hours will still remain on top
-        console.log(new Date(game.game_id.time), now)
-        spliced.push(i)
-        appended.push(game);
-      }
-    }
-
-    spliced.forEach(element => {
-      this.predictions.predictions[0].predictions.splice(element, 1);
-    });
-
-    for (let i = 0; i < appended.length; i++) {
-      this.predictions.predictions[0].predictions.splice(spliced[i], 1);
-      this.predictions.predictions[0].predictions.push(appended[i]);
-      
+    for (let i = 0; i < this.predictions.length; i++) {
+       this.predictions[i].predictions.sort(this.sortPredictions);
+       this.filteredPredictions[i].predictions = this.predictions[i].predictions.filter((prediction: any) => 
+       new Date(prediction.game_id.time).getTime() > now.getTime());
     }
 
 
-    for(let i = 0; i < this.predictions.predictions.length; i++) {
+    //this.pushFinishedGamesToEnd(this.predictions, now);
+
+
+
+
+    for(let i = 0; i < this.predictions.length; i++) {
       this.numTournaments.push(i);
-      this.predictions.predictions[i].predictions.forEach((element: any) => {
+      this.predictions[i].predictions.forEach((element: any) => {
         element.game_id.hasStarted = now.getTime() > new Date(element.game_id.time).getTime();
-        element.game_id.time = this.formatTime(new Date(element.game_id.time));
+        element.game_id.printTime = this.formatTime(new Date(element.game_id.time));
       })
     }
   }
@@ -65,14 +56,63 @@ export class PredictionsComponent implements OnInit {
     const aDate = new Date(a.game_id.time);
     const bDate = new Date(b.game_id.time);
 
-    if (aDate.getTime() > bDate.getTime()) {
-      return 1
-    } else if (aDate.getTime() < bDate.getTime()) {
-      return -1;
-    } else {
-      return 0;
+    if (aDate.getTime() > bDate.getTime()) { return 1 } 
+    else if (aDate.getTime() < bDate.getTime()) { return -1; }
+    else { return 0; }
+  }
+
+  private pushFinishedGamesToEnd(predictions: any, now: Date) {
+    for (let j = 0; j < predictions.length; j++) {
+      let appended = [];
+      let spliced = [];
+      for (let i = 0; i < predictions[j].predictions.length; i++) {
+        const game = predictions[j].predictions[i];
+  
+        if (new Date(game.game_id.time).getTime() < now.getTime()) {
+          spliced.push(i)
+          appended.push(game);
+        }
+      }
+
+      for (let i = appended.length - 1; i >= 0; i--) {
+        predictions[j].predictions.splice(spliced[i], 1);
+        predictions[j].predictions.push(appended[i]);
+      }
     }
   }
+
+
+
+  tournamentChange(index: number) {
+    const now = new Date().getTime();
+    
+    this.filteredPredictions[index].predictions = this.predictions[index].predictions.filter((prediction: any) => 
+        new Date(prediction.game_id.time).getTime() > now);
+  }
+
+
+
+
+
+
+  onFilter(filter: string, index: number) {
+    const now = new Date().getTime();
+
+    if (filter === "FINISHED") {
+      this.filteredPredictions[index].predictions = this.predictions[index].predictions.filter((prediction: any) => 
+        new Date(prediction.game_id.time).getTime() < now);
+    } else if (filter === "UPCOMING") {
+      this.filteredPredictions[index].predictions = this.predictions[index].predictions.filter((prediction: any) => 
+        new Date(prediction.game_id.time).getTime() > now);
+    } else if (filter === "ALL") {
+      this.filteredPredictions[index].predictions = this.predictions[index].predictions;
+    }
+
+
+    console.log(this.filteredPredictions)
+  }
+
+
 
   formatTime(time: Date): string {
     const minutes = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes();
@@ -80,6 +120,7 @@ export class PredictionsComponent implements OnInit {
     return `${time.getDate() < 10 ? "0" + time.getDate(): time.getDate()}/${month < 10 ? "0" + 
               month: month}/${time.getFullYear()} ${time.getHours()}:${minutes}` ;
   }
+
 
   getStageName(key: string): string {
     switch (key) {
