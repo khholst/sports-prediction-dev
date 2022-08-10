@@ -83,11 +83,23 @@ exports.new = (async (req, res) => {
 
     const username = res.locals.decodedToken.username;
 
-    console.log(req.body)
+    
 
-    const user = await Users.updateOne(
+    // const userUpdate = await Users.find(
+    // { username: username },
+
+    // { "arrayFilters": [
+    //     { "tournaments.tournament_id": -1 },
+    //     { "tournaments.tournament_id.predictions.game_id": -1 }
+    // ]}
+    // )
+
+    // console.log(userUpdate)
+
+
+    const userUpdate = await Users.updateOne(
     { username: username },
-    { 
+    {
         "$set": {
             "tournaments.$[tournament].predictions.$[prediction].score1": req.body.score1, 
             "tournaments.$[tournament].predictions.$[prediction].score2": req.body.score2
@@ -102,11 +114,8 @@ exports.new = (async (req, res) => {
 
 
 
-
-
-
     res.status(200).json({
-        msg: "YAAAAS"
+        msg: "Prediction saved"
     })
 
 

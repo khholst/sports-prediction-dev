@@ -116,7 +116,7 @@ router.post("/login", async(req, res) => {
         username: username,
         admin: user.is_admin
     }, process.env.JWTSECRET, {
-        expiresIn: 900
+        expiresIn: 1000
     });
 
     console.log(token)

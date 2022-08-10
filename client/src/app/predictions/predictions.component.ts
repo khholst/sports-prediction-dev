@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Prediction } from '../prediction';
 import { PredictionService } from '../prediction.service';
-
+import { AuthService } from '../auth.service';
 @Component({
   selector: 'app-predictions',
   templateUrl: './predictions.component.html',
@@ -16,7 +16,8 @@ export class PredictionsComponent implements OnInit {
   public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"]
 
   constructor(
-    private predictionService: PredictionService
+    private predictionService: PredictionService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -107,9 +108,6 @@ export class PredictionsComponent implements OnInit {
     } else if (filter === "ALL") {
       this.filteredPredictions[index].predictions = this.predictions[index].predictions;
     }
-
-
-    console.log(this.filteredPredictions)
   }
 
 
@@ -146,17 +144,7 @@ export class PredictionsComponent implements OnInit {
       return;
     }
 
-    score1.classList.remove("invalid-input");
-    score2.classList.remove("invalid-input");
-    score1.setAttribute("disabled", "true");
-    score2.setAttribute("disabled", "true");
 
-
-    const card: any = document.getElementById(game_id + ":card");
-    card.classList.add("predicted-card");
-
-    const button: any = document.getElementById(game_id + ":submit");
-    button.classList.add("predicted-button");
 
     //SAVE TO DB
 
@@ -165,9 +153,25 @@ export class PredictionsComponent implements OnInit {
       score1: parseInt(score1.value),
       score2: parseInt(score2.value)
     }
-    const response = await this.predictionService.newPrediction(prediction);
-    console.log(response);
 
+    try {
+      const response = await this.predictionService.newPrediction(prediction);
+      score1.classList.remove("invalid-input");
+      score2.classList.remove("invalid-input");
+      score1.setAttribute("disabled", "true");
+      score2.setAttribute("disabled", "true");
+
+      const card: any = document.getElementById(game_id + ":card");
+      card.classList.add("predicted-card");
+
+      const button: any = document.getElementById(game_id + ":submit");
+      button.classList.add("predicted-button");
+
+    } catch (error: any) {
+      if (error.status === 401) {
+        this.authService.navigateToLogin();
+      }
+    }
   }
 
 }

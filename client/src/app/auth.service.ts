@@ -42,6 +42,7 @@ export class AuthService {
 
   getIsLoggedIn() {
     this.checkJwtToken();
+
     return this.isLoggedIn;
   }
 
@@ -62,7 +63,8 @@ export class AuthService {
     }
   }
 
-  private navigateToLogin() {
+
+  navigateToLogin() {
     this.router.navigate(["/login"]);
   }
 
