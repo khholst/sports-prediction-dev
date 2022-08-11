@@ -85,19 +85,21 @@ exports.new = (async (req, res) => {
 
     
 
-    // const userUpdate = await Users.find(
-    // { username: username },
+    //Check if user has already made this prediction
+    const predictionExists = await Users.countDocuments(
+    { username: username, "tournaments.predictions": {$elemMatch: {score1: -1, score2: -1, game_id: game._id}}})
+    
+    if (predictionExists === 0) {
+        return res.status(403).json({
+            "code": 403,
+            "errors": [
+                {"msg": "Prediction already exists"}
+            ]
+        })
+    }
 
-    // { "arrayFilters": [
-    //     { "tournaments.tournament_id": -1 },
-    //     { "tournaments.tournament_id.predictions.game_id": -1 }
-    // ]}
-    // )
-
-    // console.log(userUpdate)
-
-
-    const userUpdate = await Users.updateOne(
+    //Add prediction to user document
+    const savePrediction = await Users.updateOne(
     { username: username },
     {
         "$set": {
@@ -111,14 +113,9 @@ exports.new = (async (req, res) => {
     ]}
     )
 
-
-
-
     res.status(200).json({
         msg: "Prediction saved"
     })
-
-
 
     } catch (error) {
         console.log(error)

@@ -19,6 +19,7 @@ const httpOptions = {
 export class AuthService {
   private authUrl: string = "http://localhost:8080/auth";
   private isLoggedIn: boolean = false;
+  private isAdmin: boolean = false;
   private username: string = "";
 
   constructor(
@@ -46,6 +47,11 @@ export class AuthService {
     return this.isLoggedIn;
   }
 
+
+  getIsAdmin(): boolean {
+    return this.isAdmin;
+  }
+
   checkJwtToken() {
     const token = localStorage.getItem("token");
     if (token) {
@@ -54,7 +60,8 @@ export class AuthService {
       if (this.JwtIsExpired(decodedToken.exp!)) {
         this.setLoggedIn(false);
       } else {
-        this.setUsername(decodedToken.username!)
+        this.setUsername(decodedToken.username!);
+        this.isAdmin = decodedToken.admin;
         this.setLoggedIn(true);
       }
 

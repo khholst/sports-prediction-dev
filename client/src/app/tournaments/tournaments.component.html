@@ -2,6 +2,10 @@
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-lg-10">
+                    <h1 class="heading">Upcoming tournaments</h1>
+                    <button *ngIf="isAdmin" class="btn btn-primary new-trnm-btn" (click)="onNewTournament(newTournamentPopup)">New tournament</button>
+                </div>
+                <div class="col-lg-10">
                     <div *ngFor="let index of indexes" class="card">
         
                             <div class="row">
@@ -79,3 +83,55 @@
             </div>
         </div>
 </main>
+
+
+<ng-template #newTournamentPopup let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">New tournament</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="mb-3">
+            <label for="new-tourn-name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="new-tourn-name" placeholder="Tournament name">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-tourn-start" class="form-label">Start date</label>
+            <input type="date" class="form-control" id="new-tourn-start" placeholder="Tournament start date">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-tourn-end" class="form-label">End date</label>
+            <input type="date" class="form-control" id="new-tourn-end" placeholder="Tournament end date">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-tourn-img" class="form-label">Image url</label>
+            <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-tourn-games" class="form-label">Total games</label>
+            <input type="text" class="form-control" id="new-tourn-games" placeholder="Tournament total games">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-tourn-sport" class="form-label">Sport</label>
+            <select class="form-select" id="new-tourn-sport" aria-label="Default select example">
+                <option value="Football" selected>Football</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Volleyball">Volleyball</option>
+                <option value="Hockey">Hockey</option>
+            </select>
+        </div>
+
+
+          
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>
+  </ng-template>

@@ -65,7 +65,6 @@ router.post("/register", [
         expiresIn: 900
     });
 
-    console.log(token)
     //Return token
     return res.status(201).json({
         "code": 201,

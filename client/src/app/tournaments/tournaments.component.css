@@ -34,3 +34,16 @@ img {
     border: solid 1px rgb(224, 224, 224);
     vertical-align: middle;
 }
+
+.heading {
+    font-size: 28px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    display: inline;
+}
+
+.new-trnm-btn {
+    float: right;
+    margin-top: 0px;
+    margin-bottom: 10px;
+}

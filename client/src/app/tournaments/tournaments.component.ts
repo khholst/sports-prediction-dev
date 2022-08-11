@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
+import { AuthService } from '../auth.service';
 import { Tournament } from '../tournament';
 import { Game } from '../games';
 import { Country } from '../countries';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -12,6 +14,7 @@ import { Country } from '../countries';
   styleUrls: ['./tournaments.component.css']
 })
 export class TournamentsComponent implements OnInit {
+  public isAdmin: boolean = false;
   public isCollapsed: boolean[] = [];
   public tournaments: Tournament[] = [];
   public games: {[key:number]:Game[]} = {};
@@ -22,11 +25,14 @@ export class TournamentsComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
+    private authService: AuthService,
+    private modalService: NgbModal,
     private router: Router
   ) {  }
 
   ngOnInit(): void {
     this.onTournamentsRequest();
+    this.isAdmin = this.authService.getIsAdmin();
   };
 
   async onTournamentsRequest() {
@@ -76,5 +82,11 @@ export class TournamentsComponent implements OnInit {
   popUpper(team:string, index:number){
     this.cntGames = this.games[index].filter(function(game):boolean{return game.team1==team || game.team2==team});
   };
+
+  onNewTournament(content: any) {
+    console.log(content)
+    this.modalService.open(content);
+
+  }
 
 }
