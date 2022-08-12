@@ -16,6 +16,7 @@ img {
 
 .tournament-name {
     font-size: 25px;
+    vertical-align: middle;
 }
 
 .period {
@@ -46,4 +47,9 @@ img {
     float: right;
     margin-top: 0px;
     margin-bottom: 10px;
+}
+
+.new-game-btn {
+    margin-top: 0px;
+    margin-left: 25px;
 }

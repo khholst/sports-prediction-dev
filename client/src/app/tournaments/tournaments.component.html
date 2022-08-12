@@ -10,16 +10,24 @@
         
                             <div class="row">
                                 <div class="col-sm-7">
-                                    <p class="tournament-name">{{ tournaments[index].name }}</p>
+                                    <p style="display: inline" class="tournament-name">{{ tournaments[index].name }}</p>
+                                    <p *ngIf="isAdmin" style="display: inline"><button 
+                                        class="btn btn-primary justify-content-center new-game-btn" (click)="onNewGame(tournaments[index]._id)">New game</button></p>
                                 </div>
-        
+                               
                                 <div class="col-sm-5 text-sm-end">
                                     <p class="period">{{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}</p>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col">
+                                <div class="col-sm-6">
                                     <img class="img-fluid tournament-img" src="{{ tournaments[index].img_url }}" alt="" width="320">
+                                </div>
+                                <div class="col-sm-6">
+                                    <p>Held in:</p>
+                                    <ul style="display:inline-block;">                                        
+                                        <li *ngFor="let host of tournaments[index].host">{{host}}</li>
+                                    </ul>
                                 </div>
                             </div>
         

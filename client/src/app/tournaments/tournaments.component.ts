@@ -89,4 +89,14 @@ export class TournamentsComponent implements OnInit {
 
   }
 
+
+  onNewGame(tournament_id: string) {
+    console.log(tournament_id)
+  }
+
+  
+  onGameResult(game_id: string) {
+
+  }
+
 }

@@ -4,6 +4,7 @@ export class Tournament {
         public start_date:string,
         public end_date:string,
         public img_url:string,
-        public _id:string
+        public _id:string,
+        public host: Array<string>
     ) {}
 }
