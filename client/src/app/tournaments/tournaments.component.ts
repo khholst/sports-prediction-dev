@@ -23,6 +23,10 @@ export class TournamentsComponent implements OnInit {
   public flags: {[key:string]:string} = {};
   public indexes: number[] = []; //For keeping track of expanded tournaments
 
+  public onNewGameTournName: string = ""; 
+  public onNewResultHomeTeam: string = "";
+  public onNewResultAwayTeam: string = "";
+
   constructor(
     private dataService: DataService,
     private authService: AuthService,
@@ -83,6 +87,9 @@ export class TournamentsComponent implements OnInit {
     this.cntGames = this.games[index].filter(function(game):boolean{return game.team1==team || game.team2==team});
   };
 
+
+
+
   onNewTournament(content: any) {
     console.log(content)
     this.modalService.open(content);
@@ -90,13 +97,21 @@ export class TournamentsComponent implements OnInit {
   }
 
 
-  onNewGame(tournament_id: string) {
-    console.log(tournament_id)
+  onNewGame(tournament_name: string, content: any) {
+    this.onNewGameTournName = tournament_name;
+    this.modalService.open(content);
+  }
+  
+
+  onGameResult(homeTeam: string, awayTeam: string, content: any) {
+    this.onNewResultHomeTeam = homeTeam;
+    this.onNewResultAwayTeam = awayTeam;
+    this.modalService.open(content);
   }
 
-  
-  onGameResult(game_id: string) {
 
+  saveTournament() {
+    console.log("saving tournament")
   }
 
 }

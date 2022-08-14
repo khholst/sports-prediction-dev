@@ -12,7 +12,7 @@
                                 <div class="col-sm-7">
                                     <p style="display: inline" class="tournament-name">{{ tournaments[index].name }}</p>
                                     <p *ngIf="isAdmin" style="display: inline"><button 
-                                        class="btn btn-primary justify-content-center new-game-btn" (click)="onNewGame(tournaments[index]._id)">New game</button></p>
+                                        class="btn btn-primary justify-content-center new-game-btn" (click)="onNewGame(tournaments[index].name, newGamePopup)">New game</button></p>
                                 </div>
                                
                                 <div class="col-sm-5 text-sm-end">
@@ -50,23 +50,33 @@
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let game of games[index]">
-                                        <td [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team1}} popover-class="increase-popover-width" triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
-                                            <img [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="flag">
+                                        <td style="vertical-align: middle;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team1}} popover-class="increase-popover-width" triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
+                                            <img style="margin-right: 5px;" [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="flag">
                                             {{game.team1}}
-                                        </td>
-                                        <td style="text-align: center;" *ngIf="game.score1>-1">
+                                        </td>                                        
+
+
+
+
+                                        <td style="text-align: center; vertical-align: middle;" *ngIf="game.score1 > -1">
                                             {{game.score1}} : {{game.score2}}
                                         </td>
-                                        <td style="text-align: center;" *ngIf="game.score1==-1">
-                                           :
+
+                                        <td style="text-align: center; vertical-align: middle;" *ngIf="game.score1 == -1 && !isAdmin">
+                                            :
                                         </td>
-                                        <td style="text-align: right;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team2}} triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
+
+                                        <td style="text-align: center;" *ngIf="game.score1 == -1 && isAdmin">
+                                            <button (click)="onGameResult(game.team1, game.team2, newResultPopup)" style="display: inline; margin-top: 0px;" class="btn btn-sm btn-success">+</button>
+                                        </td>
+
+
+                                        <td style="text-align: right; vertical-align: middle;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team2}} triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
                                             {{game.team2}}
-                                            <img [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="flag">
-                                            
+                                            <img style="margin-left: 3px;" [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="flag">                                            
                                         </td>
-                                        <td style="text-align: center;">{{game.time}}</td>
-                                        <td style="text-align: center;"><b>{{game.stage}}</b></td>
+                                        <td style="text-align: center; vertical-align: middle;">{{game.time}}</td>
+                                        <td style="text-align: center; vertical-align: middle;"><b>{{game.stage}}</b></td>
                                         <ng-template #popContent>
                                             <table class="table table-striped">
                                                 <tr *ngFor="let game of cntGames">
@@ -91,6 +101,9 @@
             </div>
         </div>
 </main>
+
+
+
 
 
 <ng-template #newTournamentPopup let-modal>
@@ -134,12 +147,76 @@
                 <option value="Hockey">Hockey</option>
             </select>
         </div>
-
-
-          
       </form>
     </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    <div class="d-grid gap-2">
+        <button style="margin: 0px 16px 16px 16px" type="button" class="btn btn-success" (click)="modal.close(); saveTournament();">Save</button>
     </div>
+  </ng-template>
+
+
+  <ng-template #newGamePopup let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add game in {{onNewGameTournName}}</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="mb-3">
+            <label for="new-game-home" class="form-label">Home team</label>
+            <input type="text" class="form-control" id="new-game-home" placeholder="Home team">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-game-away" class="form-label">Away team</label>
+            <input type="text" class="form-control" id="new-game-away" placeholder="Away team">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-game-time" class="form-label">Date and time (in UTC)</label>
+            <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time">
+        </div>
+
+
+        <div class="mb-3">
+            <label for="new-tourn-sport" class="form-label">Stage</label>
+            <select class="form-select" id="new-tourn-sport" aria-label="Default select example">
+                <option value="Football" selected>Group</option>
+                <option value="Basketball">1/16</option>
+                <option value="Volleyball">Quarter final</option>
+                <option value="Volleyball">Semi final</option>
+                <option value="Volleyball">Final</option>
+            </select>
+        </div>
+      </form>
+    </div>
+    <div class="d-grid gap-2">
+        <button style="margin: 0px 16px 16px 16px" type="button" class="btn btn-success" (click)="modal.close('Save click')">Save</button>
+    </div>
+  </ng-template>
+
+
+
+  <ng-template #newResultPopup let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Save score</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="mb-3">
+            <label for="new-result-home" class="form-label">{{ onNewResultHomeTeam }}</label>
+            <input type="number" min="0" class="form-control" id="new-result-home" placeholder="{{onNewResultHomeTeam}}'s score">
+        </div>
+
+        <div class="mb-3">
+            <label for="new-result-away" class="form-label">{{ onNewResultAwayTeam }}</label>
+            <input type="number" min="0" class="form-control" id="new-result-away" placeholder="{{onNewResultAwayTeam}}'s score">
+        </div>
+      </form>
+    </div>
+    <div class="d-grid gap-2">
+      <button style="margin: 0px 16px 16px 16px" type="button" class="btn btn-success" (click)="modal.close('Save click')">Save</button>
+    </div>
+
   </ng-template>
