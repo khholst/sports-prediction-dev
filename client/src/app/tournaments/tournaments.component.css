@@ -41,6 +41,7 @@ img {
     margin-bottom: 10px;
     margin-top: 10px;
     display: inline;
+    vertical-align: middle;
 }
 
 .new-trnm-btn {
@@ -67,7 +68,8 @@ img {
 }
 
 .tournament {
-    float: right;
+    margin-left: 10px;
+    vertical-align: middle;
 }
 
 .game {

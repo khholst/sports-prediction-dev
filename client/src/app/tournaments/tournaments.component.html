@@ -3,7 +3,7 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <h1 class="heading">Upcoming tournaments</h1>
-                    <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon" class="add-icon tournament" placement="left" ngbTooltip="New tournament"></fa-icon>
+                    <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon" class="add-icon tournament" placement="right" ngbTooltip="New tournament"></fa-icon>
                 </div>
                 <div class="col-lg-10">
                     <div *ngFor="let index of indexes" class="card">
