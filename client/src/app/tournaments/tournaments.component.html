@@ -3,16 +3,15 @@
             <div class="row justify-content-center">
                 <div class="col-lg-10">
                     <h1 class="heading">Upcoming tournaments</h1>
-                    <button *ngIf="isAdmin" class="btn btn-primary new-trnm-btn" (click)="onNewTournament(newTournamentPopup)">New tournament</button>
+                    <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon" class="add-icon tournament" placement="left" ngbTooltip="New tournament"></fa-icon>
                 </div>
                 <div class="col-lg-10">
                     <div *ngFor="let index of indexes" class="card">
         
                             <div class="row">
                                 <div class="col-sm-7">
-                                    <p style="display: inline" class="tournament-name">{{ tournaments[index].name }}</p>
-                                    <p *ngIf="isAdmin" style="display: inline"><button 
-                                        class="btn btn-primary justify-content-center new-game-btn" (click)="onNewGame(tournaments[index].name, newGamePopup)">New game</button></p>
+                                    <p style="display: inline" class="tournament-name">{{ tournaments[index].name }}</p>        
+                                    <fa-icon *ngIf="isAdmin" (click)="onNewGame(tournaments[index].name, newGamePopup)" [icon]="addIcon" class="add-icon game" placement="top" ngbTooltip="New game"></fa-icon> 
                                 </div>
                                
                                 <div class="col-sm-5 text-sm-end">
@@ -67,7 +66,7 @@
                                         </td>
 
                                         <td style="text-align: center;" *ngIf="game.score1 == -1 && isAdmin">
-                                            <button (click)="onGameResult(game.team1, game.team2, newResultPopup)" style="display: inline; margin-top: 0px;" class="btn btn-sm btn-success">+</button>
+                                            <fa-icon (click)="onGameResult(game.team1, game.team2, newResultPopup)" [icon]="addIcon" class="add-icon" placement="top" ngbTooltip="Add result"></fa-icon> 
                                         </td>
 
 
@@ -112,45 +111,54 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <form>
+      <form [formGroup]="newTournamentForm" (ngSubmit)="saveTournament()">
         <div class="mb-3">
             <label for="new-tourn-name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="new-tourn-name" placeholder="Tournament name">
+            <input type="text" class="form-control" id="new-tourn-name" placeholder="Tournament name" formControlName="name"
+            [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+            [class.is-valid]="name.valid">
+            <div class="invalid-feedback">Please enter a tournament name</div>
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-start" class="form-label">Start date</label>
-            <input type="date" class="form-control" id="new-tourn-start" placeholder="Tournament start date">
+            <input type="date" class="form-control" id="new-tourn-start" placeholder="Tournament start date" formControlName="start"
+            [class.is-invalid]="start.invalid && (start.dirty || start.touched)"
+            [class.is-valid]="start.valid">
+            <div class="invalid-feedback">Please enter a start date</div>
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-end" class="form-label">End date</label>
-            <input type="date" class="form-control" id="new-tourn-end" placeholder="Tournament end date">
+            <input type="date" class="form-control" id="new-tourn-end" placeholder="Tournament end date" formControlName="end"
+            [class.is-invalid]="end.invalid && (end.dirty || end.touched)"
+            [class.is-valid]="end.valid">
+            <div class="invalid-feedback">Please enter an end date</div>
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-img" class="form-label">Image url</label>
-            <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url">
+            <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url" formControlName="image">
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-games" class="form-label">Total games</label>
-            <input type="text" class="form-control" id="new-tourn-games" placeholder="Tournament total games">
+            <input type="text" class="form-control" id="new-tourn-games" placeholder="Tournament total games" formControlName="numGames">
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-sport" class="form-label">Sport</label>
-            <select class="form-select" id="new-tourn-sport" aria-label="Default select example">
+            <select class="form-select" id="new-tourn-sport" aria-label="Default select example" formControlName="sport">
                 <option value="Football" selected>Football</option>
                 <option value="Basketball">Basketball</option>
                 <option value="Volleyball">Volleyball</option>
                 <option value="Hockey">Hockey</option>
             </select>
         </div>
+        <div class="d-grid gap-2">
+            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success">Save</button>
+        </div>
       </form>
-    </div>
-    <div class="d-grid gap-2">
-        <button style="margin: 0px 16px 16px 16px" type="button" class="btn btn-success" (click)="modal.close(); saveTournament();">Save</button>
     </div>
   </ng-template>
 

@@ -6,7 +6,8 @@ import { Tournament } from '../tournament';
 import { Game } from '../games';
 import { Country } from '../countries';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { Form, FormBuilder, Validators } from '@angular/forms';
+import { faPlus, faAnglesUp, faAnglesDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-tournaments',
@@ -22,6 +23,9 @@ export class TournamentsComponent implements OnInit {
   public countries: Country[] = [];
   public flags: {[key:string]:string} = {};
   public indexes: number[] = []; //For keeping track of expanded tournaments
+  public addIcon = faPlus;
+  public downIcon = faAnglesDown;
+  public upIcon = faAnglesUp;
 
   public onNewGameTournName: string = ""; 
   public onNewResultHomeTeam: string = "";
@@ -31,8 +35,19 @@ export class TournamentsComponent implements OnInit {
     private dataService: DataService,
     private authService: AuthService,
     private modalService: NgbModal,
-    private router: Router
+    private formBuilder: FormBuilder
   ) {  }
+
+
+  newTournamentForm = this.formBuilder.group({
+    name: ["", [Validators.required]],
+    start: ["", [Validators.required]],
+    end: ["", [Validators.required]],
+    image: ["", [Validators.required]],
+    numGames: ["", [Validators.required]],
+    sport: ["", [Validators.required]],
+  })
+
 
   ngOnInit(): void {
     this.onTournamentsRequest();
@@ -111,7 +126,39 @@ export class TournamentsComponent implements OnInit {
 
 
   saveTournament() {
-    console.log("saving tournament")
+    if (this.newTournamentForm.valid) {
+      console.log("Tournament valid")
+      this.modalService.dismissAll();
+    } else {
+      console.log("tournament invalid")
+    }
   }
 
+
+
+
+
+  get name() {
+    return this.newTournamentForm.get("name")!;
+  }
+
+  get start() {
+    return this.newTournamentForm.get("start")!;
+  }
+
+  get end() {
+    return this.newTournamentForm.get("end")!;
+  }
+
+  get image() {
+    return this.newTournamentForm.get("image")!;
+  }
+
+  get numGames() {
+    return this.newTournamentForm.get("games")!;
+  }
+
+  get sport() {
+    return this.newTournamentForm.get("sport")!;
+  }
 }

@@ -53,3 +53,23 @@ img {
     margin-top: 0px;
     margin-left: 25px;
 }
+
+.add-icon:hover {
+    color: rgb(136, 136, 136);
+    cursor:pointer;
+    transition-duration: 400ms;
+}
+
+.add-icon {
+    color: rgb(46, 46, 46);
+    font-size: 23px;
+    vertical-align: middle;
+}
+
+.tournament {
+    float: right;
+}
+
+.game {
+    margin-left: 10px;
+}
