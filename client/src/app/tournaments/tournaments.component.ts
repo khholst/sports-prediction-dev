@@ -155,7 +155,8 @@ export class TournamentsComponent implements OnInit {
       console.log("Result valid");
       game.score1 = this.newResultForm.value.score1;
       game.score2 = this.newResultForm.value.score2;
-      await this.resultService.newPrediction(game);
+      let resSaver = await this.resultService.newPrediction(game);
+      console.log(resSaver);
       this.modalService.dismissAll();
     } else {
       console.log("Result invalid");

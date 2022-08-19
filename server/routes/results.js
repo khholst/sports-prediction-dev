@@ -4,8 +4,4 @@ const router = require("express").Router();
 
 router.post("/save", authenticate, resultController.save);
 
-
-
-
-
 module.exports = router;

@@ -5,8 +5,27 @@ const tournamentSchema = {_id: 'ObjectId', start_date: 'string', end_date: 'stri
 
 exports.save = (async (req, res) => {
     const result = req.body;
-    console.log(result);
-    res.json({
-        msg: "Result saved"
-    })
+
+    try {
+        let Games = db.model('Games',
+            new mongo.Schema(gamesSchema), 'games');
+    
+        //Add prediction to user document
+        const saveResults = await Games.updateOne(
+            { _id: result._id },
+            {
+                "$set": {
+                    "score1": result.score1, 
+                    "score2": result.score2
+                },
+            }
+        );
+        res.status(200).json({
+            msg: "Prediction saved"
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({});
+    }
+    
 })
