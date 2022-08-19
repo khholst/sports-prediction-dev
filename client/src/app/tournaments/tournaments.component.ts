@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
+import { ResultService } from '../result.service';
 import { Tournament } from '../tournament';
 import { Game } from '../games';
 import { Country } from '../countries';
@@ -30,10 +31,21 @@ export class TournamentsComponent implements OnInit {
   public onNewGameTournName: string = ""; 
   public onNewResultHomeTeam: string = "";
   public onNewResultAwayTeam: string = "";
+  public game: Game = {
+    team1: '',
+    team2: '',
+    score1: 0,
+    score2: 0,
+    tournament_id: '',
+    time: '',
+    stage: '',
+    _id: ''
+  };
 
   constructor(
     private dataService: DataService,
     private authService: AuthService,
+    private resultService: ResultService,
     private modalService: NgbModal,
     private formBuilder: FormBuilder
   ) {  }
@@ -123,9 +135,8 @@ export class TournamentsComponent implements OnInit {
   }
   
 
-  onGameResult(homeTeam: string, awayTeam: string, content: any) {
-    this.onNewResultHomeTeam = homeTeam;
-    this.onNewResultAwayTeam = awayTeam;
+  onGameResult(game: Game, content: any) {
+    this.game = game;
     this.modalService.open(content);
   }
 
@@ -139,13 +150,15 @@ export class TournamentsComponent implements OnInit {
     }
   }
 
-  saveResult(){
-    console.log("Tere")
+  async saveResult(game: Game){
     if (this.newResultForm.valid) {
-      console.log("Result valid")
+      console.log("Result valid");
+      game.score1 = this.newResultForm.value.score1;
+      game.score2 = this.newResultForm.value.score2;
+      await this.resultService.newPrediction(game);
       this.modalService.dismissAll();
     } else {
-      console.log("Result invalid")
+      console.log("Result invalid");
     }
   }
 
