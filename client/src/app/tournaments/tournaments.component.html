@@ -211,20 +211,20 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <form>
+      <form [formGroup]="newResultForm" (ngSubmit)="saveResult()">
         <div class="mb-3">
             <label for="new-result-home" class="form-label">{{ onNewResultHomeTeam }}</label>
-            <input type="number" min="0" class="form-control" id="new-result-home" placeholder="{{onNewResultHomeTeam}}'s score">
+            <input type="number" min="0" class="form-control" id="new-result-home" placeholder="{{onNewResultHomeTeam}}'s score" formControlName="score1">
         </div>
 
         <div class="mb-3">
             <label for="new-result-away" class="form-label">{{ onNewResultAwayTeam }}</label>
-            <input type="number" min="0" class="form-control" id="new-result-away" placeholder="{{onNewResultAwayTeam}}'s score">
+            <input type="number" min="0" class="form-control" id="new-result-away" placeholder="{{onNewResultAwayTeam}}'s score" formControlName="score2">
+        </div>
+        <div class="d-grid gap-2">
+            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success">Save</button>
         </div>
       </form>
-    </div>
-    <div class="d-grid gap-2">
-      <button style="margin: 0px 16px 16px 16px" type="button" class="btn btn-success" (click)="modal.close('Save click')">Save</button>
     </div>
 
   </ng-template>

@@ -48,6 +48,11 @@ export class TournamentsComponent implements OnInit {
     sport: ["", [Validators.required]],
   })
 
+  newResultForm = this.formBuilder.group({
+    score1: ["", [Validators.required]],
+    score2: ["", [Validators.required]]
+  })
+
 
   ngOnInit(): void {
     this.onTournamentsRequest();
@@ -134,6 +139,16 @@ export class TournamentsComponent implements OnInit {
     }
   }
 
+  saveResult(){
+    console.log("Tere")
+    if (this.newResultForm.valid) {
+      console.log("Result valid")
+      this.modalService.dismissAll();
+    } else {
+      console.log("Result invalid")
+    }
+  }
+
 
 
 
@@ -160,5 +175,13 @@ export class TournamentsComponent implements OnInit {
 
   get sport() {
     return this.newTournamentForm.get("sport")!;
+  }
+
+  get score1(){
+    return this.newResultForm.get("score1")!;
+  }
+
+  get score2(){
+    return this.newResultForm.get("score2")!;
   }
 }
