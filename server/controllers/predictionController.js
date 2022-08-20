@@ -100,7 +100,7 @@ exports.new = (async (req, res) => {
 
     //Add prediction to user document
     const savePrediction = await Users.updateOne(
-    { username: username },
+    { "username": username },
     {
         "$set": {
             "tournaments.$[tournament].predictions.$[prediction].score1": req.body.score1, 
@@ -108,8 +108,8 @@ exports.new = (async (req, res) => {
         },
     },
     { "arrayFilters": [
-        { "tournament.tournament_id": game.tournament_id },
-        { "prediction.game_id": game._id }
+        { "tournament.tournament_id": mongo.Types.ObjectId(game.tournament_id) },
+        { "prediction.game_id": mongo.Types.ObjectId(game._id) }
     ]}
     )
 
