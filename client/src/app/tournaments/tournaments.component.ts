@@ -103,10 +103,7 @@ export class TournamentsComponent implements OnInit {
   };
 
 
-
-
   onNewTournament(content: any) {
-    console.log(content)
     this.modalService.open(content);
 
   }
@@ -155,7 +152,7 @@ export class TournamentsComponent implements OnInit {
   }
 
   get numGames() {
-    return this.newTournamentForm.get("games")!;
+    return this.newTournamentForm.get("numGames")!;
   }
 
   get sport() {

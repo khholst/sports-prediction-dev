@@ -138,18 +138,24 @@
 
         <div class="mb-3">
             <label for="new-tourn-img" class="form-label">Image url</label>
-            <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url" formControlName="image">
+            <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url" formControlName="image"
+            [class.is-invalid]="image.invalid && (image.dirty || image.touched)"
+            [class.is-valid]="image.valid">
+            <div class="invalid-feedback">Please enter the image url</div>
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-games" class="form-label">Total games</label>
-            <input type="text" class="form-control" id="new-tourn-games" placeholder="Tournament total games" formControlName="numGames">
+            <input type="text" class="form-control" id="new-tourn-games" placeholder="Tournament total games" formControlName="numGames"
+            [class.is-invalid]="numGames.invalid && (numGames.dirty || numGames.touched)"
+            [class.is-valid]="numGames.valid">
+            <div class="invalid-feedback">Please enter the number of games</div>
         </div>
 
         <div class="mb-3">
             <label for="new-tourn-sport" class="form-label">Sport</label>
             <select class="form-select" id="new-tourn-sport" aria-label="Default select example" formControlName="sport">
-                <option value="Football" selected>Football</option>
+                <option value="Football" [selected]="true">Football</option>
                 <option value="Basketball">Basketball</option>
                 <option value="Volleyball">Volleyball</option>
                 <option value="Hockey">Hockey</option>
