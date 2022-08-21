@@ -29,12 +29,14 @@ exports.all = (async(req, res) => {
         scores: Array
     })
 
+    const username = res.locals.decodedToken.username;
+
     let User = db.model('Users',
     new mongo.Schema({username: 'string', password: 'string', rooms: 'array', tournaments: [tournamentsSchema], is_admin: 'boolean',  _id:'ObjectId'}), 'users');
 
 
     try {
-        const userPredictions = await User.findOne({username: "rääbis123"}, {username: 0, password: 0, is_admin: 0, _id: 0, rooms: 0, __v: 0})
+        const userPredictions = await User.findOne({username: username}, {username: 0, password: 0, is_admin: 0, _id: 0, rooms: 0, __v: 0})
                               .populate("tournaments.predictions.game_id", "-tournament_id")
                               .populate("tournaments.tournament_id", "-start_date -end_date -img_url -sport -_id");
 
@@ -83,8 +85,6 @@ exports.new = (async (req, res) => {
 
     const username = res.locals.decodedToken.username;
 
-    
-
     //Check if user has already made this prediction
     const predictionExists = await Users.countDocuments(
     { username: username, "tournaments.predictions": {$elemMatch: {score1: -1, score2: -1, game_id: game._id}}})
@@ -100,7 +100,7 @@ exports.new = (async (req, res) => {
 
     //Add prediction to user document
     const savePrediction = await Users.updateOne(
-    { username: username },
+    { "username": username },
     {
         "$set": {
             "tournaments.$[tournament].predictions.$[prediction].score1": req.body.score1, 
@@ -108,8 +108,8 @@ exports.new = (async (req, res) => {
         },
     },
     { "arrayFilters": [
-        { "tournament.tournament_id": game.tournament_id },
-        { "prediction.game_id": game._id }
+        { "tournament.tournament_id": mongo.Types.ObjectId(game.tournament_id) },
+        { "prediction.game_id": mongo.Types.ObjectId(game._id) }
     ]}
     )
 

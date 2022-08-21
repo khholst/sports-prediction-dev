@@ -8,6 +8,7 @@ const data = require("./routes/data");
 const room = require("./routes/room");
 const admin = require("./routes/admin");
 const predictions = require("./routes/predictions");
+const results = require("./routes/results");
 
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/data", data);
 app.use("/api/rooms", room);
 app.use("/api/predictions", predictions);
 app.use("/api/admin", admin);
+app.use("/api/results", results);
 
 
 
