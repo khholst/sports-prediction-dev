@@ -28,32 +28,125 @@ exports.save = (async (req, res) => {
         let Users = db.model('Users',
             new mongo.Schema({username: 'string', password: 'string', rooms: 'array', tournaments: [tournamentsSchema], is_admin: 'boolean',  _id:'ObjectId'}), 'users');
         
-        const saveResults = await Games.updateOne(
-            { _id: result._id },
-            {
-                "$set": {
-                    "score1": result.score1, 
-                    "score2": result.score2
-                }
-            }
-        );
+        // const saveResults = await Games.updateOne(
+        //     { _id: result._id },
+        //     {
+        //         "$set": {
+        //             "score1": result.score1, 
+        //             "score2": result.score2
+        //         }
+        //     }
+        // );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Find winning team for later comparison
+        let winner = 0;
+        if (result.score1 > result.score2) { winner = 1 }
+        else if (result.score2 > result.score1) { winner = 2 }
+
+        const difference = Math.abs(result.score1 - result.score2);
+        let onePointDiff = [difference];
+
+        for (let i = 1; i <= 10; i++) {
+            onePointDiff.push(difference + i);
+            onePointDiff.push(difference - i);
+        }
+
+        
 
         const savePredictionPoints = await Users.bulkWrite([
+            //Update all 3 point predictions
             { "updateMany": {
                 "filter":{},
                 "update": {
-                    "$set": {"tournaments.$[tournament].predictions.$[prediction].points": 3},
+                    "$set": {"tournaments.$[tournament].predictions.$[prediction].points": 3 },
+                    "$push": {"tournaments.$[tournament].scores": {"$last": "$tournaments.$[tournament].scores"}} //Siin peaks scores arraysse n-1 + 3 punkti lisama 
+                },
+                "arrayFilters": [
+                    {   "tournament.tournament_id": mongo.Types.ObjectId(result.tournament_id) },
+                    {   "prediction.game_id": mongo.Types.ObjectId(result._id),
+                        "prediction.winner": winner,
+                        "prediction.difference": {"$lte": difference + 5, "$gte": difference - 5} }                                                           
+                ]
+            }},
+
+            //Update all 2 point predictions
+            { "updateMany": {
+                "filter":{},
+                "update": {
+                    "$set": {"tournaments.$[tournament].predictions.$[prediction].points": 2 },
                     //"$push": {"tournaments.$[tournament].scores": 3} Siin peaks scores arraysse n-1 + 3 punkti lisama 
                 },
                 "arrayFilters": [
-                    { "tournament.tournament_id": mongo.Types.ObjectId(result.tournament_id) },
-                    { "prediction.game_id": mongo.Types.ObjectId(result._id),
-                     "prediction.score1": result.score1,
-                    "prediction.score2": result.score2}
+                    {   "tournament.tournament_id": mongo.Types.ObjectId(result.tournament_id) },
+                    {   "prediction.game_id": mongo.Types.ObjectId(result._id),
+                        "prediction.winner": winner,
+                        "prediction.difference": {"$in": [difference + 6, difference + 7, difference + 8, difference + 9, difference + 10,
+                                                        difference - 6, difference - 7, difference - 8, difference - 9, difference - 10]}
+                    }                                                           
                 ]
-            }}
-            //Siia peaksid siis teised updateMany'd tulema, aga ma ei suuda neid välja mõleda :(
-        ]);
+            }},
+            //Update all 1 point predictions
+            { "updateMany": {
+                "filter":{},
+                "update": {
+                    "$set": {"tournaments.$[tournament].predictions.$[prediction].points": 1 },
+                    //"$push": {"tournaments.$[tournament].scores": 3} Siin peaks scores arraysse n-1 + 3 punkti lisama 
+                },
+                "arrayFilters": [
+                    {   "tournament.tournament_id": mongo.Types.ObjectId(result.tournament_id) },
+                    {   "prediction.game_id": mongo.Types.ObjectId(result._id),
+                        "prediction.winner": winner,
+                        "prediction.difference": {"$nin": onePointDiff}
+                    }                                                           
+                ]
+            }},
+            //Update all 0 point predictions
+            { "updateMany": {
+                "filter":{},
+                "update": {
+                    "$set": {"tournaments.$[tournament].predictions.$[prediction].points": 0 },
+                    //"$push": {"tournaments.$[tournament].scores": 3} Siin peaks scores arraysse n-1 + 3 punkti lisama 
+                },
+                "arrayFilters": [
+                    {   "tournament.tournament_id": mongo.Types.ObjectId(result.tournament_id) },
+                    {   "prediction.game_id": mongo.Types.ObjectId(result._id),
+                        "prediction.winner": {"$ne": winner},
+                    }                                                           
+                ]
+            }},
+        ])
+
+
+
+
+
+
+
+
+
+
 
         res.status(200).json({
             msg: "Result saved"

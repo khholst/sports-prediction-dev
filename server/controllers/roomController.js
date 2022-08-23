@@ -61,6 +61,7 @@ exports.new = (async (req, res) => {
     possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} })
     
 
+    //IF JOINED LATE, ADD AS MANY 0 SCORES TO SCORES ARRAY
     let scores = [];
     let i = 0;
     // while (possiblePredictions[i].points === -1) {
@@ -175,10 +176,11 @@ exports.join = (async (req, res) => {
             possiblePredictions.forEach((e) => {
                 e.score1 = -1,
                 e.score2 = -1,
-                e.points = (new Date(e.time).getTime() > new Date().getTime()) ? -999:-1 //-999: game not started; -1: game started but not predicted
+                e.points = (new Date(e.time).getTime() > new Date().getTime()) ? -999 : -1 //-999: game not started; -1: game started but not predicted
+                e.winner = -1
             })
 
-            possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points} });
+            possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points, 'winner': e.winner} });
 
             const tournaments = {
                 tournament_id: tournamentID.tournament_id,
@@ -221,10 +223,9 @@ exports.all = (async (req, res) => {
 exports.room = (async (req, res) => {
     const room_id = mongo.Types.ObjectId(req.params.id);
     const rooms = db.model('Rooms',
-        new mongo.Schema({ tournament_id: 'string', _id: 'ObjectId', name: 'string', creator: 'string', join_key: 'number' }), 'rooms');
+        new mongo.Schema({ tournament_id: 'string', _id: 'ObjectId', name: 'string', creator: 'string', join_key: 'string' }), 'rooms');
 
     const roomData = await rooms.find({"_id": room_id});
-
     res.status(200).json(roomData);
 })
 

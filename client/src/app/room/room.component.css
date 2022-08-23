@@ -1,0 +1,16 @@
+.copy:hover {
+    color: rgb(63, 71, 120);
+    transition-duration: 200ms;
+    cursor:pointer
+}
+
+.loading {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+ 
+

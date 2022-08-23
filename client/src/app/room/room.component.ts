@@ -6,19 +6,21 @@ import { Tournament } from '../tournament';
 import { RoomService } from '../room.service';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
-import { faTrophy } from '@fortawesome/free-solid-svg-icons';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { faTrophy, faCopy } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
+
+
 export class RoomComponent implements OnInit {
   public roomUsers: User[] = [];
   public roomName: string = "";
   public room = new Room();
   public faTrophy = faTrophy;
+  public faCopy = faCopy;
   public active: number = 1;
   public statDict: {[username:string]:any} = {};
   public activeUser: string = this.authService.getUsername();
@@ -26,6 +28,11 @@ export class RoomComponent implements OnInit {
   public dropdownSettings:object = {};
   public dropdownList: Array<object> = [];
   public selectedItems: Array<any> = [];
+  public gamesPlayed: number = 0;
+  public pieChartData: any[] = [];
+  public loading = true;
+
+  public colorScheme = "#5AA454, #A10A28, #C7B42C, #AAAAAA";
 
   constructor(
     private route: ActivatedRoute,
@@ -39,6 +46,7 @@ export class RoomComponent implements OnInit {
     this.generateChartProps();
     this.generateDropdown();
   };
+
 
   async onRoomRequest(){
     const roomID: string = this.route.snapshot.paramMap.get("id")!;
@@ -67,17 +75,66 @@ export class RoomComponent implements OnInit {
     };
     
     this.roomUsers = await this.roomService.getRoomUsers([roomID]);
+    
+    this.getScores();
+
+
+
+
+
     const isThereAnyScore: Array<number> = this.roomUsers[0].tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores;
     if(isThereAnyScore.length>0){
+      console.log(isThereAnyScore)
       const lastIndex: number = isThereAnyScore.length - 1;
       this.roomUsers.sort(
-        (firsUser: User, secondUser: User) =>
-          (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex]) ? -1 : 1);
+        (firstUser: User, secondUser: User) =>
+          (firstUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores[lastIndex]) ? -1 : 1);
     };
+
     this.findStats();
     this.generateDropdownData();
     this.generateChartData(this.selectedItems);
+    this.generatePieChartData();
+    this.loading = false;
   };
+
+
+  private generatePieChartData() {
+    const username = this.authService.getUsername();
+    const userData = this.statDict[username];
+
+    this.pieChartData = [
+      { "name": "Accurate",
+        "value": userData.accPred
+      },
+      { "name": "Partly accurate",
+        "value": userData.hlfPred
+      },
+      { "name": "Incorrect",
+        "value": userData.missPred
+      }
+    ]
+  }
+
+
+  //Calculate score array
+  private getScores() {
+        for (let i = 0; i < this.roomUsers.length; i++) {
+          for (let j = 0; j < this.roomUsers[i].tournaments.length; j++) {
+            
+            if (this.room.tournament_id === this.roomUsers[i].tournaments[j].tournament_id) {
+              let index = 1;
+              let predictions = this.roomUsers[i].tournaments[j].predictions;
+              const scores = [predictions[0].points];
+              while (predictions[index].points != -999) {
+                scores.push(scores[scores.length - 1] + predictions[index].points);
+                index++;
+              }
+              this.roomUsers[i].tournaments[j].scores = scores;
+            }
+          }
+        }
+  }
 
   formatDate(dateString: string): string {
     const monthLookup: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
@@ -93,11 +150,12 @@ export class RoomComponent implements OnInit {
       const trns: Array<any> = usrs[i].tournaments.filter(function(trn):boolean{return trn.tournament_id == trn_id});
       const pnts: number = trns[0].scores[trns[0].scores.length-1];
       const totalPredsMade: Array<any> = trns[0].predictions.filter(function(pred:any):boolean{return pred.points > -999});
+      this.gamesPlayed = totalPredsMade.length;
       this.statDict[usrs[i].username] = {
         "points": pnts,
         "totalPredsMade": totalPredsMade.length,
         "accPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==3}).length,
-        "hlfPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==1}).length,
+        "hlfPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==1 || pred.points==2}).length,
         "missPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==0}).length,
         "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
       };
@@ -181,6 +239,10 @@ export class RoomComponent implements OnInit {
       autoPosition: false
     };
   };
+
+  copyJoinKey() {
+    navigator.clipboard.writeText(this.room.join_key);
+  }
 
   onItemSelect(item:any){
     this.generateChartData(this.selectedItems);

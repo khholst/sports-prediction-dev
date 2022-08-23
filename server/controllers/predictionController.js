@@ -68,7 +68,9 @@ exports.new = (async (req, res) => {
         },
         score1: Number,
         score2: Number,
-        points: Number
+        points: Number,
+        winner: Number,
+        difference: Number
     })
 
     const tournamentsSchema = new mongo.Schema({
@@ -98,13 +100,24 @@ exports.new = (async (req, res) => {
         })
     }
 
+    let winner = 0;
+    if (req.body.score1 > req.body.score2) { winner = 1 }
+    else if (req.body.score2 > req.body.score1) { winner = 2 }
+
+    let difference = Math.abs(req.body.score2 - req.body.score1);
+
+    
+    
+
     //Add prediction to user document
     const savePrediction = await Users.updateOne(
     { "username": username },
     {
         "$set": {
             "tournaments.$[tournament].predictions.$[prediction].score1": req.body.score1, 
-            "tournaments.$[tournament].predictions.$[prediction].score2": req.body.score2
+            "tournaments.$[tournament].predictions.$[prediction].score2": req.body.score2,
+            "tournaments.$[tournament].predictions.$[prediction].winner": winner,
+            "tournaments.$[tournament].predictions.$[prediction].difference": difference,
         },
     },
     { "arrayFilters": [

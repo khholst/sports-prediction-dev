@@ -1,4 +1,11 @@
-<main>
+<div *ngIf="loading" class="row loading">
+    <div class="col text-center">
+            <img src="assets/blocks.svg" alt="Loading icon" width="100">
+    </div>
+</div>
+
+
+<main *ngIf="!loading">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
@@ -6,10 +13,17 @@
                     <a ngbNavLink>Overview</a>
                     <ng-template ngbNavContent>
                         <div class="container">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    {{gamesPlayed}} out of 61 matches played
+                                </div>
+                            </div>
+                              
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <p class="mt-2"> <a><h1>{{ room.name }}</h1></a><i>created by</i> {{ room.creator }} </p>
+                                    <p class="mt-2"> <a><h1 style="margin-bottom: 0px;">{{ room.name }}</h1></a><i>created by</i> {{ room.creator }} </p>
                                 </div>
+
                                 <div class="col-sm-6 text-sm-end date">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
                                         <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
@@ -20,9 +34,16 @@
                                     <p *ngIf="room.status == 'E'" style="color: red">Finished</p>  
                                 </div>
                                 <div class="row">
+                                    
                                     <div class="col-sm-6">
                                             <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
                                             {{ room.tournament }}
+                                    </div>
+                                    <div class="col-sm-6 text-sm-end" ng>
+                                        <span class="copy" (click)="copyJoinKey()" [animation]="true" triggers="click" [autoClose]="true" [closeDelay]="200" ngbTooltip="Copied to clipboard!">
+                                            <fa-icon [icon]="faCopy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
+                                            Copy join key
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -61,10 +82,21 @@
                 <li *ngIf="room.status == 'A' || room.status == 'E'" [ngbNavItem]="2">
                     <a ngbNavLink>Statistics</a>
                     <ng-template ngbNavContent>
+
                         <div class="container">
                             <div class="row">
                                 <div class="col-sm-6">
                                     <p class="mt-2"> <a><h1>{{ room.name }}</h1></a></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <ngx-charts-advanced-pie-chart
+                                        [scheme]="chartData['colorScheme']"
+                                        [results]="pieChartData"
+                                        [view]="[700, 200]"
+                                    >
+                                    </ngx-charts-advanced-pie-chart>
                                 </div>
                             </div>
                             <div style="max-height: 300px;" class="overflow-auto">
