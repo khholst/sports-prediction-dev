@@ -4,13 +4,20 @@
     cursor:pointer
 }
 
-.loading {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
+h1 {
+    font-weight: normal;
+    font-size: 40px;
 }
 
- 
+
+ h2 {
+    font-weight: normal;
+    font-size: 25px;
+ }
+
+ .chart-wrapper {
+    display: flex;
+    overflow: hidden;
+    max-height: 200px;
+}
 

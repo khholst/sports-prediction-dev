@@ -13,7 +13,8 @@ export class PredictionsComponent implements OnInit {
   public predictions: any = {};
   public filteredPredictions: any = {};
   public numTournaments: number[] = [];
-  public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"]
+  public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"];
+  public isLoading = true;
 
   constructor(
     private predictionService: PredictionService,
@@ -39,11 +40,6 @@ export class PredictionsComponent implements OnInit {
     }
 
 
-    //this.pushFinishedGamesToEnd(this.predictions, now);
-
-
-
-
     for(let i = 0; i < this.predictions.length; i++) {
       this.numTournaments.push(i);
       this.predictions[i].predictions.forEach((element: any) => {
@@ -51,6 +47,7 @@ export class PredictionsComponent implements OnInit {
         element.game_id.printTime = this.formatTime(new Date(element.game_id.time));
       })
     }
+    this.isLoading = false;
   }
 
   private sortPredictions(a: any, b: any): number {
@@ -62,25 +59,7 @@ export class PredictionsComponent implements OnInit {
     else { return 0; }
   }
 
-  private pushFinishedGamesToEnd(predictions: any, now: Date) {
-    for (let j = 0; j < predictions.length; j++) {
-      let appended = [];
-      let spliced = [];
-      for (let i = 0; i < predictions[j].predictions.length; i++) {
-        const game = predictions[j].predictions[i];
-  
-        if (new Date(game.game_id.time).getTime() < now.getTime()) {
-          spliced.push(i)
-          appended.push(game);
-        }
-      }
 
-      for (let i = appended.length - 1; i >= 0; i--) {
-        predictions[j].predictions.splice(spliced[i], 1);
-        predictions[j].predictions.push(appended[i]);
-      }
-    }
-  }
 
 
 

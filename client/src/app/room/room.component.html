@@ -6,7 +6,7 @@
 
 
 <main *ngIf="!loading">
-    <div class="row justify-content-center">
+    <div class=" container row justify-content-center">
         <div class="col-lg-10">
             <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
                 <li [ngbNavItem]="1">
@@ -18,6 +18,7 @@
                                     {{gamesPlayed}} out of 61 matches played
                                 </div>
                             </div>
+                            
                               
                             <div class="row">
                                 <div class="col-sm-6">
@@ -59,13 +60,13 @@
                                     <tbody>
                                         <tr *ngFor="let user of roomUsers; let indexOfelement=index;">
                                             <td *ngIf="indexOfelement==0" style="text-align: center;">
-                                                <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:Gold"></fa-icon>
+                                                <fa-icon [icon]="faMedal" style="font-size: 23px; vertical-align: middle; color:Gold"></fa-icon>
                                             </td>
                                             <td *ngIf="indexOfelement==1" style="text-align: center;">
-                                                <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:Silver"></fa-icon>
+                                                <fa-icon [icon]="faMedal" style="font-size: 23px; vertical-align: middle; color:Silver"></fa-icon>
                                             </td>
                                             <td *ngIf="indexOfelement==2" style="text-align: center;">
-                                                <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle; color:rgb(151, 110, 5)"></fa-icon>
+                                                <fa-icon [icon]="faMedal" style="font-size: 23px; vertical-align: middle; color:rgb(151, 110, 5)"></fa-icon>
                                             </td>
                                             <td *ngIf="indexOfelement>2" style="text-align: center;">{{ indexOfelement +1}}.</td>
                                             <td *ngIf="user.username==activeUser" style="text-align: center;"><b>{{ user.username }}</b></td>
@@ -84,6 +85,11 @@
                     <ng-template ngbNavContent>
 
                         <div class="container">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    {{gamesPlayed}} out of 61 matches played
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-sm-6">
                                     <p class="mt-2"> <a><h1>{{ room.name }}</h1></a></p>
@@ -91,15 +97,26 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
+                                    <p class="mt-2"> <a><h2>My stats</h2></a></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col" style="height: 200px">
                                     <ngx-charts-advanced-pie-chart
                                         [scheme]="chartData['colorScheme']"
                                         [results]="pieChartData"
-                                        [view]="[700, 200]"
+                                        [label]="'Predictions made'"
                                     >
                                     </ngx-charts-advanced-pie-chart>
                                 </div>
                             </div>
+                            <hr>
                             <div style="max-height: 300px;" class="overflow-auto">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <p class="mt-2"> <a><h2>Users' stats</h2></a></p>
+                                    </div>
+                                </div>
                                 <table class="table table-striped">
                                     <thead>
                                         <tr>
@@ -107,9 +124,10 @@
                                             <th style="text-align: center;" scope="col">Pos.</th>
                                             <th style="text-align: center;" scope="col">Score</th>
                                             <th style="text-align: center;" scope="col">Total predict.</th>
-                                            <th style="text-align: center;" scope="col">Accurate predict.</th>
-                                            <th style="text-align: center;" scope="col">Halfway predict.</th>
-                                            <th style="text-align: center;" scope="col">Incorrect predict.</th>
+                                            <th style="text-align: center;" scope="col">3p predict.</th>
+                                            <th style="text-align: center;" scope="col">2p predict.</th>
+                                            <th style="text-align: center;" scope="col">1p predict.</th>
+                                            <th style="text-align: center;" scope="col">Incorrect pred.</th>
                                             <th style="text-align: center;" scope="col">Avg. points/game</th>
                                         </tr>
                                     </thead>
@@ -120,14 +138,23 @@
                                             <td style="text-align: center;">{{ indexOfelement +1}}.</td>
                                             <td style="text-align: center;">{{ statDict[user.username].points }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].totalPredsMade }}</td>
-                                            <td style="text-align: center;">{{ statDict[user.username].accPred }}</td>
-                                            <td style="text-align: center;">{{ statDict[user.username].hlfPred }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].point3 }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].point2 }}</td>
+                                            <td style="text-align: center;">{{ statDict[user.username].point1 }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].missPred }}</td>
                                             <td style="text-align: center;">{{ statDict[user.username].averPnts }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div> 
+
+                            <hr style="margin-top:35px;">
+                            <div class="row" style="margin-top: 20px;">
+                                <div class="col-sm-6">
+                                    <p class="mt-2"> <a><h2>Progress</h2></a></p>
+                                </div>
                             </div>
+
                             <div>
                                 <angular2-multiselect [data]="dropdownList" [(ngModel)]="selectedItems" 
                                 [settings]="dropdownSettings" 
@@ -141,7 +168,6 @@
                             </div>
                             <div style="height: 300px;">
                                 <ngx-charts-line-chart
-                                [view]="chartData['view']"
                                 [scheme]="chartData['colorScheme']"
                                 [legend]="chartData['legend']"
                                 [showXAxisLabel]="chartData['showXAxisLabel']"

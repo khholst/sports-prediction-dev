@@ -6,7 +6,7 @@ import { Tournament } from '../tournament';
 import { RoomService } from '../room.service';
 import { DataService } from '../data.service';
 import { AuthService } from '../auth.service';
-import { faTrophy, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faTrophy, faCopy, faMedal } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-room',
@@ -19,8 +19,6 @@ export class RoomComponent implements OnInit {
   public roomUsers: User[] = [];
   public roomName: string = "";
   public room = new Room();
-  public faTrophy = faTrophy;
-  public faCopy = faCopy;
   public active: number = 1;
   public statDict: {[username:string]:any} = {};
   public activeUser: string = this.authService.getUsername();
@@ -32,7 +30,11 @@ export class RoomComponent implements OnInit {
   public pieChartData: any[] = [];
   public loading = true;
 
-  public colorScheme = "#5AA454, #A10A28, #C7B42C, #AAAAAA";
+  //Icons
+  public faTrophy = faTrophy;
+  public faCopy = faCopy;
+  public faMedal = faMedal;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -105,10 +107,13 @@ export class RoomComponent implements OnInit {
 
     this.pieChartData = [
       { "name": "Accurate",
-        "value": userData.accPred
+        "value": userData.point3
       },
-      { "name": "Partly accurate",
-        "value": userData.hlfPred
+      { "name": "2 points",
+        "value": userData.point2
+      },
+      { "name": "1 point",
+        "value": userData.point1
       },
       { "name": "Incorrect",
         "value": userData.missPred
@@ -150,12 +155,14 @@ export class RoomComponent implements OnInit {
       const trns: Array<any> = usrs[i].tournaments.filter(function(trn):boolean{return trn.tournament_id == trn_id});
       const pnts: number = trns[0].scores[trns[0].scores.length-1];
       const totalPredsMade: Array<any> = trns[0].predictions.filter(function(pred:any):boolean{return pred.points > -999});
+      console.log(totalPredsMade)
       this.gamesPlayed = totalPredsMade.length;
       this.statDict[usrs[i].username] = {
         "points": pnts,
         "totalPredsMade": totalPredsMade.length,
-        "accPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==3}).length,
-        "hlfPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==1 || pred.points==2}).length,
+        "point3": totalPredsMade.filter(function(pred:any):boolean{return pred.points==3}).length,
+        "point2": totalPredsMade.filter(function(pred:any):boolean{return pred.points==2}).length,
+        "point1": totalPredsMade.filter(function(pred:any):boolean{return pred.points==1}).length,
         "missPred": totalPredsMade.filter(function(pred:any):boolean{return pred.points==0}).length,
         "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
       };
@@ -171,7 +178,7 @@ export class RoomComponent implements OnInit {
       "yAxis": true,
       "showYAxisLabel": true,
       "showXAxisLabel": true,
-      "xAxisLabel": 'Games',
+      "xAxisLabel": 'Games played',
       "yAxisLabel": 'Score',
       "timeline": false,
       "colorScheme": {

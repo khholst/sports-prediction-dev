@@ -6,14 +6,14 @@
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="form-group">
                   <label for="username">Username</label>
-                  <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username"
+                  <input type="text" class="form-control" id="username" placeholder="Username" formControlName="username" autocomplete="username"
                   [class.is-invalid]="username.invalid && (username.dirty || username.touched)"
                   [class.is-valid]="username.valid">
                   <div class="invalid-feedback">Please enter a username!</div>
                 </div>
                 <div class="form-group">
                   <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password"
+                  <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password" autocomplete="current-password"
                   [class.is-invalid]="password.invalid && (password.dirty || password.touched)"
                   [class.is-valid]="password.valid">
                   <div class="invalid-feedback">Please enter a password!</div>

@@ -21,6 +21,7 @@ export class RoomsComponent implements OnInit {
   public extraData: {[key:number]:any} = {};
   public faTrophy = faTrophy;
   public selectedFilter = "ALL";
+  public isLoading = true;
 
   constructor(
     private authService: AuthService,
@@ -118,6 +119,7 @@ export class RoomsComponent implements OnInit {
       this.rooms[j] = Object.assign(this.rooms[j], this.extraData[j])      
     };
     this.filteredRooms = this.rooms;
+    this.isLoading = false;
   };
 
   formatDate(dateString: string): string {
