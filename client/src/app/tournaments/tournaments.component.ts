@@ -7,7 +7,7 @@ import { Game } from '../games';
 import { Country } from '../countries';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators } from '@angular/forms';
-import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol, faArrowsToEye } from '@fortawesome/free-solid-svg-icons';
 import { TournamentService } from '../tournament.service';
 
 @Component({
@@ -24,7 +24,12 @@ export class TournamentsComponent implements OnInit {
   public countries: Country[] = [];
   public flags: {[key:string]:string} = {};
   public indexes: number[] = []; //For keeping track of expanded tournaments
-  public isLoading = true;
+  public isLoading: boolean = true;
+  public alert: any = {
+    isOpen: false,
+    message: "",
+    type: ""
+  };
 
   //Icons
   public addIcon = faPlus;
@@ -37,6 +42,7 @@ export class TournamentsComponent implements OnInit {
   public onNewGameTournName: string = ""; 
   public onNewResultHomeTeam: string = "";
   public onNewResultAwayTeam: string = "";
+
   public game: Game = {
     team1: '',
     team2: '',
@@ -64,7 +70,14 @@ export class TournamentsComponent implements OnInit {
     end_date: ["", [Validators.required]],
     img_url: ["", [Validators.required]],
     num_games: ["", [Validators.required]],
-    sport: ["", [Validators.required]],
+    sport: ["football", [Validators.required]]
+  })
+
+  newGameForm = this.formBuilder.group({
+    team1: ["", [Validators.required]],
+    team2: ["", [Validators.required]],
+    time: ["", [Validators.required]],
+    stage: ["G", [Validators.required]]
   })
 
   newResultForm = this.formBuilder.group({
@@ -93,9 +106,15 @@ export class TournamentsComponent implements OnInit {
     this.isLoading = false;
   };
 
-  async onGamesRequest(tournID:string, isCol:boolean, index:number, element:any) {
+  async onGamesRequest(tournID:string, isCol:boolean, index:number) {
+    const arrow:any = document.getElementsByClassName("arrow-icon" + index);
+    const show:any = document.getElementById("show-hide-games" + index);
+
     if(!isCol){
-      element.textContent = "Hide games ▲";
+      show.textContent = " Hide games ";
+      arrow[0].classList.toggle("down");
+      arrow[1].classList.toggle("down");
+
       if(!(index in this.games)){
         this.games[index] = await this.dataService.getGames(tournID);
         for (let i = 0; i < this.games[index].length; i++) {
@@ -111,7 +130,9 @@ export class TournamentsComponent implements OnInit {
         };
       };
     }else{
-      element.textContent = "Show games ▼";
+      arrow[0].classList.toggle("down");
+      arrow[1].classList.toggle("down");
+      show.textContent = " Show games ";
     };
   };
 
@@ -147,38 +168,68 @@ export class TournamentsComponent implements OnInit {
 
   async saveTournament() {
     if (this.newTournamentForm.valid) {
-      console.log("Tournament valid")
       try {
         this.newTournamentForm.value.end_date = new Date(this.newTournamentForm.value.end_date)
         const result = await this.tournamentService.newPrediction(this.newTournamentForm.value);
-        console.log(result)
-        this.modalService.dismissAll();
-      } catch (error) {
-        console.log(error)
-      }
-      
-    } else {
-      console.log("tournament invalid");
+        this.showAlert("Tournament saved successfully", "success");
+      } catch (error: any) {
+        if(error.status === 401) {
+          this.authService.navigateToLogin();
+        } else if (error.status === 403) {
+          this.showAlert("You are not authorized to save a tournament", "danger");
+        } else {
+          this.showAlert("Tournament could not be saved, please try again", "danger");
+        }
+      } 
     }
   }
+
+  async saveGame() {
+    console.log("ghvhhjbh")
+    console.log(this.newGameForm.value)
+  }
+
+
 
   async saveResult(game: Game){
     if (this.newResultForm.valid) {
-      console.log("Result valid");
-      game.score1 = this.newResultForm.value.score1;
-      game.score2 = this.newResultForm.value.score2;
-      let resSaver = await this.resultService.newPrediction(game);
-      console.log(resSaver);
-      this.modalService.dismissAll();
-    } else {
-      console.log("Result invalid");
+      try {
+        game.score1 = this.newResultForm.value.score1;
+        game.score2 = this.newResultForm.value.score2;
+        const result = await this.resultService.newPrediction(game);
+        this.showAlert("Result added successfully!", "success");
+      } catch (error: any) {
+        if(error.status === 401) {
+          this.authService.navigateToLogin();
+        } else if (error.status === 403) {
+          this.showAlert("You are not authorized to add a result", "danger");
+        } else {
+          this.showAlert("Result could not be saved, please try again", "danger");
+        }
+      }
     }
   }
 
 
 
 
+  private showAlert(message: string, type: string) {
+    this.modalService.dismissAll();
+        this.alert.isOpen = true;
+        this.alert.message = message;
+        this.alert.type = type;
 
+        setTimeout(() => {
+          this.alert.isOpen = false;
+        }, 4000)
+  }
+
+
+
+
+
+
+  //Tournament form getters
   get name() {
     return this.newTournamentForm.get("name")!;
   }
@@ -203,6 +254,25 @@ export class TournamentsComponent implements OnInit {
     return this.newTournamentForm.get("sport")!;
   }
 
+
+  //New game form getters
+  get team1() {
+    return this.newGameForm.get("team1")!;
+  }
+
+  get team2() {
+    return this.newGameForm.get("team2")!;
+  }
+
+  get time() {
+    return this.newGameForm.get("time")!;
+  }
+
+  get stage() {
+    return this.newGameForm.get("stage")!;
+  }
+
+  //Game result form getters
   get score1(){
     return this.newResultForm.get("score1")!;
   }

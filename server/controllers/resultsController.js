@@ -40,26 +40,6 @@ exports.save = (async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         //Find winning team for later comparison
         let winner = 0;
         if (result.score1 > result.score2) { winner = 1 }
@@ -138,24 +118,17 @@ exports.save = (async (req, res) => {
             }},
         ])
 
+        res.status(201).json({
+            code: 201,
+            msg: "Result added",
+        });
 
-
-
-
-
-
-
-
-
-
-        res.status(200).json({
-            msg: "Result saved"
-        })
     } catch (error) {
-        console.log(error);
-        res.status(400).json({});
+        res.status(500).json({
+            code: 500,
+            errors: [{
+                msg: "Something went wrong with the request"
+            }]
+        })
     };
-
-
-    
 })

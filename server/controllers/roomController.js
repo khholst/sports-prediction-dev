@@ -200,6 +200,7 @@ exports.join = (async (req, res) => {
     }
 })
 
+
 exports.all = (async (req, res) => {
     const username = req.params.username;
 
@@ -220,6 +221,8 @@ exports.all = (async (req, res) => {
     res.status(200).json(roomData);
 })
 
+
+
 exports.room = (async (req, res) => {
     const room_id = mongo.Types.ObjectId(req.params.id);
     const rooms = db.model('Rooms',
@@ -228,6 +231,8 @@ exports.room = (async (req, res) => {
     const roomData = await rooms.find({"_id": room_id});
     res.status(200).json(roomData);
 })
+
+
 
 exports.roomUsers = (async (req, res) => {
     const predSchema = new mongo.Schema({game_id:'ObjectID', score1:'number', score2:'number', points:'number'})

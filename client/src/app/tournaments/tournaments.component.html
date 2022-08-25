@@ -8,7 +8,8 @@
 <main>
         <div *ngIf="!isLoading" class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-lg-10">
+                <div class="col-lg-10" style="margin-bottom: 15px;">
+                    <ngb-alert #selfClosingAlert *ngIf="alert.isOpen" [type]="alert.type" [animation]="true" [dismissible]="false">{{alert.message}}</ngb-alert>
                     <h1 class="heading">Upcoming tournaments</h1>
                     <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon" class="add-icon tournament" placement="right" ngbTooltip="New tournament"></fa-icon>
                 </div>
@@ -39,21 +40,22 @@
                                 <div class="col-sm-6">
                                     <img class="img-fluid tournament-img" src="{{ tournaments[index].img_url }}" alt="" width="320">
                                 </div>
-                                <div class="col-sm-6">
-                                    <p>
-                                        <fa-icon class="fa-xl" [icon]="faLocation"></fa-icon> 
-                                        Held in:
-                                    </p>
-                                    <ul style="display:inline-block;">                                        
-                                        <li *ngFor="let host of tournaments[index].host">{{host}}</li>
-                                    </ul>
+                                <div class="col-sm-6 d-flex align-items-center">
+                                    <div>
+                                        <span *ngFor="let host of tournaments[index].host">
+                                            <fa-icon class="fa-lg" [icon]="faLocation"></fa-icon> 
+                                            {{host}}
+                                        <br>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
         
                         <button type="button" class="btn btn-primary"
-                            (click)="collapse.toggle(); onGamesRequest(tournaments[index]._id, isCollapsed[index], index, $event.target)"
+                            (click)="collapse.toggle(); onGamesRequest(tournaments[index]._id, isCollapsed[index], index)"
                             isCollapsed="!isCollapsed" aria-controls="collapseExample">
-                            Show games ▼<br>
+                            <fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon" style="display:inline-block"></fa-icon>
+                            <span id="show-hide-games{{index}}" style="width: 125px; display:inline-block;"> Show games </span><fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon" style="display:inline-block"></fa-icon><br>
                         </button>
         
                         <div class="overflow-auto" style="max-height: 315px;" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[index]">
@@ -176,14 +178,15 @@
         <div class="mb-3">
             <label for="new-tourn-sport" class="form-label">Sport</label>
             <select class="form-select" id="new-tourn-sport" aria-label="Default select example" formControlName="sport">
-                <option value="Football" [selected]="true">Football</option>
-                <option value="Basketball">Basketball</option>
-                <option value="Volleyball">Volleyball</option>
-                <option value="Hockey">Hockey</option>
+                <option value="football" [selected]="true">Football</option>
+                <option value="basketball">Basketball</option>
+                <option value="volleyball">Volleyball</option>
+                <option value="hockey">Hockey</option>
             </select>
         </div>
         <div class="d-grid gap-2">
-            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success">Save</button>
+            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+            [class.disabled]="newTournamentForm.invalid">Save</button>
         </div>
       </form>
     </div>
@@ -196,37 +199,50 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <form>
+      <form [formGroup]="newGameForm" (ngSubmit)="saveGame()">
         <div class="mb-3">
             <label for="new-game-home" class="form-label">Home team</label>
-            <input type="text" class="form-control" id="new-game-home" placeholder="Home team">
+            <input type="text" class="form-control" id="new-game-home" placeholder="Home team" formControlName="team1"
+            [class.is-invalid]="team1.invalid && (team1.dirty || team1.touched)"
+            [class.is-valid]="team1.valid">
+            <div class="invalid-feedback">Please enter the home team</div>
         </div>
 
         <div class="mb-3">
             <label for="new-game-away" class="form-label">Away team</label>
-            <input type="text" class="form-control" id="new-game-away" placeholder="Away team">
+            <input type="text" class="form-control" id="new-game-away" placeholder="Away team" formControlName="team2"
+            [class.is-invalid]="team2.invalid && (team2.dirty || team2.touched)"
+            [class.is-valid]="team2.valid">
+            <div class="invalid-feedback">Please enter the away team</div>
         </div>
 
         <div class="mb-3">
             <label for="new-game-time" class="form-label">Date and time (in UTC)</label>
-            <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time">
+            <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time" formControlName="time"
+            [class.is-invalid]="time.invalid && (time.dirty || time.touched)"
+            [class.is-valid]="time.valid">
+            <div class="invalid-feedback">Please enter the date and time</div>
         </div>
 
 
         <div class="mb-3">
             <label for="new-tourn-sport" class="form-label">Stage</label>
-            <select class="form-select" id="new-tourn-sport" aria-label="Default select example">
-                <option value="Football" selected>Group</option>
-                <option value="Basketball">1/16</option>
-                <option value="Volleyball">Quarter final</option>
-                <option value="Volleyball">Semi final</option>
-                <option value="Volleyball">Final</option>
+            <select class="form-select" id="new-tourn-sport" aria-label="Default select example" formControlName="stage">
+                <option value="G" selected>Group</option>
+                <option value="1/32">1/32</option>
+                <option value="1/16">1/16</option>
+                <option value="1/8">Quarter-final</option>
+                <option value="SF">Semi-final</option>
+                <option value="3rd">3rd place</option>
+                <option value="F">Final</option>
             </select>
         </div>
+        <div class="d-grid gap-2">
+            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+            [class.disabled]="newGameForm.invalid"
+            >Save</button>
+        </div>
       </form>
-    </div>
-    <div class="d-grid gap-2">
-        <button style="margin: 0px 16px 16px 16px" type="button" class="btn btn-success" (click)="modal.close('Save click')">Save</button>
     </div>
   </ng-template>
 
@@ -241,15 +257,21 @@
       <form [formGroup]="newResultForm" (ngSubmit)="saveResult(game)">
         <div class="mb-3">
             <label for="new-result-home" class="form-label">{{ game.team1 }}</label>
-            <input type="number" min="0" class="form-control" id="new-result-home" placeholder="{{game.team1}}'s score" formControlName="score1">
+            <input type="number" min="0" class="form-control" id="new-result-home" placeholder="{{game.team1}}'s score" formControlName="score1"
+            [class.is-invalid]="score1.invalid && (score1.dirty || score1.touched)"
+            [class.is-valid]="score1.valid">
         </div>
 
         <div class="mb-3">
             <label for="new-result-away" class="form-label">{{ game.team2 }}</label>
-            <input type="number" min="0" class="form-control" id="new-result-away" placeholder="{{game.team2}}'s score" formControlName="score2">
+            <input type="number" min="0" class="form-control" id="new-result-away" placeholder="{{game.team2}}'s score" formControlName="score2"
+            [class.is-invalid]="score2.invalid && (score2.dirty || score2.touched)"
+            [class.is-valid]="score2.valid">
         </div>
         <div class="d-grid gap-2">
-            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success">Save</button>
+            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+            [class.disabled]="newResultForm.invalid">Save
+            </button>
         </div>
       </form>
     </div>
