@@ -7,8 +7,8 @@ import { TournamentsComponent } from './tournaments/tournaments.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomComponent } from './room/room.component';
 import { RoomActionComponent } from './room-action/room-action.component';
-import { IsAuthenticatedGuard } from './is-authenticated.guard';
-import { IsNotAuthenticatedGuard } from './is-not-authenticated.guard';
+import { IsAuthenticatedGuard } from './guards/is-authenticated.guard';
+import { IsNotAuthenticatedGuard } from './guards/is-not-authenticated.guard';
 import { PredictionsComponent } from './predictions/predictions.component';
 
 

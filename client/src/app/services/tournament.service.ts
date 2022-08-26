@@ -21,7 +21,7 @@ export class TournamentService {
   ) { }
 
 
-  async newPrediction(result: Tournament) {
-    return await lastValueFrom(this.http.post(`${this.tournamentUrl}`, result, httpOptions));
+  async newTournament(tournament: Tournament) {
+    return await lastValueFrom(this.http.post(`${this.tournamentUrl}`, tournament, httpOptions));
   }
 }

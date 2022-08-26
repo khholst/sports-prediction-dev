@@ -142,7 +142,6 @@ export class RoomActionComponent implements OnInit {
 
     try {
       const response = await this.roomService.joinRoom(this.room.info._id);
-      console.log(response);
       this.joinAlert.style = "success";
       this.joinAlert.message = `You have joined room ${this.room.info.name}!`;
 

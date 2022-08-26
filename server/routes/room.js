@@ -12,7 +12,7 @@ router.post("/new", authenticate, [
     check("tournament", "Please provide a tournament").notEmpty()
 ], roomController.new)
 
-//Route for joining a room. Room ID comes in with request body
+//Route for joining a room. Room ID comes in with request url
 router.post("/:id/join", authenticate, roomController.join);
 
 //Route for searching room based on it's key

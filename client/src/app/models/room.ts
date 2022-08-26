@@ -12,6 +12,7 @@ export class Room {
         public numUsers: number = 0,
         public timeUntil: number = 0,
         public userPos: number = 0,
-        public leader: string = ""
+        public leader: string = "",
+        public num_games: number = 0
     ) {}
 }

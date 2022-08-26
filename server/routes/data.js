@@ -22,7 +22,7 @@ router.get("/countries", async(req, res) => {
 });
 
 router.get("/games", async(req, res) => {
-    let games = db.model('Games',
+    const games = db.model('Games',
         new mongo.Schema({team1: 'string', team2: 'string', score1: 'number', score2: 'number', 
             time: 'date', tournament_id: 'ObjectID',  _id:'ObjectID'}), 'games');
 

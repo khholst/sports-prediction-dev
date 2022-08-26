@@ -23,7 +23,6 @@ export class MainPageComponent implements OnInit {
     
     this.subscription = this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {
-        console.log(event)
         this.isLoggedIn = this.authService.getIsLoggedIn();
       }
     })

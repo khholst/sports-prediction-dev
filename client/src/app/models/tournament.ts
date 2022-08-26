@@ -6,6 +6,7 @@ export class Tournament {
         public img_url:string,
         public _id:string,
         public sport:string,
-        public host: Array<string>
+        public host: Array<string>,
+        public num_games: number
     ) {}
 }

@@ -56,10 +56,13 @@ export class RoomComponent implements OnInit {
     this.room = rooms[0];
     
     const tournaments: Array<Tournament> = await this.dataService.getTournaments(this.room.tournament_id);
+  
     this.room.tournament = tournaments[0].name;
     this.room.start_date = tournaments[0].start_date;
     this.room.end_date = tournaments[0].end_date;
     this.room.tournament_id = tournaments[0]._id;
+    this.room.num_games = tournaments[0].num_games;
+
 
     const now = new Date();
     const start_date = new Date(this.room.start_date);
@@ -86,7 +89,6 @@ export class RoomComponent implements OnInit {
 
     const isThereAnyScore: Array<number> = this.roomUsers[0].tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores;
     if(isThereAnyScore.length>0){
-      console.log(isThereAnyScore)
       const lastIndex: number = isThereAnyScore.length - 1;
       this.roomUsers.sort(
         (firstUser: User, secondUser: User) =>
@@ -155,7 +157,6 @@ export class RoomComponent implements OnInit {
       const trns: Array<any> = usrs[i].tournaments.filter(function(trn):boolean{return trn.tournament_id == trn_id});
       const pnts: number = trns[0].scores[trns[0].scores.length-1];
       const totalPredsMade: Array<any> = trns[0].predictions.filter(function(pred:any):boolean{return pred.points > -999});
-      console.log(totalPredsMade)
       this.gamesPlayed = totalPredsMade.length;
       this.statDict[usrs[i].username] = {
         "points": pnts,

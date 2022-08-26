@@ -23,7 +23,7 @@
                                         <fa-icon *ngIf="tournaments[index].sport === 'football'" class="fa-md" [icon]="faFutbol"></fa-icon> 
                                         {{ tournaments[index].name }}
                                     </p>        
-                                    <fa-icon *ngIf="isAdmin" (click)="onNewGame(tournaments[index].name, newGamePopup)" [icon]="addIcon" class="add-icon game" placement="top" ngbTooltip="New game"></fa-icon> 
+                                    <fa-icon *ngIf="isAdmin" (click)="onNewGame(tournaments[index].name, tournaments[index]._id, index, newGamePopup)" [icon]="addIcon" class="add-icon game" placement="top" ngbTooltip="New game"></fa-icon> 
                                 </div>
                                
                                 <div class="col-sm-5 text-sm-end">
@@ -195,7 +195,7 @@
 
   <ng-template #newGamePopup let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Add game in {{onNewGameTournName}}</h4>
+      <h4 class="modal-title" id="modal-basic-title">Add game in {{onNewGameTournament.name}}</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
@@ -217,7 +217,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="new-game-time" class="form-label">Date and time (in UTC)</label>
+            <label for="new-game-time" class="form-label">Date and time (in your local time)</label>
             <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time" formControlName="time"
             [class.is-invalid]="time.invalid && (time.dirty || time.touched)"
             [class.is-valid]="time.valid">

@@ -10,6 +10,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol, faArrowsToEye } from '@fortawesome/free-solid-svg-icons';
 import { TournamentService } from '../services/tournament.service';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
+import { GameService } from '../services/game.service';
 
 @Component({
   selector: 'app-tournaments',
@@ -41,7 +42,12 @@ export class TournamentsComponent implements OnInit {
   public faBasketball = faBasketball;
   public faFutbol = faFutbol;
 
-  public onNewGameTournName: string = ""; 
+  public onNewGameTournament: any = {
+    name: "",
+    id: "",
+    index: -1
+  }
+
   public onNewResultHomeTeam: string = "";
   public onNewResultAwayTeam: string = "";
 
@@ -73,6 +79,7 @@ export class TournamentsComponent implements OnInit {
     private resultService: ResultService,
     private modalService: NgbModal,
     private tournamentService: TournamentService,
+    private gameService: GameService,
     private formBuilder: FormBuilder
   ) {  }
 
@@ -167,14 +174,16 @@ export class TournamentsComponent implements OnInit {
   }
 
 
-  onNewGame(tournament_name: string, content: any) {
+  onNewGame(tournamentName: string, tournamentId: string, index: number, content: any) {
     //Add auto completetion names to array
     if (this.countryNames.length === 0) {
       for (let i = 0; i < this.countries.length; i++) {
         this.countryNames.push(this.countries[i].name)
       }
     }
-    this.onNewGameTournName = tournament_name;
+    this.onNewGameTournament.name = tournamentName;
+    this.onNewGameTournament.id = tournamentId;
+    this.onNewGameTournament.index = index;
     this.modalService.open(content);
   }
   
@@ -189,7 +198,7 @@ export class TournamentsComponent implements OnInit {
     if (this.newTournamentForm.valid) {
       try {
         this.newTournamentForm.value.end_date = new Date(this.newTournamentForm.value.end_date)
-        const result = await this.tournamentService.newPrediction(this.newTournamentForm.value);
+        const result = await this.tournamentService.newTournament(this.newTournamentForm.value);
         this.showAlert("Tournament saved successfully", "success");
       } catch (error: any) {
         if(error.status === 401) {
@@ -206,15 +215,35 @@ export class TournamentsComponent implements OnInit {
   async saveGame() {
     if (this.newGameForm.valid) {
       try {
+        const formClone = JSON.parse(JSON.stringify(this.newGameForm.value));
+
         this.newGameForm.value.time = new Date(this.newGameForm.value.time).toISOString();
-        
-        console.log(this.newGameForm.value.time)
-      } catch (error) {
-        
+        this.newGameForm.value.score1 = -1;
+        this.newGameForm.value.score2 = -1;
+
+        for (let i = 0; i < this.countries.length; i++) {
+          if (this.countries[i].name === this.newGameForm.value.team1) {
+            this.newGameForm.value.team1 = this.countries[i].country_id;
+          }
+          if (this.countries[i].name === this.newGameForm.value.team2){
+            this.newGameForm.value.team2 = this.countries[i].country_id;
+          }
+        }
+
+        const result = await this.gameService.newGame(this.onNewGameTournament.id, this.newGameForm.value);
+        this.games[this.onNewGameTournament.index].push(formClone);
+        this.showAlert(`${this.onNewGameTournament.name} game saved successfully!`, "success");
+
+      } catch (error: any) {
+        if(error.status === 401) {
+          this.authService.navigateToLogin();
+        } else if (error.status === 403) {
+          this.showAlert(`You are not authorized to add a new game to ${this.onNewGameTournament.name}`, "danger");
+        } else {
+          this.showAlert(`${this.onNewGameTournament.name} game could not be saved, please try again!`, "danger");
+        }
       }
     }
-    console.log("ghvhhjbh")
-    console.log(this.newGameForm.value)
   }
 
 
