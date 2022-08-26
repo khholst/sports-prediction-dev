@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Tournament } from './tournament';
+import { Tournament } from '../models/tournament';
 
 
 const httpOptions = {

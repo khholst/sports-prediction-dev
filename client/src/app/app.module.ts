@@ -11,7 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MainPageComponent } from './main-page/main-page.component'
 import { Interceptor } from './interceptor';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
 import { TournamentsComponent } from './tournaments/tournaments.component';
 import { RoomsComponent } from './rooms/rooms.component';
 import { RoomActionComponent } from './room-action/room-action.component';

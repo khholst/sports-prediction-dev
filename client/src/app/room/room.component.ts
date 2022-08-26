@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../user';
-import { Room } from '../room';
-import { Tournament } from '../tournament';
-import { RoomService } from '../room.service';
-import { DataService } from '../data.service';
-import { AuthService } from '../auth.service';
+import { User } from '../models/user';
+import { Room } from '../models/room';
+import { Tournament } from '../models/tournament';
+import { RoomService } from '../services/room.service';
+import { DataService } from '../services/data.service';
+import { AuthService } from '../services/auth.service';
 import { faTrophy, faCopy, faMedal } from '@fortawesome/free-solid-svg-icons';
 
 @Component({

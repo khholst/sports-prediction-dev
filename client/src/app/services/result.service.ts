@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
-import { Game } from './games';
+import { Game } from '../models/games';
 
 const httpOptions = {
   headers: new HttpHeaders({

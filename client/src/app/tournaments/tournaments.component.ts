@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from '../data.service';
-import { AuthService } from '../auth.service';
-import { ResultService } from '../result.service';
-import { Tournament } from '../tournament';
-import { Game } from '../games';
-import { Country } from '../countries';
+import { DataService } from '../services/data.service';
+import { AuthService } from '../services/auth.service';
+import { ResultService } from '../services/result.service';
+import { Tournament } from '../models/tournament';
+import { Game } from '../models/games';
+import { Country } from '../models/countries';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators } from '@angular/forms';
 import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol, faArrowsToEye } from '@fortawesome/free-solid-svg-icons';
-import { TournamentService } from '../tournament.service';
+import { TournamentService } from '../services/tournament.service';
+import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 
 @Component({
   selector: 'app-tournaments',
@@ -22,6 +23,7 @@ export class TournamentsComponent implements OnInit {
   public games: {[key:number]:Game[]} = {};
   public cntGames: Game[] = [];
   public countries: Country[] = [];
+  public countryNames: string[] = [];
   public flags: {[key:string]:string} = {};
   public indexes: number[] = []; //For keeping track of expanded tournaments
   public isLoading: boolean = true;
@@ -53,6 +55,17 @@ export class TournamentsComponent implements OnInit {
     stage: '',
     _id: ''
   };
+
+
+  //Search function for country name autocomplete
+  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(term => term.length < 2 ? []
+        : this.countryNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+    );
+
 
   constructor(
     private dataService: DataService,
@@ -129,7 +142,7 @@ export class TournamentsComponent implements OnInit {
           this.games[index][i].team2 = cnt2;
         };
       };
-    }else{
+    } else {
       arrow[0].classList.toggle("down");
       arrow[1].classList.toggle("down");
       show.textContent = " Show games ";
@@ -155,6 +168,12 @@ export class TournamentsComponent implements OnInit {
 
 
   onNewGame(tournament_name: string, content: any) {
+    //Add auto completetion names to array
+    if (this.countryNames.length === 0) {
+      for (let i = 0; i < this.countries.length; i++) {
+        this.countryNames.push(this.countries[i].name)
+      }
+    }
     this.onNewGameTournName = tournament_name;
     this.modalService.open(content);
   }
@@ -185,6 +204,15 @@ export class TournamentsComponent implements OnInit {
   }
 
   async saveGame() {
+    if (this.newGameForm.valid) {
+      try {
+        this.newGameForm.value.time = new Date(this.newGameForm.value.time).toISOString();
+        
+        console.log(this.newGameForm.value.time)
+      } catch (error) {
+        
+      }
+    }
     console.log("ghvhhjbh")
     console.log(this.newGameForm.value)
   }

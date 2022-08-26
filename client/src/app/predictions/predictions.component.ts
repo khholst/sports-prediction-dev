@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Prediction } from '../prediction';
-import { PredictionService } from '../prediction.service';
-import { AuthService } from '../auth.service';
+import { Prediction } from '../models/prediction';
+import { PredictionService } from '../services/prediction.service';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-predictions',
   templateUrl: './predictions.component.html',

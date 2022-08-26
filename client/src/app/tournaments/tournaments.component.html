@@ -202,7 +202,7 @@
       <form [formGroup]="newGameForm" (ngSubmit)="saveGame()">
         <div class="mb-3">
             <label for="new-game-home" class="form-label">Home team</label>
-            <input type="text" class="form-control" id="new-game-home" placeholder="Home team" formControlName="team1"
+            <input type="text" class="form-control" id="new-game-home" placeholder="Home team" formControlName="team1" [ngbTypeahead]="search"
             [class.is-invalid]="team1.invalid && (team1.dirty || team1.touched)"
             [class.is-valid]="team1.valid">
             <div class="invalid-feedback">Please enter the home team</div>
@@ -210,7 +210,7 @@
 
         <div class="mb-3">
             <label for="new-game-away" class="form-label">Away team</label>
-            <input type="text" class="form-control" id="new-game-away" placeholder="Away team" formControlName="team2"
+            <input type="text" class="form-control" id="new-game-away" placeholder="Away team" formControlName="team2" [ngbTypeahead]="search"
             [class.is-invalid]="team2.invalid && (team2.dirty || team2.touched)"
             [class.is-valid]="team2.valid">
             <div class="invalid-feedback">Please enter the away team</div>

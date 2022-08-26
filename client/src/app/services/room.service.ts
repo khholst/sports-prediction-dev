@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Room } from './room';
+import { Room } from '../models/room';
 import { lastValueFrom } from 'rxjs';
 
 const httpOptions = {

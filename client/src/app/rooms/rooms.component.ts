@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth.service';
-import { DataService } from '../data.service';
-import { RoomService } from '../room.service';
-import { Room } from '../room';
-import { Tournament } from '../tournament';
-import { User } from '../user';
+import { AuthService } from '../services/auth.service';
+import { DataService } from '../services/data.service';
+import { RoomService } from '../services/room.service';
+import { Room } from '../models/room';
+import { Tournament } from '../models/tournament';
+import { User } from '../models/user';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
 import { FormBuilder, FormControl } from '@angular/forms';
 

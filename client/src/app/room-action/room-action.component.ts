@@ -5,11 +5,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Location } from '@angular/common';
 
 //SERVICES
-import { DataService } from '../data.service';
-import { RoomService } from '../room.service';
+import { DataService } from '../services/data.service';
+import { RoomService } from '../services/room.service';
 
 //DATA MODELS
-import { Tournament } from '../tournament';
+import { Tournament } from '../models/tournament';
 
 //ICONS
 import { faBasketball, faFutbol } from '@fortawesome/free-solid-svg-icons';
