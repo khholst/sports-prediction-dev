@@ -62,7 +62,7 @@ router.post("/register", [
         username,
         is_admin: false
     }, process.env.JWTSECRET, { //this to env variable
-        expiresIn: 900
+        expiresIn: 3600
     });
 
     //Return token
@@ -115,7 +115,7 @@ router.post("/login", async(req, res) => {
         username: username,
         admin: user.is_admin
     }, process.env.JWTSECRET, {
-        expiresIn: 1000
+        expiresIn: 3600
     });
 
     return res.status(200).json({

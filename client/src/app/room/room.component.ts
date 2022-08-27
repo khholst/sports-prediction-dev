@@ -27,6 +27,7 @@ export class RoomComponent implements OnInit {
   public dropdownList: Array<object> = [];
   public selectedItems: Array<any> = [];
   public gamesPlayed: number = 0;
+  public progressWidth: string = "";
   public pieChartData: any[] = [];
   public loading = true;
 
@@ -168,6 +169,7 @@ export class RoomComponent implements OnInit {
         "averPnts": (pnts/totalPredsMade.filter(function(pred:any):boolean{return pred.points>=0}).length).toFixed(2)
       };
     };
+    this.progressWidth = `width: ${this.gamesPlayed / this.room.num_games * 100}%`;
   };
 
   generateChartProps() {

@@ -21,3 +21,7 @@ h1 {
     max-height: 200px;
 }
 
+.progress-bar {
+    overflow: visible;
+}
+
