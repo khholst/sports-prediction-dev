@@ -131,11 +131,20 @@ export class RoomComponent implements OnInit {
           for (let j = 0; j < this.roomUsers[i].tournaments.length; j++) {
             
             if (this.room.tournament_id === this.roomUsers[i].tournaments[j].tournament_id) {
-              let index = 1;
-              let predictions = this.roomUsers[i].tournaments[j].predictions;
-              const scores = [predictions[0].points];
-              while (predictions[index].points != -999) {
-                scores.push(scores[scores.length - 1] + predictions[index].points);
+              let index = 0;
+              let predictions: any = this.roomUsers[i].tournaments[j].predictions;
+              const scores:any = [];
+              const numPredictions = predictions.length;
+
+
+
+              while (predictions[index].points != -999 && index < numPredictions - 1) {
+
+                if (scores.length === 0) {
+                  scores.push(predictions[index].points);
+                } else {
+                  scores.push(scores[scores.length - 1] + predictions[index].points);
+                }
                 index++;
               }
               this.roomUsers[i].tournaments[j].scores = scores;
