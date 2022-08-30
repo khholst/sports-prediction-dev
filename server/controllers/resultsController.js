@@ -28,15 +28,15 @@ exports.save = (async (req, res) => {
         let Users = db.model('Users',
             new mongo.Schema({username: 'string', password: 'string', rooms: 'array', tournaments: [tournamentsSchema], is_admin: 'boolean',  _id:'ObjectId'}), 'users');
         
-        // const saveResults = await Games.updateOne(
-        //     { _id: result._id },
-        //     {
-        //         "$set": {
-        //             "score1": result.score1, 
-        //             "score2": result.score2
-        //         }
-        //     }
-        // );
+        const saveResults = await Games.updateOne(
+            { _id: result._id },
+            {
+                "$set": {
+                    "score1": result.score1, 
+                    "score2": result.score2
+                }
+            }
+        );
 
 
 

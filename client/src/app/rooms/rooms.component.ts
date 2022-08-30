@@ -90,34 +90,41 @@ export class RoomsComponent implements OnInit {
       };
     };
 
+
     let roomIDs: string[] = [];
+
     for (const room of this.rooms) {
       roomIDs.push(room._id);
     };
-    let roomUsers: Array<User> = await this.roomService.getRoomUsers(roomIDs);
-    for (let j=0; j<this.rooms.length; j++) {
-      let users: Array<User> = roomUsers.filter(
-        function(user):boolean{
-          return user.rooms.filter(function(room):boolean{return room === roomIDs[j]}).length>0;
-      });
-      this.extraData[j].numUsers = users.length;
-      const tourn_id: string = this.extraData[j].tournament_id;
-      const tournArray: Array<number> = users[0].tournaments.filter(function(trnmnt):boolean{return trnmnt.tournament_id === tourn_id})[0].scores;
-      if(tournArray.length>0){
-        const lastIndex: number = tournArray.length - 1;
-        users.sort(
-          (firsUser: User, secondUser: User) =>
-            (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex]) ? -1 : 1
-        );        
+
+    if (roomIDs.length > 0) {
+      let roomUsers: Array<User> = await this.roomService.getRoomUsers(roomIDs);
+      
+      for (let j=0; j<this.rooms.length; j++) {
+        let users: Array<User> = roomUsers.filter(
+          function(user):boolean{
+            return user.rooms.filter(function(room):boolean{return room === roomIDs[j]}).length>0;
+        });
+        this.extraData[j].numUsers = users.length;
+        const tourn_id: string = this.extraData[j].tournament_id;
+        const tournArray: Array<number> = users[0].tournaments.filter(function(trnmnt):boolean{return trnmnt.tournament_id === tourn_id})[0].scores;
+        if(tournArray.length>0){
+          const lastIndex: number = tournArray.length - 1;
+          users.sort(
+            (firsUser: User, secondUser: User) =>
+              (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex]) ? -1 : 1
+          );        
+        };
+
+        this.extraData[j].leader = users[0].username;
+        this.extraData[j].userPos = users.findIndex(object => {
+          return object.username === usr;
+        }) + 1;
+
+        this.rooms[j] = Object.assign(this.rooms[j], this.extraData[j])      
       };
+    }
 
-      this.extraData[j].leader = users[0].username;
-      this.extraData[j].userPos = users.findIndex(object => {
-        return object.username === usr;
-      }) + 1;
-
-      this.rooms[j] = Object.assign(this.rooms[j], this.extraData[j])      
-    };
     this.filteredRooms = this.rooms;
     this.isLoading = false;
   };
