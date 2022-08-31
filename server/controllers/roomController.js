@@ -183,8 +183,7 @@ exports.join = (async (req, res) => {
             possiblePredictions = possiblePredictions.map((e) => { return {'game_id': e._id, 'score1': e.score1, 'score2': e.score2, 'points': e.points, 'winner': e.winner} });
 
             const tournaments = {
-                tournament_id: tournamentID.tournament_id,
-                scores: [],
+                tournament_id: mongo.Types.ObjectId(tournamentID.tournament_id),
                 predictions: possiblePredictions
             }
     
