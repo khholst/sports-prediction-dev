@@ -235,7 +235,7 @@ exports.room = (async (req, res) => {
 
 exports.roomUsers = (async (req, res) => {
     const predSchema = new mongo.Schema({game_id:'ObjectID', score1:'number', score2:'number', points:'number'})
-    const subschema = new mongo.Schema({tournament_id:'ObjectID', scores:'array', predictions:[predSchema]});
+    const subschema = new mongo.Schema({tournament_id:'ObjectID', predictions:[predSchema]});
     let userRooms = db.model('Users',
         new mongo.Schema({_id:'ObjectId', username: 'string', rooms: ['ObjectId'], tournaments: [subschema]}), 'users')
     userRooms.find({"rooms": { "$elemMatch": { "$in": req.query.room.split(",")} }},function(err, data) {
