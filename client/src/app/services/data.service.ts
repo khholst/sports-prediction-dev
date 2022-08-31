@@ -12,7 +12,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class DataService {
-  private dataUrl: string = "http://localhost:8080/data";
+  private dataUrl: string = "https://sports-prediction-api.onrender.com/data";
 
   
   constructor(private http: HttpClient) { };

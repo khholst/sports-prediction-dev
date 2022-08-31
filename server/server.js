@@ -17,11 +17,15 @@ dotenv.config();
 const db_uri = process.env.MONGOCONNECTION;
 global.db = (global.db ? global.db : mongo.createConnection(db_uri));
 
-
+const corsOptions = {
+  methods: 'GET, POST',
+  origin: 'https://khholst.github.io/sports-prediction-app/',
+  optionsSuccessStatus: 200
+}
 
 
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use("/auth", auth);
 app.use("/data", data);
 app.use("/api/rooms", room);
@@ -31,15 +35,13 @@ app.use("/api/results", results);
 
 
 
-app.use(function (req, res, next){
-  res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');
-  res.setHeader('Access-Control-Allow-Methods','GET, POST');
-  res.setHeader('Access-Control-Allow-Headers','X-Requested-With,content-type');
-  res.setHeader('Access-Control-Allow-Credentials',true);
-next();
-})
+// app.use(function (req, res, next){
+//   res.setHeader('Access-Control-Allow-Origin','http://localhost:4200');
+//   res.setHeader('Access-Control-Allow-Methods','GET, POST');
+//   res.setHeader('Access-Control-Allow-Headers','X-Requested-With,content-type');
+//   res.setHeader('Access-Control-Allow-Credentials',true);
+// next();
+// })
 
 
-app.listen(8080, () => {
-  console.log("Running on port 8080");
-});
+app.listen(process.env.PORT || 8080);
