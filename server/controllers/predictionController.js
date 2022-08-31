@@ -25,7 +25,8 @@ exports.all = (async(req, res) => {
 
     const tournamentsSchema = new mongo.Schema({
         predictions: [predictionsSchema],
-        tournament_id: {type: mongo.Schema.Types.ObjectId, ref: "Tournaments"}
+        tournament_id: {type: mongo.Schema.Types.ObjectId, ref: "Tournaments"},
+        scores: Array
     })
 
     const username = res.locals.decodedToken.username;
@@ -74,7 +75,8 @@ exports.new = (async (req, res) => {
 
     const tournamentsSchema = new mongo.Schema({
         predictions: [predictionsSchema],
-        tournament_id: {type: mongo.Schema.Types.ObjectId, ref: "Tournaments"}
+        tournament_id: {type: mongo.Schema.Types.ObjectId, ref: "Tournaments"},
+        scores: Array
     })
 
     const Users = db.model('Users',

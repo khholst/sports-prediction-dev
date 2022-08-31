@@ -21,7 +21,8 @@ exports.save = (async (req, res) => {
 
         const tournamentsSchema = new mongo.Schema({
             predictions: [predictionsSchema],
-            tournament_id: {type: mongo.Schema.Types.ObjectId, ref: "Tournaments"}
+            tournament_id: {type: mongo.Schema.Types.ObjectId, ref: "Tournaments"},
+            scores: Array
         });
     
         let Users = db.model('Users',
