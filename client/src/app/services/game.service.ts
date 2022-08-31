@@ -21,6 +21,6 @@ export class GameService {
   ) { }
 
   async newGame(tournament_id: string, game: Game) {
-    return await lastValueFrom(this.http.post(`http://localhost:8080/api/admin/tournaments/${tournament_id}/games/new`, game, httpOptions));
+    return await lastValueFrom(this.http.post(`https://sports-prediction-api.onrender.com/api/admin/tournaments/${tournament_id}/games/new`, game, httpOptions));
   }
 }

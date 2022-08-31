@@ -13,7 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class RoomService {
-  private roomUrl = "http://localhost:8080/api/rooms"
+  private roomUrl = "https://sports-prediction-api.onrender.com/api/rooms"
 
   constructor(
     private http: HttpClient

@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 export class MainPageComponent implements OnInit {
   public isLoggedIn: boolean = false;
   public subscription: Subscription = new Subscription();
+  public username: string = "";
 
   constructor(
     private authService: AuthService,
@@ -20,6 +21,10 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.getIsLoggedIn();
+
+    if (this.isLoggedIn) {
+      this.username = this.authService.getUsername();
+    }
     
     this.subscription = this.router.events.subscribe(event => {
       if (event.constructor.name === "NavigationEnd") {

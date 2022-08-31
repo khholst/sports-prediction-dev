@@ -1,8 +1,8 @@
 <div class="container-fluid bg-dark text-light p-5">
     <div class="container bg-dark p-5">
-        <h1 class="display-4">SAPP</h1>
+        <h1 class="display-4">Sports prediction</h1>
         <hr>
         <p *ngIf="!isLoggedIn">Register to get started or log in with your existing user</p>
-        <p *ngIf="isLoggedIn">Welcome, user! <br>You can create or join a tournament and make predictions of upcoming games</p>
+        <p *ngIf="isLoggedIn">Welcome, {{username}}! <br>You can create or join a tournament and make predictions of upcoming games</p>
     </div>
 </div>

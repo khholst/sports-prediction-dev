@@ -17,7 +17,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl: string = "http://localhost:8080/auth";
+  private authUrl: string = "https://sports-prediction-api.onrender.com/auth";
   private isLoggedIn: boolean = false;
   private isAdmin: boolean = false;
   private username: string = "";

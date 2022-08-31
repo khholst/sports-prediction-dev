@@ -13,7 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ResultService {
-  private resultsUrl = "http://localhost:8080/api/results"
+  private resultsUrl = "https://sports-prediction-api.onrender.com/api/results"
 
   constructor(
     private http: HttpClient

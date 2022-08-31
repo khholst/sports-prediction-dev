@@ -14,7 +14,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class TournamentService {
-  private tournamentUrl = "http://localhost:8080/api/admin/tournaments/new"
+  private tournamentUrl = "https://sports-prediction-api.onrender.com/api/admin/tournaments/new"
 
   constructor(
     private http: HttpClient

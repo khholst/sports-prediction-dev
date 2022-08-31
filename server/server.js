@@ -25,9 +25,10 @@ const corsOptions = {
 
 
 app.use(express.json());
-app.use(cors(corsOptions));
-app.use("/auth", auth);
-app.use("/data", data);
+//app.use(cors(corsOptions));
+app.use(cors())
+app.use("/api/auth", auth);
+app.use("/api/data", data);
 app.use("/api/rooms", room);
 app.use("/api/predictions", predictions);
 app.use("/api/admin", admin);
