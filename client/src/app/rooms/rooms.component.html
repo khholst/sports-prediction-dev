@@ -57,11 +57,7 @@
                                           </svg>
                                         {{ filteredRoom.numUsers }} members
                                 </div>
-                            </div>
-                            <div *ngIf="filteredRoom.status == 'A' || filteredRoom.status == 'E'" class="row">
-                                <div class="col-6" class="col mt-1 mb-2">Room leader: {{ filteredRoom.leader }}</div>  
-                                <div class="col-6 text-sm-end">My position: {{ filteredRoom.userPos }}.</div>                        
-                            </div>                    
+                            </div>                  
                         </div>
                     </div>
             </div>

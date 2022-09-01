@@ -68,8 +68,6 @@ export class RoomsComponent implements OnInit {
         "end_date": tournament.end_date,
         "status": "",
         "numUsers": 0,
-        "leader": "",
-        "userPos": 0,
         "timeUntil": 0,
         "tournament_id": tournament._id
       };
@@ -115,11 +113,6 @@ export class RoomsComponent implements OnInit {
               (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex]) ? -1 : 1
           );        
         };
-
-        this.extraData[j].leader = users[0].username;
-        this.extraData[j].userPos = users.findIndex(object => {
-          return object.username === usr;
-        }) + 1;
 
         this.rooms[j] = Object.assign(this.rooms[j], this.extraData[j])      
       };
