@@ -27,7 +27,17 @@ export class PredictionsComponent implements OnInit {
 
 
   private async getPredictions() {
-    this.predictions = await this.predictionService.getPredictions();
+    try {
+      this.predictions = await this.predictionService.getPredictions();
+    } catch (error: any) {
+      console.log(error)
+      if (error.status === 401) {
+        console.log("WHATTTT2")
+        //this.authService.logout();
+        this.authService.navigateToLogin();
+      }
+      this.authService.navigateToLogin();
+    }
     this.predictions = this.predictions.predictions;
     this.filteredPredictions = this.predictions.map((element: any) => {return {...element}});
 
@@ -147,7 +157,8 @@ export class PredictionsComponent implements OnInit {
       button.classList.add("predicted-button");
 
     } catch (error: any) {
-      if (error.status === 401) {
+      console.log(error)
+      if (error.code === 401) {
         this.authService.navigateToLogin();
       }
     }

@@ -13,7 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class PredictionService {
-  private predictionsUrl = "https://sports-prediction-api.onrender.com/api/predictions"
+  private predictionsUrl = "https://sports-prediction-api.onrender.com/api/predictions";
 
   constructor(
     private http: HttpClient
