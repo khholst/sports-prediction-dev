@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
     closed: true,
     message: ""
   };
+  public isRegistering: boolean = false;
 
 
   constructor(
@@ -37,11 +38,13 @@ export class RegisterComponent implements OnInit {
 
   async onSubmit() {
     if(this.registerForm.valid) {
+      this.isRegistering = true;
       this.userCredentials = this.registerForm.value
       const response = await this.authService.register(this.userCredentials);
 
       //If server throws a validation error
       if (response.code === 401) {
+        this.isRegistering = false;
         this.alert.closed = false;
         this.alert.message = response.errors[0].msg;
 

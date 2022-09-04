@@ -18,7 +18,10 @@
                   [class.is-valid]="password.valid">
                   <div class="invalid-feedback">Please enter a password!</div>
                 </div>
-                <div class="text-center"><button type="submit" class="btn btn-primary">Log in</button></div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary"
+                  [ngClass]="{'disabled' : isLoggingIn || loginForm.invalid}">Log in <img *ngIf="isLoggingIn" src="assets/3-dots-fade.svg" alt="Logging in spinner"></button>
+                </div>
             </form>
         </div>
     </div>

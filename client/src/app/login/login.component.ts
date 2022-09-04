@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
     closed: true,
     message: ""
   };
+  public isLoggingIn: boolean = false;
 
 
   constructor(
@@ -37,6 +38,7 @@ export class LoginComponent implements OnInit {
 
   async onSubmit() {
     try {
+      this.isLoggingIn = true;
       this.userCredentials = this.loginForm.value
       
       const response = await this.authService.login(this.userCredentials);
@@ -47,6 +49,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate(["/"]);
       
     } catch(error: any) { //If server throws a validation error
+      this.isLoggingIn = false;
       if (error.status === 401) {
         this.alert.closed = false;
         this.alert.message = "Credentials don't match";
