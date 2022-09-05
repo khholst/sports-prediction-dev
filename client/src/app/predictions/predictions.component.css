@@ -58,6 +58,7 @@ input {
 
 button {
     margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .country {
@@ -94,4 +95,39 @@ button {
 .btn-group  {
     margin-top: 0px;
     margin-bottom: 10px;
+}
+
+@media (max-width: 660px) {
+    .score2 {
+        order: 3;
+    }
+    .flag-2 {
+        order: 1;
+    }
+    .team2 {
+        order: 2;
+    }
+    .team2-div {
+        justify-content: center;
+        margin-top: 5px;
+    }
+    .game-date {
+        margin-bottom: 0px;
+    }
+    .game-time {
+        margin-top: 0px;
+    }
+
+}
+
+.team2-div {
+    display: flex;
+    font-family: monospace;
+    font-weight: bolder;
+}
+
+.team1-div {
+    /* font-family: 'Courier New', Courier, monospace; */
+    font-family: monospace;
+    font-weight: bolder;
 }

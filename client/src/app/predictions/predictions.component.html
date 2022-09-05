@@ -46,15 +46,15 @@
                                                                 <p><span class="badge bg-dark">{{ getStageName(game.game_id.stage)}}</span></p>
                                                             </div>
                                                             <div class="col-sm-4 text-sm-start text-center">
-                                                                <p>{{game.game_id.printTime.split(" ")[0]}}</p>
+                                                                <p class="game-date">{{game.game_id.printTime.split(" ")[0]}}</p>
                                                             </div>
                                                             <div class="col-sm-4 text-center">
-                                                                <p><b>{{game.game_id.printTime.split(" ")[1]}}</b></p>
+                                                                <p class="game-time"><b>{{game.game_id.printTime.split(" ")[1]}}</b></p>
                                                             </div>
                                                         </div>
                                                         <form>
                                                             <div class="row">
-                                                                    <div class="col-sm-5 text-sm-end text-center">
+                                                                    <div class="col-sm-5 text-sm-end text-center team1-div">
                                                                         <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team1" class="flag">
                                                                         {{game.game_id.team1.toUpperCase()}}
                                                                         <input *ngIf="game.score1 != -1 && game.score1 != -999" value="{{ game.score1 }}" disabled>
@@ -65,22 +65,12 @@
                                                                     <div class="col-sm-2 text-center d-none d-sm-block">
                                                                         <span>VS</span>
                                                                     </div>
-                                                                    <div class="col-sm-5 d-none d-sm-block text-start">
-                                                                        
-                                                                            <input *ngIf="game.score2 != -1 && game.score2 != -999" value="{{ game.score2 }}" disabled>
-                                                                            <input *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
-                                                                            <input *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>
-                                                                            {{game.game_id.team2.toUpperCase()}}
-                                                                            <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
-                                                                        
-                                                                    </div>
-
-                                                                    <div class="col-sm-5 d-sm-block d-block d-sm-none text-center country">
-                                                                        <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">
-                                                                        {{game.game_id.team2.toUpperCase()}}
-                                                                        <input *ngIf="game.score2 != -1 && game.score2 != -999" value="{{ game.score2 }}" disabled>
-                                                                        <input *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
-                                                                        <input *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>                                                                        
+                                                                    <div class="col-sm-5 team2-div text-sm-start text-center align-items-center">                                                                        
+                                                                            <input class="score2" *ngIf="game.score2 != -1 && game.score2 != -999" value="{{ game.score2 }}" disabled>
+                                                                            <input class="score2" *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
+                                                                            <input class="score2" *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>
+                                                                            <p class="team2" style="margin: 0px 9px 0px 9px;">{{game.game_id.team2.toUpperCase()}}</p>
+                                                                            <img class="flag2" [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">                                                                        
                                                                     </div>
                                                             </div>
 
