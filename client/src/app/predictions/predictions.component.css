@@ -127,7 +127,18 @@ button {
 }
 
 .team1-div {
-    /* font-family: 'Courier New', Courier, monospace; */
     font-family: monospace;
     font-weight: bolder;
 }
+
+hr {
+    border: 1px solid black;
+}
+
+.sortIcon:hover {
+    color: rgb(74, 74, 74);
+    cursor: pointer;
+    transition-duration: 300ms;
+}
+
+

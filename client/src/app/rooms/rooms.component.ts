@@ -6,7 +6,8 @@ import { Room } from '../models/room';
 import { Tournament } from '../models/tournament';
 import { User } from '../models/user';
 import { faTrophy } from '@fortawesome/free-solid-svg-icons';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 
 
 
@@ -27,7 +28,10 @@ export class RoomsComponent implements OnInit {
     private authService: AuthService,
     private dataService: DataService,
     private roomService: RoomService,
-  ) { }
+    private titleService: Title
+  ) { 
+    this.titleService.setTitle("Sports Prediction - My Rooms");
+  }
 
   filter = new FormControl();
 
@@ -104,15 +108,6 @@ export class RoomsComponent implements OnInit {
             return user.rooms.filter(function(room):boolean{return room === roomIDs[j]}).length>0;
         });
         this.extraData[j].numUsers = users.length;
-        const tourn_id: string = this.extraData[j].tournament_id;
-        const tournArray: Array<number> = users[0].tournaments.filter(function(trnmnt):boolean{return trnmnt.tournament_id === tourn_id})[0].scores;
-        if(tournArray.length>0){
-          const lastIndex: number = tournArray.length - 1;
-          users.sort(
-            (firsUser: User, secondUser: User) =>
-              (firsUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex] > secondUser.tournaments.filter(function(trn):boolean{return trn.tournament_id === tourn_id})[0].scores[lastIndex]) ? -1 : 1
-          );        
-        };
 
         this.rooms[j] = Object.assign(this.rooms[j], this.extraData[j])      
       };

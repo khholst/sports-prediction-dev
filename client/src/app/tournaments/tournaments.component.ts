@@ -11,6 +11,7 @@ import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol
 import { TournamentService } from '../services/tournament.service';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 import { GameService } from '../services/game.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tournaments',
@@ -80,8 +81,11 @@ export class TournamentsComponent implements OnInit {
     private modalService: NgbModal,
     private tournamentService: TournamentService,
     private gameService: GameService,
-    private formBuilder: FormBuilder
-  ) {  }
+    private formBuilder: FormBuilder,
+    private titleService: Title
+  ) { 
+    this.titleService.setTitle("Sports Prediction - Tournaments");
+  }
 
 
   newTournamentForm = this.formBuilder.group({
@@ -231,7 +235,6 @@ export class TournamentsComponent implements OnInit {
         }
 
         const result = await this.gameService.newGame(this.onNewGameTournament.id, this.newGameForm.value);
-        this.games[this.onNewGameTournament.index].push(formClone);
         this.showAlert(`${this.onNewGameTournament.name} game saved successfully!`, "success");
 
       } catch (error: any) {

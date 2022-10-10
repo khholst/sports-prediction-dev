@@ -17,7 +17,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl: string = "https://sports-prediction-api.onrender.com/auth";
+  private authUrl: string = "https://sports-prediction-api.onrender.com/api/auth";
   private isLoggedIn: boolean = false;
   private isAdmin: boolean = false;
   private username: string = "";
@@ -35,6 +35,7 @@ export class AuthService {
     return await lastValueFrom(this.http.post(`${this.authUrl}/login`, credentials, httpOptions))
   }
 
+  
   logout() {
     localStorage.removeItem("token");
     this.isLoggedIn = false;

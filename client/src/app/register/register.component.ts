@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import { UserRegister } from '../models/userRegister';
 import { Router } from '@angular/router';
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-register',
@@ -19,12 +21,19 @@ export class RegisterComponent implements OnInit {
   };
   public isRegistering: boolean = false;
 
+  //ICONS
+  public userIcon = faUser;
+  public passwordIcon = faLock;
+
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) { 
+    this.titleService.setTitle("Sports Prediction - Register");
+  }
 
 
   registerForm = this.formBuilder.group({

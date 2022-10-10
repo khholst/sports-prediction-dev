@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Prediction } from '../models/prediction';
 import { PredictionService } from '../services/prediction.service';
 import { AuthService } from '../services/auth.service';
+import { faArrowUpWideShort, faArrowDownShortWide } from '@fortawesome/free-solid-svg-icons';
+import { Title } from '@angular/platform-browser';
+
+
 @Component({
   selector: 'app-predictions',
   templateUrl: './predictions.component.html',
@@ -16,10 +20,20 @@ export class PredictionsComponent implements OnInit {
   public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"];
   public isLoading = true;
 
+  public sortAscending: boolean = true;
+
+  //ICONS
+  public sortAscIcon =  faArrowUpWideShort;
+  public sortDescIcon = faArrowDownShortWide;
+
+
   constructor(
     private predictionService: PredictionService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private titleService: Title
+  ) { 
+    this.titleService.setTitle("Sports Prediction - My Predictions");
+  }
 
   ngOnInit(): void {
     this.getPredictions();
@@ -30,14 +44,11 @@ export class PredictionsComponent implements OnInit {
     try {
       this.predictions = await this.predictionService.getPredictions();
     } catch (error: any) {
-      console.log(error)
       if (error.status === 401) {
-        console.log("WHATTTT2")
-        //this.authService.logout();
         this.authService.navigateToLogin();
       }
-      this.authService.navigateToLogin();
     }
+
     this.predictions = this.predictions.predictions;
     this.filteredPredictions = this.predictions.map((element: any) => {return {...element}});
 
@@ -78,6 +89,8 @@ export class PredictionsComponent implements OnInit {
     
     this.filteredPredictions[index].predictions = this.predictions[index].predictions.filter((prediction: any) => 
         new Date(prediction.game_id.time).getTime() > now);
+
+      this.sortAscending = true;
   }
 
 
@@ -99,6 +112,14 @@ export class PredictionsComponent implements OnInit {
     }
   }
 
+  changeSortField(index: number) {
+    console.log(this.filteredPredictions)
+  }
+
+  changeSortOrder(index: number) {
+    this.sortAscending = !this.sortAscending;
+  }
+
 
 
   formatTime(time: Date): string {
@@ -113,6 +134,20 @@ export class PredictionsComponent implements OnInit {
     switch (key) {
       case "G":
         return "GROUP"
+      case "1/32":
+        return "ROUND OF 64"
+      case "1/16":
+        return "ROUND OF 32"
+      case "1/8":
+        return "ROUND OF 16"
+      case "QF":
+        return "QUARTER-FINAL"
+      case "SF":
+        return "SEMI-FINAL"
+      case "F":
+        return "FINAL"
+      case "3rd":
+        return "3rd PLACE"
     }
     return "";
   }
@@ -126,6 +161,7 @@ export class PredictionsComponent implements OnInit {
 
     if(score1.value === "" || isNaN(score1.value)) {
       score1.classList.add("invalid-input");
+      return;
     }
 
     if (score2.value === "" || isNaN(score2.value)) {
@@ -136,7 +172,6 @@ export class PredictionsComponent implements OnInit {
 
 
     //SAVE TO DB
-
     const prediction: Prediction = {
       game_id: game_id,
       score1: parseInt(score1.value),
@@ -157,7 +192,6 @@ export class PredictionsComponent implements OnInit {
       button.classList.add("predicted-button");
 
     } catch (error: any) {
-      console.log(error)
       if (error.code === 401) {
         this.authService.navigateToLogin();
       }

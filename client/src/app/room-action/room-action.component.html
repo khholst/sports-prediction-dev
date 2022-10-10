@@ -1,83 +1,98 @@
 <main>
-    <div class="container-fluid row text-center justify-content-center">
-        <div class="col-lg-6 col-md-8">
-            <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
-                <li [ngbNavItem]="1">
-                    <a ngbNavLink (click)="newTabActivated()">New room</a>
-                    <ng-template ngbNavContent>
-                        <form [formGroup]="roomForm" (ngSubmit)="onNewSubmit()">
-                            <div class="container">
-                                <div *ngIf="newAlert.isShown" class="row text-center justify-content-center">
-                                    <div class="col-lg-6 col-md-8 success">
-                                        <ngb-alert #staticAlert [type]="newAlert.style" (closed)="close()">
-                                            {{ newAlert.message }}
-                                        </ngb-alert>
+    <div class="container">
+        <div class="row" style="justify-content: center;">
+            <div class="col-lg-6 col-md-8">
+                <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
+                    <li [ngbNavItem]="1">
+                        <a ngbNavLink (click)="newTabActivated()">New room</a>
+                        <ng-template ngbNavContent>
+                            <form [formGroup]="roomForm" (ngSubmit)="onNewSubmit()">
+                                <div class="container">
+                                    <div *ngIf="newAlert.isShown" class="row text-center justify-content-center">
+                                        <div class="col-lg-6 col-md-8 success">
+                                            <ngb-alert #staticAlert [type]="newAlert.style" (closed)="close()">
+                                                {{ newAlert.message }}
+                                            </ngb-alert>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row justify-content-center">
-                                    <div class="col-lg-6 col-md-8">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" class="form-control" id="name" formControlName="name"
-                                                placeholder="Enter name"
-                                                [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-6 col-md-8">
+    
+    
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text"><fa-icon [icon]="textIcon"></fa-icon></span>
+                                                <input type="text" class="form-control" placeholder="Room name" formControlName="name"
+                                                required
+                                                [class.is-invalid]="name.invalid && (name.touched)"
                                                 [class.is-valid]="name.valid">
-                                            <div class="invalid-feedback">Please enter a room name!</div>
+                                                <div class="invalid-feedback">Please choose a name for your room!</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="col-lg-6 col-md-8">
-                                        <label for="tournament">Tournament</label>
-                                        <select id="tournament" class="form-select" formControlName="tournament">
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row align-items-center">
-                                    <div class="col text-center">
-                                        <button type="submit" class="btn btn-primary">Create room</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </form>
-                    </ng-template>
-                </li>
-
-
-                <li [ngbNavItem]="2">
-                    <a ngbNavLink (click)="joinTabActivated()">Join room</a>
-                    <ng-template ngbNavContent>
-                        <div class="container">
-                            <form [formGroup]="joinRoomForm" (ngSubmit)="findRoom()">
-                                <div class="row justify-content-center">
-                                    <div class="col-lg-6 col-md-8">
-                                        <ngb-alert [dismissible]="false" *ngIf="findAlert.isShown" #staticAlert type="danger">
-                                            {{ findAlert.message }}
-                                        </ngb-alert>
-                                        <div class="form-group">
-                                            <label for="join-key">Room key</label>
-                                            <input type="text" class="form-control" id="join-key" formControlName="join_key"
-                                                aria-describedby="join-key" placeholder="Enter room key"
-                                                [class.is-invalid]="join_key.invalid && (join_key.dirty || join_key.touched)"
-                                                [class.is-valid]="join_key.valid">
-                                            <div class="invalid-feedback">Please enter a join key!</div>
+    
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-6 col-md-8">
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text"><fa-icon [icon]="trophyIcon"></fa-icon></span>
+                                                <select id="tournament" class="form-select" formControlName="tournament">
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                <div class="row align-items-center">
-                                    <div class="col text-center">
-                                        <button type="submit" class="btn btn-primary">Find room</button>
+    
+                                    <div class="row align-items-center">
+                                        <div class="col text-center">
+                                            <button type="submit" class="btn btn-primary"
+                                            [ngClass]="{'disabled' : roomForm.invalid}">
+                                                Create room                       
+                                            </button>
+                                        </div>
                                     </div>
+    
                                 </div>
                             </form>
-                        </div>
-                    </ng-template>
-                </li>
-            </ul>
+                        </ng-template>
+                    </li>
+    
+    
+                    <li [ngbNavItem]="2">
+                        <a ngbNavLink (click)="joinTabActivated()">Join room</a>
+                        <ng-template ngbNavContent>
+                            <div class="container">
+                                <form [formGroup]="joinRoomForm" (ngSubmit)="findRoom()">
+                                    <div class="row justify-content-center">
+                                        <div class="col-lg-6 col-md-8">
+                                            <ngb-alert [dismissible]="false" *ngIf="findAlert.isShown" #staticAlert type="danger">
+                                                {{ findAlert.message }}
+                                            </ngb-alert>
+    
+                                            <div class="input-group mb-3">
+                                                <span class="input-group-text"><fa-icon [icon]="keyIcon"></fa-icon></span>
+                                                <input type="text" class="form-control" placeholder="Enter room key" formControlName="join_key"
+                                                required
+                                                minlength="8"
+                                                [class.is-invalid]="join_key.invalid && (join_key.touched)"
+                                                [class.is-valid]="join_key.valid">
+                                                <div class="invalid-feedback">Please enter a valid join key!</div>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="row align-items-center">
+                                        <div class="col text-center">
+                                            <button type="submit" class="btn btn-primary"
+                                            [ngClass]="{'disabled' : joinRoomForm.invalid}">
+                                                Join room                       
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 

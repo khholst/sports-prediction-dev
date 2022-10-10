@@ -1,4 +1,4 @@
-decode JWT as middleware
 timestamps
-push 0s to scre array
-user in tournament joins new room with the same tournament halway through, but there is only one score array
+past tournament show up in create room
+created room info
+tournament sorting

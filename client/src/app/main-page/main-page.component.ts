@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-page',
@@ -15,8 +16,11 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private titleService: Title
+  ) { 
+    this.titleService.setTitle("Sports Prediction - Home");
+  }
 
 
   ngOnInit(): void {

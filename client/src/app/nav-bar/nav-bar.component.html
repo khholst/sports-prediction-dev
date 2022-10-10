@@ -31,7 +31,7 @@
 
     <ul class="nav navbar-nav ms-auto">
       <li *ngIf="!isLoggedIn" class="nav-item">
-        <a (click)="isMenuCollapsed = true" class="nav-link" routerLink="/login">Log in</a>
+        <a (click)="isMenuCollapsed = true" class="nav-link" routerLink="/login">Sign in</a>
       </li>
       <li *ngIf="!isLoggedIn" class="nav-item">
         <a (click)="isMenuCollapsed = true" class="nav-link" routerLink="/register">Register</a>
@@ -52,7 +52,7 @@
         <div ngbDropdownMenu aria-labelledby="navbarDropdown2" class="dropdown-menu dropdown-menu-end">
           <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="$event.preventDefault()">Profile</a>
           <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="$event.preventDefault()">History</a>
-          <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="logout()">Log out</a>
+          <a (click)="isMenuCollapsed = true" ngbDropdownItem href="#" (click)="logout()">Sign out</a>
         </div>
       </li>
     </ul>

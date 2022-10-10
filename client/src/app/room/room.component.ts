@@ -7,6 +7,7 @@ import { RoomService } from '../services/room.service';
 import { DataService } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
 import { faTrophy, faCopy, faMedal } from '@fortawesome/free-solid-svg-icons';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-room',
@@ -17,7 +18,6 @@ import { faTrophy, faCopy, faMedal } from '@fortawesome/free-solid-svg-icons';
 
 export class RoomComponent implements OnInit {
   public roomUsers: User[] = [];
-  public roomName: string = "";
   public room = new Room();
   public active: number = 1;
   public statDict: {[username:string]:any} = {};
@@ -41,8 +41,9 @@ export class RoomComponent implements OnInit {
     private route: ActivatedRoute,
     private roomService: RoomService,
     private dataService: DataService,
-    private authService: AuthService
-  ) { }
+    private authService: AuthService,
+    private titleService: Title
+  ) {  }
 
   ngOnInit(): void {
     this.onRoomRequest();
@@ -55,6 +56,8 @@ export class RoomComponent implements OnInit {
     const roomID: string = this.route.snapshot.paramMap.get("id")!;
     const rooms: Array<Room> = await this.roomService.getRoom(roomID);
     this.room = rooms[0];
+
+    this.titleService.setTitle(`Sports Prediction - ${this.room.name}`);
     
     const tournaments: Array<Tournament> = await this.dataService.getTournaments(this.room.tournament_id);
   

@@ -12,7 +12,9 @@ import { RoomService } from '../services/room.service';
 import { Tournament } from '../models/tournament';
 
 //ICONS
-import { faBasketball, faFutbol } from '@fortawesome/free-solid-svg-icons';
+import { faBasketball, faFutbol, faKey, faTrophy, faFont } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-room-action',
@@ -48,9 +50,14 @@ export class RoomActionComponent implements OnInit {
   closeResult = "";
   joinAlert = { isShown: false, style: "", message: "" };
 
+  public subscription = new Subscription();
+
   //Icons
   faBasketball = faBasketball;
   faFootball = faFutbol;
+  keyIcon = faKey;
+  textIcon = faFont;
+  trophyIcon = faTrophy;
 
 
   constructor(
@@ -59,7 +66,8 @@ export class RoomActionComponent implements OnInit {
     private formBuilder: FormBuilder,
     private roomService: RoomService,
     private modalService: NgbModal,
-    private location: Location
+    private location: Location,
+    private titleService: Title
   ) { }
 
   roomForm = this.formBuilder.group({
@@ -76,11 +84,15 @@ export class RoomActionComponent implements OnInit {
     this.selectAction();
 
 
-    this.router.events.subscribe(event => {
-      if (event.constructor.name === "NavigationEnd") {
+    this.subscription = this.router.events.subscribe(event => {
+      if (event.toString().includes("NavigationEnd")) {
         this.selectAction();
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
 
@@ -181,20 +193,22 @@ export class RoomActionComponent implements OnInit {
 
 
   selectAction() {
-    var url = new URL(window.location.href);
-    var action = url.searchParams.get("action");
-    if (action === "new")   { this.active = 1; }
-    if (action === "join")  { this.active = 2; }
+    var action = new URL(window.location.href).hash.split("=")[1];
+    
+    if (action === "new")   { this.active = 1; this.titleService.setTitle("Sports Prediction - New Room") }
+    if (action === "join")  { this.active = 2; this.titleService.setTitle("Sports Prediction - Join Room") }
   }
 
 
   joinTabActivated() {
-    this.location.go("/rooms/action?action=join"); 
+    this.location.go("/rooms/action?action=join");
+    this.titleService.setTitle("Sports Prediction - Join Room");
   }
 
   
   newTabActivated() {
-    this.location.go("/rooms/action?action=new"); 
+    this.location.go("/rooms/action?action=new");
+    this.titleService.setTitle("Sports Prediction - New Room");
   }
 
 

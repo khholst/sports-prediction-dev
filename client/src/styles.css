@@ -2,11 +2,14 @@ main {
     padding: 1vw;
 }
 
+
 nav {
     border-bottom: 1px rgb(0, 0, 0) solid;
 }
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 
 .loading {
     position: absolute;
