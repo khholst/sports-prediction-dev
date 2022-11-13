@@ -21,10 +21,12 @@ export class PredictionsComponent implements OnInit {
   public isLoading = true;
 
   public sortAscending: boolean = true;
+  public selectedSortField: string = "";
+  public selectedFilter: string = "UPCOMING";
 
   //ICONS
-  public sortAscIcon =  faArrowUpWideShort;
-  public sortDescIcon = faArrowDownShortWide;
+  public sortDescIcon =  faArrowUpWideShort;
+  public sortAscIcon = faArrowDownShortWide;
 
 
   constructor(
@@ -71,13 +73,14 @@ export class PredictionsComponent implements OnInit {
     this.isLoading = false;
   }
 
+
   private sortPredictions(a: any, b: any): number {
     const aDate = new Date(a.game_id.time);
     const bDate = new Date(b.game_id.time);
 
     if (aDate.getTime() > bDate.getTime()) { return 1 } 
     else if (aDate.getTime() < bDate.getTime()) { return -1; }
-    else { return 0; }
+    return 0;
   }
 
 
@@ -101,6 +104,7 @@ export class PredictionsComponent implements OnInit {
   onFilter(filter: string, index: number) {
     const now = new Date().getTime();
 
+    this.selectedFilter = filter;
     if (filter === "FINISHED") {
       this.filteredPredictions[index].predictions = this.predictions[index].predictions.filter((prediction: any) => 
         new Date(prediction.game_id.time).getTime() < now);
@@ -112,12 +116,48 @@ export class PredictionsComponent implements OnInit {
     }
   }
 
-  changeSortField(index: number) {
-    console.log(this.filteredPredictions)
+  changeSortField(tournamentIndex: number, sortField: string) {
+    this.selectedSortField = sortField;
+
+    this.sortAndFilter(this.selectedSortField, tournamentIndex);
   }
 
-  changeSortOrder(index: number) {
+
+  changeSortOrder(tournamentIndex: number) {
     this.sortAscending = !this.sortAscending;
+
+    this.sortAndFilter(this.selectedSortField, tournamentIndex);
+  }
+
+
+  private sortAndFilter(sortField: string, tournamentIndex: number) {
+    this.predictions[tournamentIndex].predictions = this.predictions[tournamentIndex].predictions.sort((a: any, b: any) => {
+      if (sortField === "Date") {
+        const aDate = new Date(a.game_id.time);
+        const bDate = new Date(b.game_id.time);
+
+        if (this.sortAscending) {                
+          if (aDate.getTime() > bDate.getTime()) { return 1 }
+          if (aDate.getTime() < bDate.getTime()) { return -1 }
+          return 0
+        } else {
+          if (aDate.getTime() > bDate.getTime()) { return -1 }
+          if (aDate.getTime() < bDate.getTime()) { return 1 }
+          return 0
+        }
+      } else { //sort field is points
+        if (this.sortAscending) {
+          if (a.points > b.points) { return 1 }
+          if (a.points < b.points) { return -1 }
+          return 0
+        } else {            
+          if (a.points > b.points) { return -1 }
+          if (a.points < b.points) { return 1 }
+          return 0
+        }
+      }
+    })
+    this.onFilter(this.selectedFilter, tournamentIndex);
   }
 
 

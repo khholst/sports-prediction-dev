@@ -1,8 +1,55 @@
-<div class="container-fluid bg-dark text-light p-5">
-    <div class="container bg-dark p-5">
-        <h1 class="display-4">Sports prediction</h1>
-        <hr>
-        <p *ngIf="!isLoggedIn">Register to get started or log in with your existing user</p>
-        <p *ngIf="isLoggedIn">Welcome, {{username}}! <br>You can create or join a tournament and make predictions of upcoming games</p>
-    </div>
+<div class="main-container">
+  <div class="container-fluid text-light p-5 header">
+      <div class="container p-5">
+          <h1 class="display-4" style="margin-top: 50px;">SPORTS PREDICTION</h1>
+          <hr>
+          <p class="app-description">
+            An application to predict the results of large sports tournaments with your friends and find out who's best!
+          </p>
+          <p *ngIf="!isLoggedIn">
+            As soon as you <a routerLink="/login">sign in</a> or <a routerLink="/register">register</a> you can:
+            
+            <br><fa-icon [icon]="checkIcon"></fa-icon>Create a room for you and your friends
+            <br><fa-icon [icon]="checkIcon"></fa-icon>Join a room your friends have already created
+            <br><fa-icon [icon]="checkIcon"></fa-icon>Predict the results of the games in tournaments you are taking part of
+            <br><fa-icon [icon]="checkIcon"></fa-icon>See how well you are you are doing against your friends
+          </p>
+          <p *ngIf="isLoggedIn"><b>Welcome, {{username}}!</b></p>
+      </div>
+  </div>
+  
+  <div class="container">
+      <div class="row">
+          <div class="col-sm-4 col-6">
+              <div class="card">
+                  <div class="card-body">
+                    <fa-icon [icon]="trophyIcon"></fa-icon>
+                    <h5 class="card-title">Tournaments</h5>
+                    <p class="card-text">Take a look at all tournaments, their schedules and results!</p>
+                    <a routerLink="/tournaments" class="stretched-link"></a>
+                  </div>
+                </div>
+          </div>
+          <div *ngIf="isLoggedIn" class="col-sm-4 col-6">
+              <div class="card">
+                  <div class="card-body">
+                    <fa-icon [icon]="roomIcon"></fa-icon>
+                    <h5 class="card-title">My rooms</h5>
+                    <p class="card-text">Take a look at all of your rooms and see how well you are doing!</p>
+                    <a routerLink="/rooms" class="stretched-link"></a>
+                  </div>
+                </div>
+          </div>
+          <div *ngIf="isLoggedIn" class="col-sm-4 col-6">
+              <div class="card">
+                  <div class="card-body">
+                    <fa-icon [icon]="predictionIcon"></fa-icon>
+                    <h5 class="card-title">My predictions</h5>
+                    <p class="card-text">Take a look at the upcoming games and make your predictions!</p>
+                    <a routerLink="/predictions" class="stretched-link"></a>
+                  </div>
+                </div>
+          </div>
+      </div>
+  </div>
 </div>

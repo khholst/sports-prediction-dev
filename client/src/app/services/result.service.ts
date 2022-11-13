@@ -14,12 +14,13 @@ const httpOptions = {
 })
 export class ResultService {
   private resultsUrl = "https://sports-prediction-api.onrender.com/api/results"
+  private localUrl = "http://localhost:8080/api/results"
 
   constructor(
     private http: HttpClient
   ) { }
 
-  async newPrediction(result: Game) {
+  async newResult(result: Game) {
     return await lastValueFrom(this.http.post(`${this.resultsUrl}/save`, result));
   }
 }

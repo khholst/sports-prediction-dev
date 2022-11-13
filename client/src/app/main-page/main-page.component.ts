@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
+import { faCheck, faTrophy, faPeopleRoof, faCircleQuestion } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-main-page',
@@ -13,6 +14,10 @@ export class MainPageComponent implements OnInit {
   public isLoggedIn: boolean = false;
   public subscription: Subscription = new Subscription();
   public username: string = "";
+  public checkIcon = faCheck;
+  public trophyIcon = faTrophy;
+  public roomIcon = faPeopleRoof;
+  public predictionIcon = faCircleQuestion;
 
   constructor(
     private authService: AuthService,

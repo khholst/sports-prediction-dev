@@ -119,6 +119,7 @@ export class TournamentsComponent implements OnInit {
     this.tournaments = await this.dataService.getTournaments();
     this.countries = await this.dataService.getCountries();
 
+
     let index = 0; //For keeping track of expanded tournaments
     for (let i = 0; i < this.tournaments.length; i++) {
       this.indexes.push(index);
@@ -256,7 +257,7 @@ export class TournamentsComponent implements OnInit {
       try {
         game.score1 = this.newResultForm.value.score1;
         game.score2 = this.newResultForm.value.score2;
-        const result = await this.resultService.newPrediction(game);
+        const result = await this.resultService.newResult(game);
         this.showAlert("Result added successfully!", "success");
       } catch (error: any) {
         if(error.status === 401) {

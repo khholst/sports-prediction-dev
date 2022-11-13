@@ -27,6 +27,7 @@ export class RoomComponent implements OnInit {
   public dropdownList: Array<object> = [];
   public selectedItems: Array<any> = [];
   public gamesPlayed: number = 0;
+  public sport = "";
   public progressWidth: string = "";
   public pieChartData: any[] = [];
   public loading = true;
@@ -66,6 +67,7 @@ export class RoomComponent implements OnInit {
     this.room.end_date = tournaments[0].end_date;
     this.room.tournament_id = tournaments[0]._id;
     this.room.num_games = tournaments[0].num_games;
+    this.sport = tournaments[0].sport;
 
 
     const now = new Date();
@@ -112,7 +114,7 @@ export class RoomComponent implements OnInit {
     const userData = this.statDict[username];
 
     this.pieChartData = [
-      { "name": "Accurate",
+      { "name": "3 points",
         "value": userData.point3
       },
       { "name": "2 points",
@@ -121,7 +123,7 @@ export class RoomComponent implements OnInit {
       { "name": "1 point",
         "value": userData.point1
       },
-      { "name": "Incorrect",
+      { "name": "0 points",
         "value": userData.missPred
       }
     ]
@@ -144,9 +146,11 @@ export class RoomComponent implements OnInit {
               while (predictions[index].points != -999 && index < numPredictions - 1) {
 
                 if (scores.length === 0) {
-                  scores.push(predictions[index].points);
+                  if (predictions[index].points >= 0)
+                    scores.push(predictions[index].points);
                 } else {
-                  scores.push(scores[scores.length - 1] + predictions[index].points);
+                  if (predictions[index].points >= 0)
+                    scores.push(scores[scores.length - 1] + predictions[index].points);
                 }
                 index++;
               }

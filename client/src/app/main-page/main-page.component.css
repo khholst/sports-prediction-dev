@@ -1,0 +1,57 @@
+@media only screen and (max-width: 475px) {
+    .card {
+      display: none;
+    }
+  }
+
+
+.card {
+    min-height: 150px;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.444);
+    color: rgb(223, 223, 223);
+    border: 2px solid rgba(255, 255, 255, 0);
+}
+
+.card:hover {
+    transition-duration: 400ms;
+    border: 2px solid white;
+}
+
+.header {
+    margin-bottom: 30px;
+    background-size: cover;
+}
+
+
+.main-container {
+    height: 100%;
+    background-size: cover;
+    background-image: 
+    linear-gradient(
+      rgba(0, 0, 0, 0.6),
+      rgb(0, 0, 0)
+    ),
+    url(https://wallpaperset.com/w/full/9/4/3/185419.jpg);
+}
+
+.container {
+    padding: 5px!important;
+}
+
+.container-fluid {
+    padding: 5px!important;
+}
+
+fa-icon {
+    margin-right: 5px;
+    font-size: 25px;
+}
+
+.app-description {
+    font-size: 18px;
+}
+
+.card-title {
+    display: inline;
+}
