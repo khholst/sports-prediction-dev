@@ -104,6 +104,7 @@ export class RoomActionComponent implements OnInit {
 
       try {
         const response = await this.roomService.createNewRoom(this.roomForm.value);
+        this.newAlert.message = "You have created a room! You will now be redirected to the room page..."
         setTimeout(() => this.router.navigate([`/rooms/${response.room_id}`]), 2500); 
       } catch (error: any) {
         this.newAlert.style = "danger";
@@ -147,15 +148,12 @@ export class RoomActionComponent implements OnInit {
   }
 
 
-
-
-
   async joinRoom() {
 
     try {
       const response = await this.roomService.joinRoom(this.room.info._id);
       this.joinAlert.style = "success";
-      this.joinAlert.message = `You have joined room ${this.room.info.name}!`;
+      this.joinAlert.message = `You have joined room ${this.room.info.name}! You will now be redirected to the room page...`;
 
       setTimeout(() => {
         this.router.navigate([`/rooms/${response.room_id}`]);
@@ -184,11 +182,13 @@ export class RoomActionComponent implements OnInit {
 
     //Add tournaments to the dropdown menu
     for (const tournament of this.tournaments) {
-      const option = document.createElement("option");
-      option.text = tournament.name;
-      dropdown.appendChild(option);
+      if (new Date(tournament.end_date).getTime() > new Date().getTime()) {
+        const option = document.createElement("option");
+        option.text = tournament.name;
+        dropdown.appendChild(option);
+      }
     }
-    this.roomForm.patchValue({tournament: this.tournaments[0].name})
+    this.roomForm.patchValue({tournament: this.tournaments[1].name})
   }
 
 

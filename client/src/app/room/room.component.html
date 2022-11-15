@@ -39,12 +39,12 @@
                                         
                                         <div class="col-sm-6">
                                                 <fa-icon [icon]="faTrophy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
-                                                {{ room.tournament }}
+                                                <span style="margin-left: 5px;"><b>{{ room.tournament }}</b></span>
                                         </div>
                                         <div class="col-sm-6 text-sm-end" ng>
                                             <span class="copy" (click)="copyJoinKey()" [animation]="true" triggers="click" [autoClose]="true" [closeDelay]="200" ngbTooltip="Copied to clipboard!">
                                                 <fa-icon [icon]="faCopy" style="font-size: 23px; vertical-align: middle;"></fa-icon> 
-                                                Copy join key
+                                                <span style="margin-left: 8px">Copy join key</span>
                                             </span>
                                         </div>
                                     </div>

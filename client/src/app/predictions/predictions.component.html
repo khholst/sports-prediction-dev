@@ -13,6 +13,7 @@
         <div class="container">
             <div class="row text-center justify-content-center">
                 <div class="col-lg-8">
+                    <h1 style="font-size: 28px; margin-bottom: 15px; text-align: left;">My predictions</h1>
                     <ng-container *ngFor="let index of numTournaments"></ng-container>
                     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
                         <ng-container *ngFor="let index of numTournaments">

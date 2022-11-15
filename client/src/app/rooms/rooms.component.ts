@@ -18,6 +18,7 @@ import { Title } from '@angular/platform-browser';
 })
 export class RoomsComponent implements OnInit {
   public rooms: Room[]= [];
+  public numRooms: number = 0;
   public filteredRooms: Room[] = [];
   public extraData: {[key:number]:any} = {};
   public faTrophy = faTrophy;
@@ -61,6 +62,7 @@ export class RoomsComponent implements OnInit {
   async onRoomRequest() {
     const usr: string = this.authService.getUsername();
     this.rooms = await this.roomService.getRooms(usr);
+    this.numRooms = this.rooms.length;
 
     const allTourns: Array<Tournament> = await this.dataService.getTournaments();
     for (let i = 0; i < this.rooms.length; i++) {

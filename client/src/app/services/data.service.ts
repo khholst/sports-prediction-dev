@@ -13,6 +13,7 @@ const httpOptions = {
 })
 export class DataService {
   private dataUrl: string = "https://sports-prediction-api.onrender.com/api/data";
+  private localUrl: string = "http://localhost:8080/api/data";
 
   
   constructor(private http: HttpClient) { };

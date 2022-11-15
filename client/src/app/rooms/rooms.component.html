@@ -10,6 +10,7 @@
 <div class="container-fluid">      
       <div class="row justify-content-center">
         <div class="col-xl-8 col-lg-10">
+            <h1 style="font-size: 28px; margin-bottom: 15px">My rooms</h1>
             <div class="btn-group flex-wrap" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('ALL')" id="btnradio1" autocomplete="off" checked>
                 <label class="btn btn-outline-primary" for="btnradio1">ALL</label>
@@ -27,6 +28,10 @@
       </div>
         <div class="row justify-content-center">
             <div class="col-xl-8 col-lg-10">
+                    <p style="font-size: 30;" *ngIf="numRooms === 0">You have not joined any rooms yet. To get started you can 
+                        <a routerLink="/rooms/action" [queryParams]="{action: 'new'}">create</a> a new room or <a routerLink="/rooms/action" [queryParams]="{action: 'join'}">join</a>
+                        an existing one!
+                    </p>
                     <div class="card" *ngFor="let filteredRoom of filteredRooms">
                         <div class="container-fluid">
                             <div class="row">
