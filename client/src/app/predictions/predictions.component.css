@@ -141,4 +141,9 @@ hr {
     transition-duration: 300ms;
 }
 
+.special {
+    min-height: 140px;
+    border: 2px rgb(18, 118, 211) dashed;
+}
+
 

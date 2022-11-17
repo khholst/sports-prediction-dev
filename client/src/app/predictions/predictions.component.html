@@ -45,9 +45,41 @@
                                                 <span style="float: right; margin-top: 7px; margin-right: 5px;">Sort:</span>
                                             </div>
                                         </div>
+
+                                        <div *ngIf="predictions[index].tournament_id.name === '2022 FIFA World Cup'" class="row justify-content-center text-center align-items-center">
+                                            <h5>Special predictions (available until 20.11 23:59):</h5>
+                                            <div class="col-lg-4">
+                                                <div class="card special">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">{{predictions[index].special_predictions[0].prediction}}</h5>
+                                                      <p class="card-text">Country to win the world cup</p>
+                                                      <input style="width: 100%; margin-bottom: 10px;" id="{{index + ':winner'}}" type="text" class="form-control" [ngbTypeahead]="searchCountries"
+                                                      [attr.disabled]="predictions[index].special_predictions[0].user_prediction != 'None' ? 'disabled' : null"
+                                                      [attr.value]="predictions[index].special_predictions[0].user_prediction != 'None' ? predictions[index].special_predictions[0].user_prediction : null"
+                                                      />
+                                                      <button *ngIf="predictions[index].special_predictions[0].user_prediction == 'None'" button class="btn btn-primary" (click)="saveSpecial('winner', index)">Save</button>
+                                                    </div>
+                                                  </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="card special">
+                                                    <div class="card-body">
+                                                      <h5 class="card-title">{{predictions[index].special_predictions[1].prediction}}</h5>
+                                                      <p class="card-text">Player who scores the most goals                                                    
+                                                      </p>
+                                                      <input style="width: 100%; margin-bottom: 10px;" id="{{index + ':scorer'}}"  type="text" class="form-control" [ngbTypeahead]="searchPlayers"
+                                                      [attr.disabled]="predictions[index].special_predictions[1].user_prediction != 'None' ? 'disabled' : null"
+                                                      [attr.value]="predictions[index].special_predictions[1].user_prediction != 'None' ? predictions[index].special_predictions[1].user_prediction : null"
+                                                      />
+                                                      <button *ngIf="predictions[index].special_predictions[1].user_prediction == 'None'" class="btn btn-primary" (click)="saveSpecial('scorer', index)">Save</button>
+                                                    </div>
+                                                  </div>
+                                            </div>
+                                        </div>
                                         
-                                        <div class="row justify-content-center">
+                                        <div class="row justify-content-center">                                            
                                             <div class="col-lg-8">
+                                                <h5>Games:</h5>
                                                 <div *ngFor="let game of filteredPredictions[index].predictions" class="card">
                                                     <div [ngClass]="game.score1 != -1 || game.game_id.hasStarted  ? 'predicted-card' : ''" 
                                                     

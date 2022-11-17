@@ -14,6 +14,7 @@ const httpOptions = {
 })
 export class PredictionService {
   private predictionsUrl = "https://sports-prediction-api.onrender.com/api/predictions";
+  private localUrl = "http://localhost:8080/api/predictions"
 
   constructor(
     private http: HttpClient
@@ -25,5 +26,9 @@ export class PredictionService {
 
   async newPrediction(prediction: Prediction) {
     return await lastValueFrom(this.http.post(`${this.predictionsUrl}/new`, prediction));
+  }
+
+  async newSpecialPrediction(prediction: Prediction) {
+    return await lastValueFrom(this.http.post(`${this.predictionsUrl}/new-special`, prediction));
   }
 }
