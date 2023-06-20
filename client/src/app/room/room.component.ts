@@ -141,16 +141,18 @@ export class RoomComponent implements OnInit {
               const scores:any = [];
               const numPredictions = predictions.length;
 
-
-
               while (predictions[index].points != -999 && index < numPredictions - 1) {
 
                 if (scores.length === 0) {
                   if (predictions[index].points >= 0)
                     scores.push(predictions[index].points);
+                  else if (predictions[index].points == -1)
+                    scores.push(0)
                 } else {
                   if (predictions[index].points >= 0)
                     scores.push(scores[scores.length - 1] + predictions[index].points);
+                  else if (predictions[index].points == -1)
+                    scores.push(0)
                 }
                 index++;
               }

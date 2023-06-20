@@ -136,7 +136,7 @@ hr {
 }
 
 .sortIcon:hover {
-    color: rgb(74, 74, 74);
+    color: rgb(18, 118, 211);
     cursor: pointer;
     transition-duration: 300ms;
 }
@@ -144,6 +144,11 @@ hr {
 .special {
     min-height: 140px;
     border: 2px rgb(18, 118, 211) dashed;
+}
+
+.eye:hover {
+    cursor: pointer;
+    color: rgb(18, 118, 211);
 }
 
 

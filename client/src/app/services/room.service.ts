@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Room } from '../models/room';
 import { lastValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -13,8 +14,9 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class RoomService {
-  private roomUrl = "https://sports-prediction-api.onrender.com/api/rooms";
-  private localUrl = "http://localhost:8080/api/rooms";
+  //private roomUrl = "https://sports-prediction-api.onrender.com/api/rooms";
+  //private localUrl = "http://localhost:8080/api/rooms";
+  private roomUrl: string = `${environment.serverUrl}/rooms`
 
   constructor(
     private http: HttpClient

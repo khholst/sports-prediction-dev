@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Prediction } from '../models/prediction';
 import { PredictionService } from '../services/prediction.service';
-import { DataService } from '../services/data.service';
 import { AuthService } from '../services/auth.service';
-import { faArrowUpWideShort, faArrowDownShortWide } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpWideShort, faArrowDownShortWide, faEye } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { countryNames, players } from './options';
 
 
 @Component({
@@ -14,28 +15,16 @@ import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction }
   styleUrls: ['./predictions.component.css']
 })
 export class PredictionsComponent implements OnInit {
-
+  @ViewChild("modalContent") modalContent: any;
   public active: number = 0;
   public predictions: any = {};
   public filteredPredictions: any = {};
   public numTournaments: number[] = [];
-  public countryNames: string[] = ["Qatar", "Ecuador", "Senegal", "Netherlands", "England", "Iran", "United States of America", "Wales",
-  "Argentina", "Saudi Arabia", "Mexico", "Poland", "France", "Australia", "Denmark", "Tunisia", "Spain", "Costa Rica", "Germany",
-  "Japan", "Belgium", "Canada", "Morocco", "Croatia", "Brazil", "Serbia", "Switzerland", "Cameroon", "Portugal", "Ghana", "Uruguay", "Korea Republic"];
+  public friendsPredictions: any = [];
+  public friendsPredictionsHeader: string = "";
+  public countryNames = countryNames;
+  public players = players;
   
-  public players: string[] = ["Djorkaeff Reasco", "Kevin Rodriguez", "Michael Estrada", "Enner Valencia", "Memphis Depay", "Steven Bergwijn", "Vincent Janssen", "Luuk de Jong", "Noa Lang", "Wout Weghors",
-  "Sadio Mane", "Ismaila Sarr", "Boulaye Dia", "Bamba Dieng", "Famara Diedhiou", "Nicolas Jackson", "Iliman Ndiaye", "Harry Kane", "Callum Wilson", "Marcus Rashford", "Raheem Sterling", "Bukayo Saka", "Phil Foden", "Jack Grealish", "James Maddison",
-  "Gareth Bale", "Kieffer Moore", "Mark Harris", "Brennan Johnson", "Daniel James", "Lionel Messi", "Angel Di Maria", "Lautaro Martinez", "Julian Alvarez", "Paulo Dybala", "Nicolas Gonzalez", "Joaquin Correa", "Rogelio Funes Mori", "Raul Jimenez", "Hirving Lozano", "Henry Martin", "Alexis Vega",
-  "Robert Lewandowski", "Arkadiusz Milik", "Krzysztof Piatek", "Karol Swiderski", "Karim Benzema", "Kingsley Coman", "Ousmane Dembele", "Olivier Giroud", "Antoine Griezmann", "Kylian Mbappe", "Christopher Nkunku", "Marcus Thuram",
-  "Andreas Cornelius", "Martin Braithwaite", "Kasper Dolberg", "Mikkel Damsgaard", "Jesper Lindstrom", "Yussuf Poulsen", "Andreas Skov Olsen", "Jonas Wind", "Kai Havertz", "Youssoufa Moukoko", "Niclas Fullkrug", "Karim Adeyemi", "Ferran Torres", "Nico Williams", "Yeremi Pino", "Alvaro Morata", "Marco Asensio", "Pablo Sarabia", "Dani Olmo", "Ansu Fati",
-  "Romelu Lukaku", "Michy Batshuayi", "Lois Openda", "Charles De Ketelaere", "Eden Hazard", "Jeremy Doku", "Dries Mertens", "Leandro Trossard", "Ivan Perisic", "Andrej Kramaric", "Bruno Petkovic", "Mislav Orsic", "Ante Budimir", "Marko Livaja", "Antony", "Gabriel Jesus", "Gabriel Martinelli", "Neymar", "Pedro", "Raphinha", "Richarlison", "Rodrygo", "Vinicius Junior",
-  "Dusan Tadic", "Aleksandar Mitrovic", "Dusan Vlahovic", "Filip Djuricic", "Luka Jovic", "Nemanja Radonjic", "Breel Embolo", "Ruben Vargas", "Djibril Sow", "Haris Seferovic", "Christian Fassnacht", "Cristiano Ronaldo", "Joao Felix", "Rafael Leao", "Ricardo Horta", "Goncalo Ramos", "Andre Silva",
-  "Luis Suarez", "Darwin Nunez", "Maximiliano Gomez", "Edinson Cavani"," Frenkie de Jong", "Steven Berghuis", "Davy Klaassen", "Teun Koopmeiners", "Marten de Roon", "Cody Gakpo", "Kenneth Taylor", "Xavi Simons", "Declan Rice", "Jude Bellingham", "Kalvin Phillips", "Jordan Henderson", "Conor Gallagher", "Mason Mount",
-  "Joe Allen", "Aaron Ramsey", "Rodrigo De Paul", "Leandro Paredes", "Alexis Mac Allister", "Guido Rodriguez", "Papu Gomez", "Enzo Fernandez", "Exequiel Palacios", "Luis Chavez", "Hector Herrera", "Grzegorz Krychowiak", "Eduardo Camavinga", "Youssouf Fofana", "Matteo Guendouzi", "Adrien Rabiot", "Aurelien Tchouameni", "Jordan Veretout",
-  "Christian Eriksen", "Ilkay Gundogan", "Jonas Hofmann", "Leon Goretzka", "Serge Gnabry", "Leroy Sane", "Jamal Musiala", "Joshua Kimmich", "Thomas Muller", "Julian Brandt", "Mario Gotze", "Sergio Busquets", "Rodri", "Gavi", "Carlos Soler", "Marcos Llorente", "Pedri", "Koke", "Axel Witsel", "Youri Tielemans", "Amadou Onana", "Kevin De Bruyne", "Yannick Carrasco", "Thorgan Hazard", "Timothy Castagne", "Thomas Meunier",
-  "Luka Modric", "Mateo Kovacic", "Bruno Guimaraes", "Casemiro", "Everton Ribeiro", "Fabinho", "Fred", "Lucas Paqueta", "Xherdan Shaqiri", "Granit Xhaka",
-  "Joao Palhinha", "Ruben Neves", "Bernardo Silva", "Bruno Fernandes", "Joao Mario", "Matheus Nunes", "Vitinha", "William Carvalho", "Otavio"];
-
   public badgeClasses = ["bg-danger", "bg-warning", "bg-primary", "bg-success"];
   public isLoading = true;
 
@@ -46,6 +35,7 @@ export class PredictionsComponent implements OnInit {
   //ICONS
   public sortDescIcon =  faArrowUpWideShort;
   public sortAscIcon = faArrowDownShortWide;
+  public eyeIcon = faEye;
 
     //Search function for country name autocomplete
     searchCountries: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
@@ -70,7 +60,7 @@ export class PredictionsComponent implements OnInit {
     private predictionService: PredictionService,
     private authService: AuthService,
     private titleService: Title,
-    private dataService: DataService
+    private modalService: NgbModal
   ) { 
     this.titleService.setTitle("Sports Prediction - My Predictions");
   }
@@ -83,6 +73,7 @@ export class PredictionsComponent implements OnInit {
   private async getPredictions() {
     try {
       this.predictions = await this.predictionService.getPredictions();
+      console.log(this.predictions)
     } catch (error: any) {
       if (error.status === 401) {
         this.authService.navigateToLogin();
@@ -295,4 +286,21 @@ export class PredictionsComponent implements OnInit {
     }
   }
 
+  async getFriendsPredictions(type: string, index: number, prediction_id: string, header: string) {
+    const prediction = {
+      type: type,
+      tournament_id: this.predictions[index].tournament_id._id,
+      prediction_id: prediction_id
+    }
+    try {
+      const result = await this.predictionService.getFriendsPredictions(prediction);
+      this.friendsPredictions = result;
+      this.friendsPredictionsHeader = header;
+      this.modalService.open(this.modalContent, { scrollable: true })
+    } catch (error: any) {
+      if (error.code === 401) {
+        this.authService.navigateToLogin();
+      }
+    }
+  }
 }

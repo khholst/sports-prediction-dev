@@ -5,6 +5,7 @@ import { UserRegister } from '../models/userRegister';
 import { UserLogin } from '../models/userLogin';
 import jwtDecode from "jwt-decode";
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 
 const httpOptions = {
@@ -17,8 +18,9 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  private authUrl: string = "https://sports-prediction-api.onrender.com/api/auth";
-  private localUrl: string = "http://localhost:8080/api/auth";
+  //private authUrl: string = "https://sports-prediction-api.onrender.com/api/auth";
+  private authUrl: string = `${environment.serverUrl}/auth`;
+  //private localUrl: string = "http://localhost:8080/api/auth";
   private isLoggedIn: boolean = false;
   private isAdmin: boolean = false;
   private username: string = "";

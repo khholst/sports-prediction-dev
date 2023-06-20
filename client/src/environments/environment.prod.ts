@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  serverUrl: "https://sports-prediction-api.onrender.com/api"
 };

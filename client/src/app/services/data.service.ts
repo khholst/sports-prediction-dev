@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -12,8 +13,9 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class DataService {
-  private dataUrl: string = "https://sports-prediction-api.onrender.com/api/data";
-  private localUrl: string = "http://localhost:8080/api/data";
+  //private dataUrl: string = "https://sports-prediction-api.onrender.com/api/data";
+  private dataUrl: string = `${environment.serverUrl}/data`;
+  //private localUrl: string = "http://localhost:8080/api/data";
 
   
   constructor(private http: HttpClient) { };
