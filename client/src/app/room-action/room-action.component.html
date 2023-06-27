@@ -24,7 +24,9 @@
                                                 <input type="text" class="form-control" placeholder="Room name" formControlName="name"
                                                 required
                                                 [class.is-invalid]="name.invalid && (name.touched)"
-                                                [class.is-valid]="name.valid">
+                                                [class.is-valid]="name.valid"
+                                                >
+                                                <span class="input-group-text" id="refresh-span"><fa-icon (click)="generateRoomName()" id="refresh-icon" [icon]="refreshIcon"></fa-icon></span>
                                                 <div class="invalid-feedback">Please choose a name for your room!</div>
                                             </div>
                                         </div>

@@ -1,0 +1,17 @@
+1. Lipu API!!!
+2. Punktide lisamine triggeriga.
+3. pgrouting
+4. Eriennustused:
+	lisamine turniiri alt. Atribuudid: küsimus, punktisumma, tüüp, turniiri id, küsimuse id, vastus. Mängija: pakkumine, punktid, ennustuse id.
+	salvestamine: lisada õige vastus ja mängija alla punktid.
+5. Turniiri lisamisel asukohad.
+6. Turniiride loetelu sorteerimine.
+7. logo home teksti asemele.
+8. Loading icon ära koatada, teksti dünaamilise laadimise animatsioon.
+9. Ennustuste lehel turniirid ära eraldada.
+10. Enda ennustus sõprade ennustuste juurde.
+11. Ruumide nime generaator.
+12. Tulemuste edit.
+	
+	
+	

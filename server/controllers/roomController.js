@@ -103,7 +103,6 @@ exports.new = (async (req, res) => {
             room_id: createdRoom._id
         })
     } catch(error) {
-        console.log(error)
         return res.status(404).json({
             code: 404,
             errors: [

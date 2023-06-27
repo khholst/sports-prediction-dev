@@ -7,12 +7,13 @@ import { Location } from '@angular/common';
 //SERVICES
 import { DataService } from '../services/data.service';
 import { RoomService } from '../services/room.service';
+import { RandomService } from '../services/random.service';
 
 //DATA MODELS
 import { Tournament } from '../models/tournament';
 
 //ICONS
-import { faBasketball, faFutbol, faKey, faTrophy, faFont } from '@fortawesome/free-solid-svg-icons';
+import { faBasketball, faFutbol, faKey, faTrophy, faFont, faArrowsRotate } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 
@@ -58,6 +59,7 @@ export class RoomActionComponent implements OnInit {
   keyIcon = faKey;
   textIcon = faFont;
   trophyIcon = faTrophy;
+  refreshIcon = faArrowsRotate;
 
 
   constructor(
@@ -65,6 +67,7 @@ export class RoomActionComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private roomService: RoomService,
+    private randomService: RandomService,
     private modalService: NgbModal,
     private location: Location,
     private titleService: Title
@@ -82,6 +85,7 @@ export class RoomActionComponent implements OnInit {
   ngOnInit(): void {
     this.getTournaments();    
     this.selectAction();
+    this.generateRoomName();
 
 
     this.subscription = this.router.events.subscribe(event => {
@@ -93,6 +97,12 @@ export class RoomActionComponent implements OnInit {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+
+  async generateRoomName() {
+    const response: any = await this.randomService.generateName();
+    this.roomForm.controls["name"].setValue(response.roomName);
   }
 
 

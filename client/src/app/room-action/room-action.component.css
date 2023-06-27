@@ -15,6 +15,16 @@ h1 {
     border: 1px solid rgb(0, 114, 253);
 }
 
+#refresh-span {
+    background-color: transparent;
+    border: 0px;
+}
+
+#refresh-icon:hover {
+    cursor: pointer;
+    color: rgb(0, 114, 253);
+}
+
 .form-control:focus {
     transition-duration: 300ms;
     border-color: rgb(120, 194, 255);
