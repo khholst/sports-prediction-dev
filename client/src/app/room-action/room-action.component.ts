@@ -191,14 +191,16 @@ export class RoomActionComponent implements OnInit {
     const dropdown = <HTMLInputElement>document.getElementById("tournament")!;
 
     //Add tournaments to the dropdown menu
+    let upcomingTournaments = [];
     for (const tournament of this.tournaments) {
       if (new Date(tournament.end_date).getTime() > new Date().getTime()) {
         const option = document.createElement("option");
         option.text = tournament.name;
         dropdown.appendChild(option);
+        upcomingTournaments.push(tournament)
       }
     }
-    this.roomForm.patchValue({tournament: this.tournaments[1].name})
+    this.roomForm.patchValue({tournament: upcomingTournaments[0].name})
   }
 
 

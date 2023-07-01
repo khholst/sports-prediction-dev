@@ -15,25 +15,28 @@
                                             </ngb-alert>
                                         </div>
                                     </div>
-                                    <div class="row justify-content-center">
-                                        <div class="col-lg-6 col-md-8">
-    
-    
-                                            <div class="input-group mb-3">
-                                                <span class="input-group-text"><fa-icon [icon]="textIcon"></fa-icon></span>
-                                                <input type="text" class="form-control" placeholder="Room name" formControlName="name"
-                                                required
-                                                [class.is-invalid]="name.invalid && (name.touched)"
-                                                [class.is-valid]="name.valid"
-                                                >
-                                                <span class="input-group-text" id="refresh-span"><fa-icon (click)="generateRoomName()" id="refresh-icon" [icon]="refreshIcon"></fa-icon></span>
-                                                <div class="invalid-feedback">Please choose a name for your room!</div>
+                                    <div class="top-margin-20">
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-6 col-md-8">
+        
+                                                <label for="room-name-input" class="form-label">Choose your own room name or generate one</label>
+                                                <div class="input-group mb-3">
+                                                    <span class="input-group-text"><fa-icon [icon]="textIcon"></fa-icon></span>
+                                                    <input id="room-name-input" type="text" class="form-control" placeholder="Room name" formControlName="name"
+                                                    required
+                                                    [class.is-invalid]="name.invalid && (name.touched)"
+                                                    [class.is-valid]="name.valid"
+                                                    >
+                                                    <span class="input-group-text" id="refresh-span"><fa-icon (click)="generateRoomName()" id="refresh-icon" [icon]="refreshIcon"></fa-icon></span>
+                                                    <div class="invalid-feedback">Please choose a name for your room!</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
     
                                     <div class="row justify-content-center">
                                         <div class="col-lg-6 col-md-8">
+                                            <label for="tournament" class="form-label">Tournament</label>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text"><fa-icon [icon]="trophyIcon"></fa-icon></span>
                                                 <select id="tournament" class="form-select" formControlName="tournament">
@@ -62,15 +65,16 @@
                         <ng-template ngbNavContent>
                             <div class="container">
                                 <form [formGroup]="joinRoomForm" (ngSubmit)="findRoom()">
-                                    <div class="row justify-content-center">
+                                    <div class="row justify-content-center top-margin-20">
                                         <div class="col-lg-6 col-md-8">
                                             <ngb-alert [dismissible]="false" *ngIf="findAlert.isShown" #staticAlert type="danger">
                                                 {{ findAlert.message }}
                                             </ngb-alert>
-    
+                                            
+                                            <label for="room-key-input" class="form-label">Room key</label>
                                             <div class="input-group mb-3">
                                                 <span class="input-group-text"><fa-icon [icon]="keyIcon"></fa-icon></span>
-                                                <input type="text" class="form-control" placeholder="Enter room key" formControlName="join_key"
+                                                <input id="room-key-input" type="text" class="form-control" placeholder="Enter room key" formControlName="join_key"
                                                 required
                                                 minlength="8"
                                                 [class.is-invalid]="join_key.invalid && (join_key.touched)"
