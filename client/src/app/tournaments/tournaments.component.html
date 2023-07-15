@@ -1,126 +1,145 @@
 <div *ngIf="isLoading" class="row loading">
     <div class="col text-center">
-            <img src="assets/blocks.svg" alt="Loading icon" width="100">
+        <img src="assets/blocks.svg" alt="Loading icon" width="100">
     </div>
 </div>
 
 
 <main>
-        <div *ngIf="!isLoading" class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-lg-10" style="margin-bottom: 15px;">
-                    <ngb-alert #selfClosingAlert *ngIf="alert.isOpen" [type]="alert.type" [animation]="true" [dismissible]="false">{{alert.message}}</ngb-alert>
-                    <h1 class="heading">Tournaments</h1>
-                    <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon" class="add-icon tournament" placement="right" ngbTooltip="New tournament"></fa-icon>
-                </div>
-                <div class="col-lg-10">
-                    <div *ngFor="let index of indexes" class="card">
-        
-                            <div class="row">
-                                <div class="col-sm-7">
-                                    <p style="display: inline" class="tournament-name">
-                                        <fa-icon *ngIf="tournaments[index].sport === 'basketball'" class="fa-md" [icon]="faBasketball"></fa-icon> 
-                                        <fa-icon *ngIf="tournaments[index].sport === 'football'" class="fa-md" [icon]="faFutbol"></fa-icon> 
-                                        {{ tournaments[index].name }}
-                                    </p>        
-                                    <fa-icon *ngIf="isAdmin" (click)="onNewGame(tournaments[index].name, tournaments[index]._id, index, newGamePopup)" [icon]="addIcon" class="add-icon game" placement="top" ngbTooltip="New game"></fa-icon> 
-                                </div>
-                               
-                                <div class="col-sm-5 text-sm-end">
-                        
-                                    <p class="period">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
-                                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"/>
-                                          </svg>
-                                        {{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-sm-6">
-                                    <img class="img-fluid tournament-img" src="{{ tournaments[index].img_url }}" alt="" width="320">
-                                </div>
-                                <div class="col-sm-6 d-flex align-items-center">
-                                    <div>
-                                        <span *ngFor="let host of tournaments[index].host">
-                                            <fa-icon class="fa-lg" [icon]="faLocation"></fa-icon> 
-                                            {{host}}
-                                        <br>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-        
-                        <button type="button" class="btn btn-primary"
-                            (click)="collapse.toggle(); onGamesRequest(tournaments[index]._id, isCollapsed[index], index)"
-                            isCollapsed="!isCollapsed" aria-controls="collapseExample">
-                            <fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon" style="display:inline-block"></fa-icon>
-                            <span id="show-hide-games{{index}}" style="width: 125px; display:inline-block;"> Show games </span><fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon" style="display:inline-block"></fa-icon><br>
-                        </button>
-        
-                        <div class="overflow-auto" style="max-height: 315px;" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed[index]">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Team 1</th>
-                                        <th style="text-align: center;" scope="col">Score</th>
-                                        <th style="text-align: right;" scope="col">Team 2</th>
-                                        <th style="text-align: center;" scope="col">Time</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let game of games[index]">
-                                        <td style="vertical-align: middle;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team1}} popover-class="increase-popover-width" triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
-                                            <img style="margin-right: 5px;" [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="flag">
-                                            {{game.team1}}
-                                        </td>                                        
+    <div *ngIf="!isLoading" class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-10" style="margin-bottom: 15px;">
+                <ngb-alert #selfClosingAlert *ngIf="alert.isOpen" [type]="alert.type" [animation]="true"
+                    [dismissible]="false">{{alert.message}}</ngb-alert>
+                <h1 class="heading">Tournaments</h1>
+                <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon"
+                    class="add-icon tournament" placement="right" ngbTooltip="New tournament"></fa-icon>
+            </div>
+            <div class="col-lg-10">
+                <div *ngFor="let index of indexes" class="card">
 
-
-
-
-                                        <td style="text-align: center; vertical-align: middle;" *ngIf="game.score1 > -1">
-                                            {{game.score1}} : {{game.score2}}
-                                        </td>
-
-                                        <td style="text-align: center; vertical-align: middle;" *ngIf="game.score1 == -1 && !isAdmin">
-                                            :
-                                        </td>
-
-                                        <td style="text-align: center;" *ngIf="game.score1 == -1 && isAdmin">
-                                            <fa-icon (click)="onGameResult(game, newResultPopup)" [icon]="addIcon" class="add-icon" placement="top" ngbTooltip="Add result"></fa-icon> 
-                                        </td>
-
-
-                                        <td style="text-align: right; vertical-align: middle;" [ngbPopover]="popContent" [container]="'body'" popoverTitle={{game.team2}} triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
-                                            {{game.team2}}
-                                            <img style="margin-left: 3px;" [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="flag">                                            
-                                        </td>
-                                        <td style="text-align: center; vertical-align: middle;">{{game.time}}</td>
-                                        <td style="text-align: center; vertical-align: middle;"><b>{{game.stage}}</b></td>
-                                        <ng-template #popContent>
-                                            <table class="table table-striped">
-                                                <tr *ngFor="let game of cntGames">
-                                                    <td>{{game.team1}}</td>
-                                                    <td style="text-align: center; white-space:nowrap; overflow:hidden; padding: 10px;" *ngIf="game.score1>-1">
-                                                        {{game.score1}} : {{game.score2}}
-                                                    </td>
-                                                    <td style="text-align: center; padding: 10px;" *ngIf="game.score1==-1">
-                                                        vs 
-                                                    </td>
-                                                    <td>{{game.team2}}</td>
-                                                    <td style="text-align: center;"><b>{{game.stage}}</b></td>
-                                                </tr>
-                                            </table>
-                                        </ng-template>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <p style="display: inline" class="tournament-name">
+                                <fa-icon class="fa-md"
+                                    [icon]="getTournamentSportIcon(tournaments[index].sport)"></fa-icon>
+                                {{ tournaments[index].name }}
+                            </p>
+                            <fa-icon *ngIf="isAdmin"
+                                (click)="onNewGame(tournaments[index].name, tournaments[index]._id, index, newGamePopup)"
+                                [icon]="addIcon" class="add-icon game" placement="top" ngbTooltip="New game"></fa-icon>
                         </div>
+
+                        <div class="col-sm-5 text-sm-end">
+
+                            <p class="period">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
+                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z" />
+                                </svg>
+                                {{ tournaments[index].start_date }} to {{ tournaments[index].end_date }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <img class="img-fluid tournament-img" src="{{ tournaments[index].img_url }}" alt=""
+                                width="320">
+                        </div>
+                        <div class="col-sm-6 d-flex align-items-center">
+                            <div>
+                                <span *ngFor="let host of tournaments[index].host">
+                                    <fa-icon class="fa-lg" [icon]="faLocation"></fa-icon>
+                                    {{host}}
+                                    <br>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary"
+                        (click)="collapse.toggle(); onGamesRequest(tournaments[index]._id, isCollapsed[index], index)"
+                        isCollapsed="!isCollapsed" aria-controls="collapseExample">
+                        <fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon"
+                            style="display:inline-block"></fa-icon>
+                        <span id="show-hide-games{{index}}" style="width: 125px; display:inline-block;"> Show games
+                        </span><fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon"
+                            style="display:inline-block"></fa-icon><br>
+                    </button>
+
+                    <div class="overflow-auto" style="max-height: 315px;" #collapse="ngbCollapse"
+                        [(ngbCollapse)]="isCollapsed[index]">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Team 1</th>
+                                    <th style="text-align: center;" scope="col">Score</th>
+                                    <th style="text-align: right;" scope="col">Team 2</th>
+                                    <th style="text-align: center;" scope="col">Time</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let game of games[index]">
+                                    <td style="vertical-align: middle;" [ngbPopover]="popContent" [container]="'body'"
+                                        popoverTitle={{game.team1}} popover-class="increase-popover-width"
+                                        triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
+                                        <img style="margin-right: 5px;"
+                                            [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="flag">
+                                        {{game.team1}}
+                                    </td>
+
+
+
+
+                                    <td style="text-align: center; vertical-align: middle;" *ngIf="game.score1 > -1">
+                                        {{game.score1}} : {{game.score2}}
+                                    </td>
+
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        *ngIf="game.score1 == -1 && !isAdmin">
+                                        :
+                                    </td>
+
+                                    <td style="text-align: center;" *ngIf="game.score1 == -1 && isAdmin">
+                                        <fa-icon (click)="onGameResult(game, newResultPopup)" [icon]="addIcon"
+                                            class="add-icon" placement="top" ngbTooltip="Add result"></fa-icon>
+                                    </td>
+
+
+                                    <td style="text-align: right; vertical-align: middle;" [ngbPopover]="popContent"
+                                        [container]="'body'" popoverTitle={{game.team2}}
+                                        triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
+                                        {{game.team2}}
+                                        <img style="margin-left: 3px;"
+                                            [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="flag">
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;">{{game.time}}</td>
+                                    <td style="text-align: center; vertical-align: middle;"><b>{{game.stage}}</b></td>
+                                    <ng-template #popContent>
+                                        <table class="table table-striped">
+                                            <tr *ngFor="let game of cntGames">
+                                                <td>{{game.team1}}</td>
+                                                <td style="text-align: center; white-space:nowrap; overflow:hidden; padding: 10px;"
+                                                    *ngIf="game.score1>-1">
+                                                    {{game.score1}} : {{game.score2}}
+                                                </td>
+                                                <td style="text-align: center; padding: 10px;" *ngIf="game.score1==-1">
+                                                    vs
+                                                </td>
+                                                <td>{{game.team2}}</td>
+                                                <td style="text-align: center;"><b>{{game.stage}}</b></td>
+                                            </tr>
+                                        </table>
+                                    </ng-template>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </main>
 
 
@@ -129,152 +148,189 @@
 
 <ng-template #newTournamentPopup let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">New tournament</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        <h4 class="modal-title" id="modal-basic-title">New tournament</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="newTournamentForm" (ngSubmit)="saveTournament()">
-        <div class="mb-3">
-            <label for="new-tourn-name" class="form-label">Name</label>
-            <input type="text" class="form-control" id="new-tourn-name" placeholder="Tournament name" formControlName="name"
-            [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
-            [class.is-valid]="name.valid">
-            <div class="invalid-feedback">Please enter a tournament name</div>
-        </div>
+        <form [formGroup]="newTournamentForm" (ngSubmit)="saveTournament()">
+            <div class="mb-3">
+                <label for="new-tourn-name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="new-tourn-name" placeholder="Tournament name"
+                    formControlName="name" [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
+                    [class.is-valid]="name.valid">
+                <div class="invalid-feedback">Please enter a tournament name</div>
+            </div>
 
-        <div class="mb-3">
-            <label for="new-tourn-start" class="form-label">Start date</label>
-                <input type="date" class="form-control" id="new-tourn-start" placeholder="Tournament start date" formControlName="start_date"
-            [class.is-invalid]="start_date.invalid && (start_date.dirty || start_date.touched)"
-            [class.is-valid]="start_date.valid">
-            <div class="invalid-feedback">Please enter a start date</div>
-        </div>
+            <div class="mb-3">
+                <label for="new-tourn-start" class="form-label">Start date</label>
+                <input type="date" class="form-control" id="new-tourn-start" placeholder="Tournament start date"
+                    formControlName="start_date"
+                    [class.is-invalid]="start_date.invalid && (start_date.dirty || start_date.touched)"
+                    [class.is-valid]="start_date.valid">
+                <div class="invalid-feedback">Please enter a start date</div>
+            </div>
 
-        <div class="mb-3">
-            <label for="new-tourn-end" class="form-label">End date</label>
-            <input type="date" class="form-control" id="new-tourn-end" placeholder="Tournament end date" formControlName="end_date"
-            [class.is-invalid]="end_date.invalid && (end_date.dirty || end_date.touched)"
-            [class.is-valid]="end_date.valid">
-            <div class="invalid-feedback">Please enter an end date</div>
-        </div>
+            <div class="mb-3">
+                <label for="new-tourn-end" class="form-label">End date</label>
+                <input type="date" class="form-control" id="new-tourn-end" placeholder="Tournament end date"
+                    formControlName="end_date"
+                    [class.is-invalid]="end_date.invalid && (end_date.dirty || end_date.touched)"
+                    [class.is-valid]="end_date.valid">
+                <div class="invalid-feedback">Please enter an end date</div>
+            </div>
 
-        <div class="mb-3">
-            <label for="new-tourn-img" class="form-label">Image url</label>
-            <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url" formControlName="img_url"
-            [class.is-invalid]="img_url.invalid && (img_url.dirty || img_url.touched)"
-            [class.is-valid]="img_url.valid">
-            <div class="invalid-feedback">Please enter the image url</div>
-        </div>
+            <div class="mb-3">
+                <label for="new-tourn-img" class="form-label">Image url</label>
+                <input type="text" class="form-control" id="new-tourn-img" placeholder="Tournament image url"
+                    formControlName="img_url" [class.is-invalid]="img_url.invalid && (img_url.dirty || img_url.touched)"
+                    [class.is-valid]="img_url.valid">
+                <div class="invalid-feedback">Please enter the image url</div>
+            </div>
 
-        <div class="mb-3">
-            <label for="new-tourn-games" class="form-label">Total games</label>
-            <input type="number" min="0" class="form-control" id="new-tourn-games" placeholder="Tournament total games" formControlName="num_games"
-            [class.is-invalid]="num_games.invalid && (num_games.dirty || num_games.touched)"
-            [class.is-valid]="num_games.valid">
-            <div class="invalid-feedback">Please enter the number of games</div>
-        </div>
+            <div class="mb-3">
+                <label for="new-tourn-games" class="form-label">Total games</label>
+                <input type="number" min="0" class="form-control" id="new-tourn-games"
+                    placeholder="Tournament total games" formControlName="num_games"
+                    [class.is-invalid]="num_games.invalid && (num_games.dirty || num_games.touched)"
+                    [class.is-valid]="num_games.valid">
+                <div class="invalid-feedback">Please enter the number of games</div>
+            </div>
 
+            <div class="mb-3">
+                <label for="new-tourn-hosts" class="form-label">Torunament host(s). If more than one, seperated by a
+                    comma</label>
+                <input type="text" class="form-control" id="new-tourn-hosts" placeholder="Tournament hosts"
+                    formControlName="host" [class.is-invalid]="host.invalid && (host.dirty || host.touched)"
+                    [class.is-valid]="host.valid">
+                <div class="invalid-feedback">Please enter the tournament hosts</div>
+            </div>
 
-        <div class="mb-3">
-            <label for="new-tourn-sport" class="form-label">Sport</label>
-            <select class="form-select" id="new-tourn-sport" aria-label="Default select example" formControlName="sport">
-                <option value="football" [selected]="true">Football</option>
-                <option value="basketball">Basketball</option>
-                <option value="volleyball">Volleyball</option>
-                <option value="hockey">Hockey</option>
-            </select>
-        </div>
-        <div class="d-grid gap-2">
-            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
-            [class.disabled]="newTournamentForm.invalid">Save</button>
-        </div>
-      </form>
+            <div class="mb-3">
+                <label for="new-tourn-sport" class="form-label">Sport</label>
+                <select class="form-select" id="new-tourn-sport" aria-label="Default select example"
+                    formControlName="sport">
+                    <option value="football" [selected]="true">Football</option>
+                    <option value="basketball">Basketball</option>
+                    <option value="volleyball">Volleyball</option>
+                    <option value="hockey">Hockey</option>
+                </select>
+            </div>
+            <div class="d-grid gap-2">
+                <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+                    [class.disabled]="newTournamentForm.invalid">Save</button>
+            </div>
+        </form>
     </div>
-  </ng-template>
+</ng-template>
 
 
-  <ng-template #newGamePopup let-modal>
+<ng-template #newGamePopup let-modal>
+
+
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+       <li [ngbNavItem]="1">
+        <a ngbNavLink>Game</a>
+            <ng-template ngbNavContent>
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modal-basic-title">Add game in {{onNewGameTournament.name}}</h4>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="newGameForm" (ngSubmit)="saveGame()">
+                        <div class="mb-3">
+                            <label for="new-game-home" class="form-label">Home team</label>
+                            <input type="text" class="form-control" id="new-game-home" placeholder="Home team"
+                                formControlName="team1" [ngbTypeahead]="search"
+                                [class.is-invalid]="team1.invalid && (team1.dirty || team1.touched)" [class.is-valid]="team1.valid">
+                            <div class="invalid-feedback">Please enter the home team</div>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label for="new-game-away" class="form-label">Away team</label>
+                            <input type="text" class="form-control" id="new-game-away" placeholder="Away team"
+                                formControlName="team2" [ngbTypeahead]="search"
+                                [class.is-invalid]="team2.invalid && (team2.dirty || team2.touched)" [class.is-valid]="team2.valid">
+                            <div class="invalid-feedback">Please enter the away team</div>
+                        </div>
+            
+                        <div class="mb-3">
+                            <label for="new-game-time" class="form-label">Date and time (in your local time)</label>
+                            <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time"
+                                formControlName="time" [class.is-invalid]="time.invalid && (time.dirty || time.touched)"
+                                [class.is-valid]="time.valid">
+                            <div class="invalid-feedback">Please enter the date and time</div>
+                        </div>
+            
+            
+                        <div class="mb-3">
+                            <label for="new-tourn-sport" class="form-label">Stage</label>
+                            <select class="form-select" id="new-tourn-sport" aria-label="Default select example"
+                                formControlName="stage">
+                                <option value="G" selected>Group</option>
+                                <option value="1/32">1/32</option>
+                                <option value="1/16">1/16</option>
+                                <option value="1/8">1/8</option>
+                                <option value="QF">Quarter-final</option>
+                                <option value="SF">Semi-final</option>
+                                <option value="3rd">3rd place</option>
+                                <option value="F">Final</option>
+                            </select>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+                                [class.disabled]="newGameForm.invalid">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+       </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>Special</a>
+            <ng-template ngbNavContent>
+                <p>
+                    Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko
+                    farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts
+                    ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar
+                    helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson
+                    8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester
+                    stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.
+                </p>
+            </ng-template>
+        </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+</ng-template>
+
+
+
+<ng-template #newResultPopup let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Add game in {{onNewGameTournament.name}}</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+        <h4 class="modal-title" id="modal-basic-title">Save score</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="newGameForm" (ngSubmit)="saveGame()">
-        <div class="mb-3">
-            <label for="new-game-home" class="form-label">Home team</label>
-            <input type="text" class="form-control" id="new-game-home" placeholder="Home team" formControlName="team1" [ngbTypeahead]="search"
-            [class.is-invalid]="team1.invalid && (team1.dirty || team1.touched)"
-            [class.is-valid]="team1.valid">
-            <div class="invalid-feedback">Please enter the home team</div>
-        </div>
+        <form [formGroup]="newResultForm" (ngSubmit)="saveResult(game)">
+            <div class="mb-3">
+                <label for="new-result-home" class="form-label">{{ game.team1 }}</label>
+                <input type="number" min="0" class="form-control" id="new-result-home"
+                    placeholder="{{game.team1}}'s score" formControlName="score1"
+                    [class.is-invalid]="score1.invalid && (score1.dirty || score1.touched)"
+                    [class.is-valid]="score1.valid">
+            </div>
 
-        <div class="mb-3">
-            <label for="new-game-away" class="form-label">Away team</label>
-            <input type="text" class="form-control" id="new-game-away" placeholder="Away team" formControlName="team2" [ngbTypeahead]="search"
-            [class.is-invalid]="team2.invalid && (team2.dirty || team2.touched)"
-            [class.is-valid]="team2.valid">
-            <div class="invalid-feedback">Please enter the away team</div>
-        </div>
-
-        <div class="mb-3">
-            <label for="new-game-time" class="form-label">Date and time (in your local time)</label>
-            <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time" formControlName="time"
-            [class.is-invalid]="time.invalid && (time.dirty || time.touched)"
-            [class.is-valid]="time.valid">
-            <div class="invalid-feedback">Please enter the date and time</div>
-        </div>
-
-
-        <div class="mb-3">
-            <label for="new-tourn-sport" class="form-label">Stage</label>
-            <select class="form-select" id="new-tourn-sport" aria-label="Default select example" formControlName="stage">
-                <option value="G" selected>Group</option>
-                <option value="1/32">1/32</option>
-                <option value="1/16">1/16</option>
-                <option value="1/8">1/8</option>
-                <option value="QF">Quarter-final</option>
-                <option value="SF">Semi-final</option>
-                <option value="3rd">3rd place</option>
-                <option value="F">Final</option>
-            </select>
-        </div>
-        <div class="d-grid gap-2">
-            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
-            [class.disabled]="newGameForm.invalid"
-            >Save</button>
-        </div>
-      </form>
-    </div>
-  </ng-template>
-
-
-
-  <ng-template #newResultPopup let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Save score</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-    </div>
-    <div class="modal-body">
-      <form [formGroup]="newResultForm" (ngSubmit)="saveResult(game)">
-        <div class="mb-3">
-            <label for="new-result-home" class="form-label">{{ game.team1 }}</label>
-            <input type="number" min="0" class="form-control" id="new-result-home" placeholder="{{game.team1}}'s score" formControlName="score1"
-            [class.is-invalid]="score1.invalid && (score1.dirty || score1.touched)"
-            [class.is-valid]="score1.valid">
-        </div>
-
-        <div class="mb-3">
-            <label for="new-result-away" class="form-label">{{ game.team2 }}</label>
-            <input type="number" min="0" class="form-control" id="new-result-away" placeholder="{{game.team2}}'s score" formControlName="score2"
-            [class.is-invalid]="score2.invalid && (score2.dirty || score2.touched)"
-            [class.is-valid]="score2.valid">
-        </div>
-        <div class="d-grid gap-2">
-            <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
-            [class.disabled]="newResultForm.invalid">Save
-            </button>
-        </div>
-      </form>
+            <div class="mb-3">
+                <label for="new-result-away" class="form-label">{{ game.team2 }}</label>
+                <input type="number" min="0" class="form-control" id="new-result-away"
+                    placeholder="{{game.team2}}'s score" formControlName="score2"
+                    [class.is-invalid]="score2.invalid && (score2.dirty || score2.touched)"
+                    [class.is-valid]="score2.valid">
+            </div>
+            <div class="d-grid gap-2">
+                <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+                    [class.disabled]="newResultForm.invalid">Save
+                </button>
+            </div>
+        </form>
     </div>
 
-  </ng-template>
+</ng-template>

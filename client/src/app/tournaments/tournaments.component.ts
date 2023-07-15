@@ -7,7 +7,7 @@ import { Game } from '../models/games';
 import { Country } from '../models/countries';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators } from '@angular/forms';
-import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol, faArrowsToEye } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faAnglesUp, faAnglesDown, faLocationDot, faBasketball, faFutbol, faVolleyball, faStar } from '@fortawesome/free-solid-svg-icons';
 import { TournamentService } from '../services/tournament.service';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 import { GameService } from '../services/game.service';
@@ -35,13 +35,22 @@ export class TournamentsComponent implements OnInit {
     type: ""
   };
 
+  public active = 1;
+
   //Icons
   public addIcon = faPlus;
   public downIcon = faAnglesDown;
   public upIcon = faAnglesUp;
   public faLocation = faLocationDot;
-  public faBasketball = faBasketball;
-  public faFutbol = faFutbol;
+  public faStar = faStar;
+
+
+  private sportIcons: any = {
+    football: faFutbol,
+    basketball: faBasketball,
+    volleyball: faVolleyball,
+  }
+
 
   public onNewGameTournament: any = {
     name: "",
@@ -94,6 +103,7 @@ export class TournamentsComponent implements OnInit {
     end_date: ["", [Validators.required]],
     img_url: ["", [Validators.required]],
     num_games: ["", [Validators.required]],
+    host: ["", [Validators.required]],
     sport: ["football", [Validators.required]]
   })
 
@@ -202,10 +212,12 @@ export class TournamentsComponent implements OnInit {
   async saveTournament() {
     if (this.newTournamentForm.valid) {
       try {
-        this.newTournamentForm.value.end_date = new Date(this.newTournamentForm.value.end_date)
+        this.newTournamentForm.value.end_date = new Date(this.newTournamentForm.value.end_date);
+        this.newTournamentForm.value.host = this.newTournamentForm.value.host.split(",");
         const result = await this.tournamentService.newTournament(this.newTournamentForm.value);
         this.showAlert("Tournament saved successfully", "success");
       } catch (error: any) {
+        console.log("error")
         if(error.status === 401) {
           this.authService.navigateToLogin();
         } else if (error.status === 403) {
@@ -272,8 +284,6 @@ export class TournamentsComponent implements OnInit {
   }
 
 
-
-
   private showAlert(message: string, type: string) {
     this.modalService.dismissAll();
         this.alert.isOpen = true;
@@ -283,6 +293,11 @@ export class TournamentsComponent implements OnInit {
         setTimeout(() => {
           this.alert.isOpen = false;
         }, 4000)
+  }
+
+
+  public getTournamentSportIcon(sport:string) {
+    return this.sportIcons[sport];
   }
 
 
@@ -309,6 +324,10 @@ export class TournamentsComponent implements OnInit {
 
   get num_games() {
     return this.newTournamentForm.get("num_games")!;
+  }
+
+  get host() {
+    return this.newTournamentForm.get("host")!;
   }
 
   get sport() {
