@@ -12,6 +12,7 @@ import { TournamentService } from '../services/tournament.service';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
 import { GameService } from '../services/game.service';
 import { Title } from '@angular/platform-browser';
+import { NewPredictionFormComponent } from './new-prediction-form/new-prediction-form.component';
 
 @Component({
   selector: 'app-tournaments',
@@ -189,17 +190,25 @@ export class TournamentsComponent implements OnInit {
   }
 
 
-  onNewGame(tournamentName: string, tournamentId: string, index: number, content: any) {
+  onNewGame(tournamentName: string, tournamentId: string, index: number) {
     //Add auto completetion names to array
     if (this.countryNames.length === 0) {
       for (let i = 0; i < this.countries.length; i++) {
         this.countryNames.push(this.countries[i].name)
       }
     }
-    this.onNewGameTournament.name = tournamentName;
-    this.onNewGameTournament.id = tournamentId;
-    this.onNewGameTournament.index = index;
-    this.modalService.open(content);
+
+    const modal = this.modalService.open(NewPredictionFormComponent);
+    modal.componentInstance.tournament = {name: tournamentName, id: tournamentId};
+    modal.componentInstance.countryNames = this.countryNames;
+    modal.componentInstance.countries = this.countries;
+
+
+    
+    // this.onNewGameTournament.name = tournamentName;
+    // this.onNewGameTournament.id = tournamentId;
+    // this.onNewGameTournament.index = index;
+    // //this.modalService.open(content);
   }
   
 

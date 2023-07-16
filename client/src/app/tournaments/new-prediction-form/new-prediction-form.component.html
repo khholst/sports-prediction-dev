@@ -1,0 +1,111 @@
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+        <a ngbNavLink>Game</a>
+        <ng-template ngbNavContent>
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Add game in {{tournament.name}}</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="newGameForm" (ngSubmit)="saveGame()">
+                    <div class="mb-3">
+                        <label for="new-game-home" class="form-label">Home team</label>
+                        <input type="text" class="form-control" id="new-game-home" placeholder="Home team"
+                            formControlName="team1" [ngbTypeahead]="search"
+                            [class.is-invalid]="team1.invalid && (team1.dirty || team1.touched)"
+                            [class.is-valid]="team1.valid">
+                        <div class="invalid-feedback">Please enter the home team</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new-game-away" class="form-label">Away team</label>
+                        <input type="text" class="form-control" id="new-game-away" placeholder="Away team"
+                            formControlName="team2" [ngbTypeahead]="search"
+                            [class.is-invalid]="team2.invalid && (team2.dirty || team2.touched)"
+                            [class.is-valid]="team2.valid">
+                        <div class="invalid-feedback">Please enter the away team</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new-game-time" class="form-label">Date and time (in your local time)</label>
+                        <input type="datetime-local" class="form-control" id="new-game-time" placeholder="Game time"
+                            formControlName="time" [class.is-invalid]="time.invalid && (time.dirty || time.touched)"
+                            [class.is-valid]="time.valid">
+                        <div class="invalid-feedback">Please enter the date and time</div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="new-tourn-sport" class="form-label">Stage</label>
+                        <select class="form-select" id="new-tourn-sport" aria-label="Default select example"
+                            formControlName="stage">
+                            <option value="G" selected>Group</option>
+                            <option value="1/32">1/32</option>
+                            <option value="1/16">1/16</option>
+                            <option value="1/8">1/8</option>
+                            <option value="QF">Quarter-final</option>
+                            <option value="SF">Semi-final</option>
+                            <option value="3rd">3rd place</option>
+                            <option value="F">Final</option>
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+                            [class.disabled]="newGameForm.invalid">Add game</button>
+                    </div>
+                </form>
+            </div>
+        </ng-template>
+    </li>
+
+    <li [ngbNavItem]="2">
+        <a ngbNavLink>Special</a>
+        <ng-template ngbNavContent>
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Add special prediction in {{tournament.name}}</h4>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="newSpecialForm" (ngSubmit)="saveSpecial()">
+
+                    <div class="mb-3">
+                        <label for="new-special-prediction" class="form-label">Prediction</label>
+                        <input type="text" class="form-control" id="new-special-prediction" placeholder="Prediction"
+                            formControlName="prediction"
+                            [class.is-invalid]="specialPrediction.invalid && (specialPrediction.dirty || specialPrediction.touched)"
+                            [class.is-valid]="specialPrediction.valid">
+                        <div class="invalid-feedback">Please enter the prediction</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new-special-points" class="form-label">Points</label>
+                        <input type="number" min="0" class="form-control" id="new-special-points"
+                            placeholder="Points" formControlName="points"
+                            [class.is-invalid]="specialPoints.invalid && (specialPoints.dirty || specialPoints.touched)"
+                            [class.is-valid]="specialPoints.valid">
+                        <div class="invalid-feedback">Please enter the number of points</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="new-special-type" class="form-label">Type</label>
+                        <select class="form-select" id="new-special-type" aria-label="New special prediction" formControlName="type">
+                            <option value="country" selected>Country</option>
+                            <option value="player">Player</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button style="margin: 0px 16px 16px 16px" type="submit" class="btn btn-success"
+                            [class.disabled]="newSpecialForm.invalid">Add prediction</button>
+                    </div>
+                </form>
+            </div>
+        </ng-template>
+    </li>
+    <li class="ms-auto d-flex align-items-center" style="margin-right: 10px">
+        <button type="button" class="btn-close" aria-label="Close"
+            (click)="activeModal.dismiss('Cross click')"></button>
+    </li>
+</ul>
+
+<ngb-alert #selfClosingAlert *ngIf="alert.isOpen" [type]="alert.type" [animation]="true" [dismissible]="false">{{alert.message}}</ngb-alert>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

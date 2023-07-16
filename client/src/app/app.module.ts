@@ -22,6 +22,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { PredictionsComponent } from './predictions/predictions.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { NewPredictionFormComponent } from './tournaments/new-prediction-form/new-prediction-form.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     RoomActionComponent,
     RoomComponent,
     PredictionsComponent,
+    NewPredictionFormComponent,
   ],
   imports: [
     BrowserModule,
