@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, OperatorFunction, debounceTime, distinctUntilChanged, map } from 'rxjs';
@@ -7,6 +7,7 @@ import { GameService } from '../../services/game.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Country } from 'src/app/models/countries';
+import { Game } from 'src/app/models/games';
 
 @Component({
   selector: 'app-new-prediction-form',
@@ -17,6 +18,7 @@ export class NewPredictionFormComponent implements OnInit {
   @Input() tournament: any;
   @Input() countries: Country[] = [];
   @Input() countryNames: string[] = [];
+  @Output() newGame: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -76,14 +78,17 @@ export class NewPredictionFormComponent implements OnInit {
             this.newGameForm.value.team2 = this.countries[i].country_id;
           }
         }
-        const result = await this.gameService.newGame(this.tournament.id, this.newGameForm.value);
-        const timeResultShown = 3000;
-        this.alertService.showAlert(this.alert, `${this.tournament.name} game saved successfully!`, "success", timeResultShown);
+        const result: any = await this.gameService.newGame(this.tournament._id, this.newGameForm.value);
 
-        setTimeout(() => {
-          this.activeModal.dismiss();
-        }, timeResultShown)
+        if (result.code === 201) {
+          const timeResultShown = 3000;
+          this.alertService.showAlert(this.alert, `${this.tournament.name} game saved successfully!`, "success", timeResultShown);
 
+          setTimeout(() => {
+            this.activeModal.dismiss();
+          }, timeResultShown)
+          this.newGame.emit(this.newGameForm.value);
+        }
       } catch (error: any) {
         if(error.status === 401) {
           this.authService.navigateToLogin();
@@ -102,18 +107,17 @@ export class NewPredictionFormComponent implements OnInit {
     }
 
     try {
-      this.newSpecialForm.value.userPrediction = "NULL"
-      this.newSpecialForm.value.result         = "NULL"
+      console.log(this.tournament)
+      this.newSpecialForm.value.userPrediction = "TBD"
+      this.newSpecialForm.value.result         = "TBD"
       this.newSpecialForm.value.userPoints     = -1
-      this.newSpecialForm.value.activeUntil    = "GET DATE FROM TOURNAMENT"
+      this.newSpecialForm.value.activeUntil    = new Date(this.tournament.start_date).toISOString();
 
+      this.gameService.newSpecial(this.tournament._id, this.newSpecialForm.value)
 
-      console.log(this.newSpecialForm.value)
     } catch (error) {
       
     }
-
-
   }
 
    // New game form getters

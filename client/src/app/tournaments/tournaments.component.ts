@@ -135,8 +135,8 @@ export class TournamentsComponent implements OnInit {
     for (let i = 0; i < this.tournaments.length; i++) {
       this.indexes.push(index);
       this.isCollapsed.push(true);
-      this.tournaments[i].start_date = this.formatDate(this.tournaments[i].start_date, false);
-      this.tournaments[i].end_date = this.formatDate(this.tournaments[i].end_date, false);
+      this.tournaments[i].start_date_pretty = this.formatDate(this.tournaments[i].start_date, false);
+      this.tournaments[i].end_date_pretty = this.formatDate(this.tournaments[i].end_date, false);
       index++;
     };
     this.isLoading = false;
@@ -190,25 +190,24 @@ export class TournamentsComponent implements OnInit {
   }
 
 
-  onNewGame(tournamentName: string, tournamentId: string, index: number) {
+  onNewGame(tournament: Tournament, index: number) {
     //Add auto completetion names to array
     if (this.countryNames.length === 0) {
       for (let i = 0; i < this.countries.length; i++) {
         this.countryNames.push(this.countries[i].name)
       }
     }
-
     const modal = this.modalService.open(NewPredictionFormComponent);
-    modal.componentInstance.tournament = {name: tournamentName, id: tournamentId};
+    modal.componentInstance.tournament = tournament;
     modal.componentInstance.countryNames = this.countryNames;
     modal.componentInstance.countries = this.countries;
 
-
-    
-    // this.onNewGameTournament.name = tournamentName;
-    // this.onNewGameTournament.id = tournamentId;
-    // this.onNewGameTournament.index = index;
-    // //this.modalService.open(content);
+    // Reflect new game in opened game list
+    modal.componentInstance.newGame.subscribe((newGame: Game) => {
+      if (Object.keys(this.games).length > 0) {
+        this.games[index].push(newGame);
+      }
+    });
   }
   
 
