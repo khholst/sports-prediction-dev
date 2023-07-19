@@ -118,9 +118,9 @@ exports.animalsPlural = [
     "Seals",
     "Sharks"
 ]
-  
-  
-  
+
+
+
 
 exports.adjectives = [
     "Absurd",
@@ -241,6 +241,6 @@ exports.adjectives = [
     "Unusual",
     "Whimsical",
     "Zippy",
-  ];
-  
+];
+
 

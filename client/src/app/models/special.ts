@@ -5,7 +5,7 @@ export class Special {
         public type: string,
         public activeUntil: string,
         public userPrediction: string,
-        public userPoints: string,
+        public userPoints: number,
         public result: string,
         public _id: string
     ) {}
