@@ -107,10 +107,7 @@ export class NewPredictionFormComponent implements OnInit {
     }
 
     try {
-      console.log(this.tournament)
-      this.newSpecialForm.value.userPrediction = "TBD"
       this.newSpecialForm.value.result         = "TBD"
-      this.newSpecialForm.value.userPoints     = -1
       this.newSpecialForm.value.activeUntil    = new Date(this.tournament.start_date).toISOString();
 
       this.gameService.newSpecial(this.tournament._id, this.newSpecialForm.value)

@@ -28,28 +28,15 @@ exports.newTournament = (async(req, res) => {
 
 
 exports.newGame = (async(req, res) => {
-
     try {
-        const User = db.model('Users', new mongo.Schema(schema.user), 'users');
-        const Games =   db.model('Games', new mongo.Schema(schema.game), 'games');
+        const userCollection = db.model('Users', schema.user);
+        const gameCollection =   db.model('Games', schema.game);
 
         req.body.tournament_id = req.params.id;
-        const addedGame = await Games.create(req.body);
+        const addedGame = await gameCollection.create(req.body);
 
         const newPrediction = getNewPrediction(addedGame._id)
-        
-        // Add new game to user predictions
-        const saveGameInPredictions = await User.updateMany(
-            {  },
-            {
-                "$push": {
-                    "tournaments.$[tournament].predictions": newPrediction, 
-                },
-            },
-            { "arrayFilters": [
-                { "tournament.tournament_id": mongo.Types.ObjectId(req.params.id) },
-            ]}
-        )
+        await addPredictionForUsers(userCollection, newPrediction, req.params.id)
 
         res.status(201).json({
             code: 201,
@@ -67,22 +54,22 @@ exports.newGame = (async(req, res) => {
     }
 })
 
+async function addPredictionForUsers(userCollection, prediction, tournament_id, special=false) {
+    let subdocument = "predictions";
+    if (special) { subdocument = "special_predictions" }
+    push_location = `tournaments.$[tournament].${subdocument}`
 
-exports.newSpecial = (async(req, res) => {
-    
-    try {
-        const User = db.model('Users', new mongo.Schema(schema.user), 'users');
-        
-    } catch (error) {
-        res.status(500).json({
-            code: 500,
-            errors: [{
-                msg: "Something went wrong with the request"
-            }]
-        });
-    }
-})
-
+    await userCollection.updateMany({},
+        {
+            "$push": {
+                push_location: prediction, 
+            },
+        },
+        { "arrayFilters": [
+            { "tournament.tournament_id": mongo.Types.ObjectId(tournament_id) },
+        ]}
+    )
+}
 
 function getNewPrediction(game_id) {
     return {
@@ -93,3 +80,45 @@ function getNewPrediction(game_id) {
         winner: -1
     }
 }
+
+
+
+
+exports.newSpecial = (async(req, res) => {
+    
+    try {
+        const specialCollection = db.model('specials', schema.specialPrediction);
+        const userCollection = db.model('users', schema.user);
+
+        req.body.tournament_id = req.params.id;
+        const newSpecial = await specialCollection.create(req.body);
+        const newSpecialPrediction = getNewSpecialPrediction(newSpecial._id);
+
+        addPredictionForUsers(userCollection, newSpecialPrediction, req.params.id, true);
+
+
+        console.log(newSpecialPrediction)
+
+
+
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            code: 500,
+            errors: [{
+                msg: "Something went wrong with the request"
+            }]
+        });
+    }
+})
+
+
+function getNewSpecialPrediction(prediction_id) {
+    return {
+        prediction_id   : prediction_id,
+        user_prediction  : "TBD",
+        user_points      : "TBD"
+    }
+}
+
