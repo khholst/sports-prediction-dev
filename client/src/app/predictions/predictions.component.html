@@ -110,7 +110,7 @@
                                                             <form>
                                                                 <div class="row">
                                                                         <div class="col-sm-5 text-sm-end text-center team1-div">
-                                                                            <img [src]="'https://countryflagsapi.com/png/' + game.game_id.team1" class="flag">
+                                                                            <img [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + game.game_id.team1 + '.png'" class="flag">
                                                                             {{game.game_id.team1.toUpperCase()}}
                                                                             <input *ngIf="game.score1 != -1 && game.score1 != -999" value="{{ game.score1 }}" disabled>
                                                                             <input *ngIf="game.score1 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team1'}}" type="number" min="0" value="0">
@@ -125,7 +125,7 @@
                                                                                 <input class="score2" *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
                                                                                 <input class="score2" *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>
                                                                                 <p class="team2" style="margin: 0px 9px 0px 9px;">{{game.game_id.team2.toUpperCase()}}</p>
-                                                                                <img class="flag2" [src]="'https://countryflagsapi.com/png/' + game.game_id.team2" class="flag">                                                                        
+                                                                                <img class="flag2" [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + game.game_id.team2 + '.png'" class="flag">                                                                        
                                                                         </div>
                                                                 </div>
     

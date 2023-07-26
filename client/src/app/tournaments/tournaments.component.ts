@@ -152,7 +152,10 @@ export class TournamentsComponent implements OnInit {
       arrow[1].classList.toggle("down");
 
       if(!(index in this.games)){
+        const specials = await this.dataService.getSpecials(tournID); // TO PROMISE.ALL
+        console.log(specials)
         this.games[index] = await this.dataService.getGames(tournID);
+        //const specials = await this.dataService.getSpecials(tournID);
         for (let i = 0; i < this.games[index].length; i++) {
           this.games[index][i].time = this.formatDate(this.games[index][i].time, true);
           let t1: string = this.games[index][i].team1;
@@ -225,7 +228,6 @@ export class TournamentsComponent implements OnInit {
         const result = await this.tournamentService.newTournament(this.newTournamentForm.value);
         this.showAlert("Tournament saved successfully", "success");
       } catch (error: any) {
-        console.log("error")
         if(error.status === 401) {
           this.authService.navigateToLogin();
         } else if (error.status === 403) {
@@ -240,7 +242,6 @@ export class TournamentsComponent implements OnInit {
   async saveGame() {
     if (this.newGameForm.valid) {
       try {
-        const formClone = JSON.parse(JSON.stringify(this.newGameForm.value));
 
         this.newGameForm.value.time = new Date(this.newGameForm.value.time).toISOString();
         this.newGameForm.value.score1 = -1;

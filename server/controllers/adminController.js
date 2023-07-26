@@ -29,8 +29,8 @@ exports.newTournament = (async(req, res) => {
 
 exports.newGame = (async(req, res) => {
     try {
-        const userCollection = db.model('Users', schema.user);
-        const gameCollection =   db.model('Games', schema.game);
+        const userCollection = db.models.users || db.model('users', schema.user);
+        const gameCollection = db.models.games || db.model('games', schema.game);
 
         req.body.tournament_id = req.params.id;
         const addedGame = await gameCollection.create(req.body);
@@ -62,7 +62,7 @@ async function addPredictionForUsers(userCollection, prediction, tournament_id, 
     await userCollection.updateMany({},
         {
             "$push": {
-                push_location: prediction, 
+                [push_location]: prediction, 
             },
         },
         { "arrayFilters": [
@@ -87,21 +87,21 @@ function getNewPrediction(game_id) {
 exports.newSpecial = (async(req, res) => {
     
     try {
-        const specialCollection = db.model('specials', schema.specialPrediction);
-        const userCollection = db.model('users', schema.user);
+        tournamentId = req.params.id;
+        const specialCollection = db.model.specials || db.model('specials', schema.specialPrediction);
+        const userCollection = db.models.users || db.model('users', schema.user);
 
-        req.body.tournament_id = req.params.id;
+        req.body.tournament_id = tournamentId;
         const newSpecial = await specialCollection.create(req.body);
         const newSpecialPrediction = getNewSpecialPrediction(newSpecial._id);
 
-        addPredictionForUsers(userCollection, newSpecialPrediction, req.params.id, true);
+        addPredictionForUsers(userCollection, newSpecialPrediction, tournamentId, true);
 
+        res.status(201).json({
+            code: 201,
+            msg: "Special prediction added",
+        });
 
-        console.log(newSpecialPrediction)
-
-
-
-        
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -118,7 +118,7 @@ function getNewSpecialPrediction(prediction_id) {
     return {
         prediction_id   : prediction_id,
         user_prediction  : "TBD",
-        user_points      : "TBD"
+        user_points      : -999
     }
 }
 

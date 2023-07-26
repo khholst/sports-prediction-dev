@@ -94,7 +94,9 @@ export class RoomComponent implements OnInit {
 
 
     const isThereAnyScore: Array<number> = this.roomUsers[0].tournaments.filter(function(trn):boolean{return trn.tournament_id === tournaments[0]._id})[0].scores;
-    if(isThereAnyScore.length>0){
+    if (isThereAnyScore === undefined) { this.loading = false; return; }
+
+    if(isThereAnyScore.length > 0 && isThereAnyScore !== undefined){
       const lastIndex: number = isThereAnyScore.length - 1;
       this.roomUsers.sort(
         (firstUser: User, secondUser: User) =>
@@ -140,6 +142,9 @@ export class RoomComponent implements OnInit {
               let predictions: any = this.roomUsers[i].tournaments[j].predictions;
               const scores:any = [];
               const numPredictions = predictions.length;
+
+              
+              if (numPredictions === 0) { return;}
 
               while (predictions[index].points != -999 && index < numPredictions - 1) {
 

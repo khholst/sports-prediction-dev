@@ -24,6 +24,7 @@ const predictionSchema = {
 
 
 const specialPredictionSchema = new mongo.Schema({
+    tournament_id   : 'ObjectID',
     prediction      : 'string',
     points          : 'number',
     type            : 'string',

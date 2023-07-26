@@ -13,9 +13,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class DataService {
-  //private dataUrl: string = "https://sports-prediction-api.onrender.com/api/data";
   private dataUrl: string = `${environment.serverUrl}/data`;
-  //private localUrl: string = "http://localhost:8080/api/data";
 
   
   constructor(private http: HttpClient) { };
@@ -37,5 +35,9 @@ export class DataService {
     let params: HttpParams = new HttpParams().append('tournament_id', tourID);
     let headers = httpOptions.headers;
     return await lastValueFrom(this.http.get(`${this.dataUrl}/games`, {headers, params}));
+  };
+
+  async getSpecials(tournamentId: string):Promise<any> {
+    return await lastValueFrom(this.http.get(`${this.dataUrl}/tournaments/${tournamentId}/specials`, httpOptions));
   };
 }

@@ -84,7 +84,7 @@
                                         popoverTitle={{game.team1}} popover-class="increase-popover-width"
                                         triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
                                         <img style="margin-right: 5px;"
-                                            [src]="'https://countryflagsapi.com/png/' + flags[game.team1]" class="flag">
+                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + flags[game.team1] + '.png'" class="flag">
                                         {{game.team1}}
                                     </td>
 
@@ -111,7 +111,7 @@
                                         triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
                                         {{game.team2}}
                                         <img style="margin-left: 3px;"
-                                            [src]="'https://countryflagsapi.com/png/' + flags[game.team2]" class="flag">
+                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + flags[game.team2] + '.png'" class="flag">
                                     </td>
                                     <td style="text-align: center; vertical-align: middle;">{{game.time}}</td>
                                     <td style="text-align: center; vertical-align: middle;"><b>{{game.stage}}</b></td>
