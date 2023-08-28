@@ -12,7 +12,6 @@ function createPointRangeArray(score, pointRange, offset) {
     } else {
         for (let i = score - pointRange; i < score - offset; i++) {
             pointRangeArray.push(i);
-            console.log(i)
         }
         for (let i = score + offset + 1; i < score + pointRange + 1; i++) {
             pointRangeArray.push(i)
@@ -49,18 +48,12 @@ exports.save = (async (req, res) => {
             }
         );
 
-        console.log(predictionWithResult)
-
-
         // Update user predictions with score
         let winner = 0;
         if (result.score1 > result.score2) { winner = 1 }
         else if (result.score2 > result.score1) { winner = 2 }
-        //const difference = Math.abs(result.score1 - result.score2);
+        const difference = Math.abs(result.score1 - result.score2);
 
-
-
-        console.log(sport)
 
         if (sport === "basketball") {
             const withinFivePointsTeam1 = createPointRangeArray(result.score1, 5, 0);
@@ -69,11 +62,6 @@ exports.save = (async (req, res) => {
             const withinTenPointsTeam1 = createPointRangeArray(result.score1, 10, 5);
             const withinTenPointsTeam2 = createPointRangeArray(result.score2, 10, 5);
 
-            console.log(withinFivePointsTeam1)
-            console.log(withinFivePointsTeam2)
-            console.log("______")
-            console.log(withinTenPointsTeam1)
-            console.log(withinTenPointsTeam2)
 
             const savePredictionPoints = await userCollection.bulkWrite([
                 //Update all 0 point predictions
