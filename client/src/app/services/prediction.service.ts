@@ -30,7 +30,7 @@ export class PredictionService {
     return await lastValueFrom(this.http.post(`${this.predictionsUrl}/new`, prediction));
   }
 
-  async newSpecialPrediction(prediction: Prediction) {
+  async newSpecialPrediction(prediction: any) {
     return await lastValueFrom(this.http.post(`${this.predictionsUrl}/new-special`, prediction));
   }
 

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Prediction } from '../models/prediction';
 import { PredictionService } from '../services/prediction.service';
 import { AuthService } from '../services/auth.service';
+import { FormatService } from '../services/format.service';
 import { faArrowUpWideShort, faArrowDownShortWide, faEye } from '@fortawesome/free-solid-svg-icons';
 import { Title } from '@angular/platform-browser';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction } from 'rxjs';
@@ -46,7 +47,7 @@ export class PredictionsComponent implements OnInit {
         : this.countryNames.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
     );
 
-    //Search function for country name autocomplete
+    //Search function for football players autocomplete
     searchPlayers: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(200),
@@ -60,7 +61,8 @@ export class PredictionsComponent implements OnInit {
     private predictionService: PredictionService,
     private authService: AuthService,
     private titleService: Title,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public formatService: FormatService
   ) { 
     this.titleService.setTitle("Sports Prediction - My Predictions");
   }
@@ -73,7 +75,6 @@ export class PredictionsComponent implements OnInit {
   private async getPredictions() {
     try {
       this.predictions = await this.predictionService.getPredictions();
-      console.log(this.predictions)
     } catch (error: any) {
       if (error.status === 401) {
         this.authService.navigateToLogin();
@@ -223,16 +224,20 @@ export class PredictionsComponent implements OnInit {
   }
 
 
-  async saveSpecial(type: string, index: number) {
-    const input:any = document.getElementById(`${index}:${type}`)
+  async saveSpecial(special: any, tournamentId: string) {
+    const input:any = document.getElementById(`${special.prediction_id._id}`);
 
-    let prediction;
-    if (type === "winner") { prediction = this.predictions[index].special_predictions[0] }
-    else if (type === "scorer") { prediction = this.predictions[index].special_predictions[1] }
-    prediction.user_prediction = input.value
-
+    const prediction = {
+      prediction_id: special.prediction_id._id,
+      tournament_id: tournamentId,
+      user_prediction: input.value
+    }
     try {
-      const result = await this.predictionService.newSpecialPrediction(prediction);
+      const result: any = await this.predictionService.newSpecialPrediction(prediction);
+      if (result.code === 200) {
+        special.user_prediction = input.value;
+      }
+
     } catch (error: any) {
       if (error.code === 401) {
         this.authService.navigateToLogin();

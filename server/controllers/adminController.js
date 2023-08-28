@@ -81,9 +81,6 @@ function getNewPrediction(game_id) {
     }
 }
 
-
-
-
 exports.newSpecial = (async(req, res) => {
     
     try {
@@ -120,5 +117,88 @@ function getNewSpecialPrediction(prediction_id) {
         user_prediction  : "TBD",
         user_points      : -999
     }
+}
+
+
+exports.editSpecial = async (req, res) => {
+
+
+    try {
+        const result        = req.body.result;
+    const tournamentId  = mongo.Types.ObjectId(req.params.tournament_id);
+    const specialId     = mongo.Types.ObjectId(req.params.special_id);
+
+    const specialCollection = db.model.specials || db.model('specials', schema.specialPrediction);
+    const userCollection = db.models.users || db.model('users', schema.user);
+
+    const specialPrediction = await specialCollection.findOneAndUpdate(
+        { _id: specialId },
+        {
+            "$set": {
+                "result": result, 
+            }
+        }
+    );
+
+    const points = specialPrediction.points;
+
+    const savePredictionPoints = await userCollection.bulkWrite([
+        //Update all accurate predictions
+        { "updateMany": {
+            "filter":{},
+            "update": {
+                "$set": {"tournaments.$[tournament].special_predictions.$[prediction].user_points": points },
+            },
+            "arrayFilters": [
+                {   "tournament.tournament_id": tournamentId },
+                {   "prediction.prediction_id": specialId,
+                    "prediction.user_prediction": result,                   
+                }                   
+            ]
+        }},
+
+        //Update all wrong predictions
+        { "updateMany": {
+            "filter":{},
+            "update": {
+                "$set": {"tournaments.$[tournament].special_predictions.$[prediction].user_points": 0 },
+            },
+            "arrayFilters": [
+                {   "tournament.tournament_id": tournamentId },
+                {   "prediction.prediction_id": specialId,
+                    "prediction.user_prediction": {"$ne": result},
+                }
+            ]
+        }},
+    ])
+
+    res.status(201).json({
+        code: 201,
+        msg: "Result added",
+    });
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            code: 500,
+            errors: [{
+                msg: "Something went wrong with the request"
+            }]
+        })
+    }
+
+
+
+
+    
+
+
+
+
+
+
+
+
 }
 

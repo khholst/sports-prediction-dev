@@ -42,6 +42,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem("token");
     this.isLoggedIn = false;
+    this.isAdmin = false;
     this.username = "";
   }
 

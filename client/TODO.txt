@@ -1,2 +1,0 @@
-share css with login and register components
-sortable games table, date to xx/xx

@@ -19,6 +19,7 @@ export class NewPredictionFormComponent implements OnInit {
   @Input() countries: Country[] = [];
   @Input() countryNames: string[] = [];
   @Output() newGame: EventEmitter<any> = new EventEmitter();
+  @Output() newSpecial: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private formBuilder: FormBuilder,
@@ -110,10 +111,26 @@ export class NewPredictionFormComponent implements OnInit {
       this.newSpecialForm.value.result         = "TBD"
       this.newSpecialForm.value.activeUntil    = new Date(this.tournament.start_date).toISOString();
 
-      this.gameService.newSpecial(this.tournament._id, this.newSpecialForm.value)
+      const newSpecialResult: any = await this.gameService.newSpecial(this.tournament._id, this.newSpecialForm.value);
 
-    } catch (error) {
-      
+      if (newSpecialResult.code === 201) {
+        const timeResultShown = 3000;
+        this.alertService.showAlert(this.alert, `${this.tournament.name} special prediction saved successfully!`, "success", timeResultShown);
+
+        setTimeout(() => {
+          this.activeModal.dismiss();
+        }, timeResultShown)
+        this.newSpecial.emit(this.newSpecialForm.value);
+      }
+
+    } catch (error: any) {
+      if(error.status === 401) {
+        this.authService.navigateToLogin();
+      } else if (error.status === 403) {
+        this.alertService.showAlert(this.alert, `You are not authorized to add a new special prediction to ${this.tournament.name}`, "danger", -1);
+      } else {
+        this.alertService.showAlert(this.alert, `${this.tournament.name} special could not be saved, please try again!`, "danger", -1);
+      }
     }
   }
 
@@ -147,6 +164,4 @@ export class NewPredictionFormComponent implements OnInit {
   get specialPoints() {
     return this.newSpecialForm.get("points")!;
   }
-
-
 }

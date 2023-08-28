@@ -1,4 +1,0 @@
-timestamps
-past tournament show up in create room
-created room info
-tournament sorting

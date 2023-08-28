@@ -9,7 +9,8 @@
     <div *ngIf="!isLoading" class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-10" style="margin-bottom: 15px;">
-                <ngb-alert #selfClosingAlert *ngIf="alert.isOpen" [type]="alert.type" [animation]="true" [dismissible]="false">{{alert.message}}</ngb-alert>
+                <ngb-alert #selfClosingAlert *ngIf="alert.isOpen" [type]="alert.type" [animation]="true"
+                    [dismissible]="false">{{alert.message}}</ngb-alert>
                 <h1 class="heading">Tournaments</h1>
                 <fa-icon *ngIf="isAdmin" (click)="onNewTournament(newTournamentPopup)" [icon]="addIcon"
                     class="add-icon tournament" placement="right" ngbTooltip="New tournament"></fa-icon>
@@ -24,9 +25,8 @@
                                     [icon]="getTournamentSportIcon(tournaments[index].sport)"></fa-icon>
                                 {{ tournaments[index].name }}
                             </p>
-                            <fa-icon *ngIf="isAdmin"
-                                (click)="onNewGame(tournaments[index], index)"
-                                [icon]="addIcon" class="add-icon game" placement="top" ngbTooltip="New prediction"></fa-icon>
+                            <fa-icon *ngIf="isAdmin" (click)="onNewGame(tournaments[index], index)" [icon]="addIcon"
+                                class="add-icon game" placement="top" ngbTooltip="New prediction"></fa-icon>
                         </div>
 
                         <div class="col-sm-5 text-sm-end">
@@ -34,7 +34,8 @@
                             <p class="period">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                                     class="bi bi-calendar2-event-fill" viewBox="0 0 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z" />
+                                    <path
+                                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zM11.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z" />
                                 </svg>
                                 {{ tournaments[index].start_date_pretty }} to {{ tournaments[index].end_date_pretty }}
                             </p>
@@ -61,13 +62,37 @@
                         isCollapsed="!isCollapsed" aria-controls="collapseExample">
                         <fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon"
                             style="display:inline-block"></fa-icon>
-                        <span id="show-hide-games{{index}}" style="width: 125px; display:inline-block;"> Show games
+                        <span id="show-hide-games{{index}}" style="width: 175px; display:inline-block;">Show predictions
                         </span><fa-icon class="rotate rotate-180 fa-lg arrow-icon{{index}}" [icon]="downIcon"
                             style="display:inline-block"></fa-icon><br>
                     </button>
 
-                    <div class="overflow-auto" style="max-height: 315px;" #collapse="ngbCollapse"
+                    <div class="overflow-auto" style="max-height: 315px; margin-top: 15px;" #collapse="ngbCollapse"
                         [(ngbCollapse)]="isCollapsed[index]">
+                        <h3>Specials</h3>
+                        <table class="table table-striped">
+                            <thead style="background-color: white;">
+                                <tr>
+                                    <th scope="col">Prediction</th>
+                                    <th style="text-align: center;" scope="col">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let special of specials[index]">
+                                    <td style="vertical-align: middle;">{{special.prediction}}</td>
+
+                                    <td style="text-align: center; vertical-align: middle;">
+                                        {{special.result}}
+                                    </td>
+                                    <td style="text-align: center;" *ngIf="isAdmin && special.result === 'TBD'">
+                                        <fa-icon (click)="onSpecialResult(special, index)" [icon]="addIcon"
+                                            class="add-icon" placement="top" ngbTooltip="Add result"></fa-icon>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h3>Games</h3>
                         <table class="table table-striped">
                             <thead class="sticky-top top-0" style="background-color: white;">
                                 <tr>
@@ -84,12 +109,10 @@
                                         popoverTitle={{game.team1}} popover-class="increase-popover-width"
                                         triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team1, index)">
                                         <img style="margin-right: 5px;"
-                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + flags[game.team1] + '.png'" class="flag">
+                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + flags[game.team1] + '.png'"
+                                            class="flag">
                                         {{game.team1}}
                                     </td>
-
-
-
 
                                     <td style="text-align: center; vertical-align: middle;" *ngIf="game.score1 > -1">
                                         {{game.score1}} : {{game.score2}}
@@ -111,7 +134,8 @@
                                         triggers="mouseenter:mouseleave" (mouseover)="popUpper(game.team2, index)">
                                         {{game.team2}}
                                         <img style="margin-left: 3px;"
-                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + flags[game.team2] + '.png'" class="flag">
+                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + flags[game.team2] + '.png'"
+                                            class="flag">
                                     </td>
                                     <td style="text-align: center; vertical-align: middle;">{{game.time}}</td>
                                     <td style="text-align: center; vertical-align: middle;"><b>{{game.stage}}</b></td>

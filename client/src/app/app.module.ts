@@ -23,6 +23,7 @@ import { AngularMultiSelectModule } from 'angular2-multiselect-dropdown';
 import { PredictionsComponent } from './predictions/predictions.component';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NewPredictionFormComponent } from './tournaments/new-prediction-form/new-prediction-form.component';
+import { NewSpecialResultComponent } from './tournaments/new-special-result/new-special-result.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { NewPredictionFormComponent } from './tournaments/new-prediction-form/ne
     RoomComponent,
     PredictionsComponent,
     NewPredictionFormComponent,
+    NewSpecialResultComponent,
   ],
   imports: [
     BrowserModule,

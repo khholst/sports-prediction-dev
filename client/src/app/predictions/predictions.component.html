@@ -1,8 +1,7 @@
-
 <div class="container">
     <div *ngIf="isLoading" class="row loading">
         <div class="col text-center">
-                <img src="assets/blocks.svg" alt="Loading icon" width="100">
+            <img src="assets/blocks.svg" alt="Loading icon" width="100">
         </div>
     </div>
 </div>
@@ -17,136 +16,225 @@
                     <ng-container *ngFor="let index of numTournaments"></ng-container>
                     <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
                         <ng-container *ngFor="let index of numTournaments">
-                                <li [ngbNavItem]="index">
-                                  <a ngbNavLink (click)="tournamentChange(index)">{{filteredPredictions[index].tournament_id.name}}</a>
-                                  
-                                  <ng-template ngbNavContent>
+                            <li [ngbNavItem]="index">
+                                <a ngbNavLink
+                                    (click)="tournamentChange(index)">{{filteredPredictions[index].tournament_id.name}}</a>
+
+                                <ng-template ngbNavContent>
                                     <div class="container">
+                                        
                                         <div class="row justify-content-center">
-                                            <div class="col-sm-7 col-lg-5">
-                                                <div class="btn-group flex-wrap" role="group" aria-label="Basic radio toggle button group">
-                                                    <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('UPCOMING', index)" id="btnradio1" autocomplete="off" checked>
-                                                    <label class="btn btn-outline-primary" for="btnradio1">UPCOMING</label>
-                                                  
-                                                    <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('FINISHED', index)" id="btnradio2" autocomplete="off">
-                                                    <label class="btn btn-outline-primary" for="btnradio2">FINISHED</label>
-                                                  
-                                                    <input type="radio" class="btn-check" name="btnradio" (click)="onFilter('ALL', index)" id="btnradio3" autocomplete="off">
-                                                    <label class="btn btn-outline-primary" for="btnradio3">ALL</label>
-                                                </div>
+                                            <div class="col-lg-8">
+                                                <h5
+                                                    *ngIf="predictions[index].special_predictions !== undefined && predictions[index].special_predictions.length > 0">
+                                                    Special predictions (available until {{formatService.dateStringToText(predictions[index].tournament_id.start_date, true)}}):</h5>
                                             </div>
-                                            <div class="col-sm-5 col-lg-3">
-                                                <fa-icon *ngIf="sortAscending" class="sortIcon" [icon]="sortAscIcon" style="font-size: 23px; vertical-align: middle; float:right; margin-left: 10px; margin-top: 3px;" (click)="changeSortOrder(index)"></fa-icon> 
-                                                <fa-icon *ngIf="!sortAscending" class="sortIcon" [icon]="sortDescIcon" style="font-size: 23px; vertical-align: middle; float:right; margin-left: 10px; margin-top: 3px;" (click)="changeSortOrder(index)"></fa-icon> 
-                                                <select #sortField style="max-width: 100px; float: right;" class="form-select form-select-md mb-3" (change)="changeSortField(index, sortField.value)">
-                                                    <option selected>Date</option>
-                                                    <option>Points</option>
-                                                </select>
-                                                <span style="float: right; margin-top: 7px; margin-right: 5px;">Sort:</span>
+                                        </div>
+
+                                        <div class="row justify-content-center text-center align-items-center">
+                                            <div *ngFor="let special of filteredPredictions[index].special_predictions" class="col-lg-4">
+                                                <div *ngIf="special.prediction_id !== undefined" class="card special">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            {{special.prediction_id.prediction}}
+                                                        </h5>
+                                                        <p class="card-text">{{ special.prediction_id.description }}</p>
+                                                        <input style="width: 100%; margin-bottom: 10px;"
+                                                            id={{special.prediction_id._id}} type="text" class="form-control"
+                                                            [ngbTypeahead]="special.prediction_id.type === 'country' ? searchCountries : null"
+                                                            [attr.disabled]="special.user_prediction != 'None' ? 'disabled' : null"
+                                                            [attr.value]="special.user_prediction != 'None' ? special.user_prediction : null"
+                                                        />
+                                                        <button
+                                                            *ngIf="special.user_prediction == 'None'"
+                                                            button class="btn btn-primary"
+                                                            (click)="saveSpecial(special, filteredPredictions[index].tournament_id._id)">Save</button>
+                                                        <fa-icon
+                                                            *ngIf="special.user_prediction != 'None'"
+                                                            class="eye" [icon]="eyeIcon"
+                                                            (click)="getFriendsPredictions('special', index, special.prediction_id._id, special.prediction_id.prediction);"
+                                                            style="font-size: 23px;" placement="bottom"
+                                                            ngbTooltip="Friends' predictions"></fa-icon>
+                                                    </div>
+                                                </div>
+
+                                                <div *ngIf="special.prediction_id === undefined && filteredPredictions[index].special_predictions.length > 0" class="card special">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">
+                                                            {{special.prediction}}
+                                                        </h5>
+                                                        <p class="card-text">{{ special.description }}</p>
+                                                        <input style="width: 100%; margin-bottom: 10px;"
+                                                            id={{special._id}} type="text" class="form-control"
+                                                            [ngbTypeahead]="searchCountries"
+                                                            [attr.disabled]="special.user_prediction != 'None' ? 'disabled' : null"
+                                                            [attr.value]="special.user_prediction != 'None' ? special.user_prediction : null" />
+                                                        <button
+                                                            *ngIf="special.user_prediction == 'None'"
+                                                            button class="btn btn-primary"
+                                                            (click)="saveSpecial(special, filteredPredictions[index].tournament_id._id)">Save</button>
+                                                        <fa-icon
+                                                            *ngIf="special.user_prediction != 'None'"
+                                                            class="eye" [icon]="eyeIcon"
+                                                            (click)="getFriendsPredictions('special', index, special._id, special.prediction);"
+                                                            style="font-size: 23px;" placement="bottom"
+                                                            ngbTooltip="Friends' predictions"></fa-icon>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="row justify-content-center">
                                             <div class="col-lg-8">
-                                                <h5 *ngIf="predictions[index].tournament_id.name === '2022 FIFA World Cup'">Special predictions (available until 21.11 23:59):</h5>
-                                            </div>
-                                        </div>
-                                        <div *ngIf="predictions[index].tournament_id.name === '2022 FIFA World Cup'" class="row justify-content-center text-center align-items-center">
-                                            <div class="col-lg-4">
-                                                <div class="card special">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">{{predictions[index].special_predictions[0].prediction}}</h5>
-                                                      <p class="card-text">Country to win the world cup</p>
-                                                      <input style="width: 100%; margin-bottom: 10px;" id="{{index + ':winner'}}" type="text" class="form-control" [ngbTypeahead]="searchCountries"
-                                                      [attr.disabled]="predictions[index].special_predictions[0].user_prediction != 'None' ? 'disabled' : null"
-                                                      [attr.value]="predictions[index].special_predictions[0].user_prediction != 'None' ? predictions[index].special_predictions[0].user_prediction : null"
-                                                      />
-                                                      <button *ngIf="predictions[index].special_predictions[0].user_prediction == 'None'" button class="btn btn-primary" (click)="saveSpecial('winner', index)">Save</button>
-                                                      <fa-icon *ngIf="predictions[index].special_predictions[0].user_prediction != 'None'" class="eye" [icon]="eyeIcon" 
-                                                      (click)="getFriendsPredictions('special', index, predictions[index].special_predictions[0]._id, 'FIFA 2022 winner');" 
-                                                      style="font-size: 23px;" placement="bottom" ngbTooltip="Friends' predictions"></fa-icon>
-                                                    </div>
-                                                  </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="card special">
-                                                    <div class="card-body">
-                                                      <h5 class="card-title">{{predictions[index].special_predictions[1].prediction}}</h5>
-                                                      <p class="card-text">Player who scores the most goals                                                    
-                                                      </p>
-                                                      <input style="width: 100%; margin-bottom: 10px;" id="{{index + ':scorer'}}"  type="text" class="form-control" [ngbTypeahead]="searchPlayers"
-                                                      [attr.disabled]="predictions[index].special_predictions[1].user_prediction != 'None' ? 'disabled' : null"
-                                                      [attr.value]="predictions[index].special_predictions[1].user_prediction != 'None' ? predictions[index].special_predictions[1].user_prediction : null"
-                                                      />
-                                                      <button *ngIf="predictions[index].special_predictions[1].user_prediction == 'None'" class="btn btn-primary" (click)="saveSpecial('scorer', index)">Save</button>
-                                                      <fa-icon *ngIf="predictions[index].special_predictions[1].user_prediction != 'None'" class="eye" [icon]="eyeIcon"
-                                                      (click)="getFriendsPredictions('special', index, predictions[index].special_predictions[1]._id, 'FIFA 2022 golden boot');"
-                                                      style="font-size: 23px;" placement="bottom" ngbTooltip="Friends' predictions"></fa-icon>
-                                                    </div>
-                                                  </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="row justify-content-center">                                            
-                                            <div class="col-lg-8">
                                                 <h5>Games:</h5>
-                                                <div *ngFor="let game of filteredPredictions[index].predictions" class="card">
-                                                    <div [ngClass]="game.score1 != -1 || game.game_id.hasStarted  ? 'predicted-card' : ''" 
-                                                    
-                                                    id="{{game.game_id._id + ':card'}}" class="card-body">
-    
+                                            </div>
+                                        </div>
+
+                                        <div class="row justify-content-center">
+                                            <div class="col-sm-7 col-lg-5">
+                                                <div class="btn-group flex-wrap" role="group"
+                                                    aria-label="Basic radio toggle button group">
+                                                    <input type="radio" class="btn-check" name="btnradio"
+                                                        (click)="onFilter('UPCOMING', index)" id="btnradio1"
+                                                        autocomplete="off" checked>
+                                                    <label class="btn btn-outline-primary"
+                                                        for="btnradio1">UPCOMING</label>
+
+                                                    <input type="radio" class="btn-check" name="btnradio"
+                                                        (click)="onFilter('FINISHED', index)" id="btnradio2"
+                                                        autocomplete="off">
+                                                    <label class="btn btn-outline-primary"
+                                                        for="btnradio2">FINISHED</label>
+
+                                                    <input type="radio" class="btn-check" name="btnradio"
+                                                        (click)="onFilter('ALL', index)" id="btnradio3"
+                                                        autocomplete="off">
+                                                    <label class="btn btn-outline-primary" for="btnradio3">ALL</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-5 col-lg-3">
+                                                <fa-icon *ngIf="sortAscending" class="sortIcon" [icon]="sortAscIcon"
+                                                    style="font-size: 23px; vertical-align: middle; float:right; margin-left: 10px; margin-top: 3px;"
+                                                    (click)="changeSortOrder(index)"></fa-icon>
+                                                <fa-icon *ngIf="!sortAscending" class="sortIcon" [icon]="sortDescIcon"
+                                                    style="font-size: 23px; vertical-align: middle; float:right; margin-left: 10px; margin-top: 3px;"
+                                                    (click)="changeSortOrder(index)"></fa-icon>
+                                                <select #sortField style="max-width: 100px; float: right;"
+                                                    class="form-select form-select-md mb-3"
+                                                    (change)="changeSortField(index, sortField.value)">
+                                                    <option selected>Date</option>
+                                                    <option>Points</option>
+                                                </select>
+                                                <span
+                                                    style="float: right; margin-top: 7px; margin-right: 5px;">Sort:</span>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-8">
+                                                
+                                                
+                                                <div *ngFor="let game of filteredPredictions[index].predictions"
+                                                    class="card">
+                                                    <div [ngClass]="game.score1 != -1 || game.game_id.hasStarted  ? 'predicted-card' : ''"
+                                                        id="{{game.game_id._id + ':card'}}" class="card-body">
+
                                                         <div class="container">
                                                             <div class="row">
-                                                                <div class="col-sm-4 text-sm-end text-center order-sm-1">
-                                                                    <p><span class="badge bg-dark">{{ getStageName(game.game_id.stage)}}</span></p>
+                                                                <div
+                                                                    class="col-sm-4 text-sm-end text-center order-sm-1">
+                                                                    <p><span class="badge bg-dark">{{
+                                                                            getStageName(game.game_id.stage)}}</span>
+                                                                    </p>
                                                                 </div>
                                                                 <div class="col-sm-4 text-sm-start text-center">
-                                                                    <p class="game-date">{{game.game_id.printTime.split(" ")[0]}}</p>
+                                                                    <p class="game-date">
+                                                                        {{game.game_id.printTime.split(" ")[0]}}</p>
                                                                 </div>
                                                                 <div class="col-sm-4 text-center">
-                                                                    <p class="game-time"><b>{{game.game_id.printTime.split(" ")[1]}}</b></p>
+                                                                    <p class="game-time">
+                                                                        <b>{{game.game_id.printTime.split(" ")[1]}}</b>
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                             <form>
                                                                 <div class="row">
-                                                                        <div class="col-sm-5 text-sm-end text-center team1-div">
-                                                                            <img [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + game.game_id.team1 + '.png'" class="flag">
-                                                                            {{game.game_id.team1.toUpperCase()}}
-                                                                            <input *ngIf="game.score1 != -1 && game.score1 != -999" value="{{ game.score1 }}" disabled>
-                                                                            <input *ngIf="game.score1 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team1'}}" type="number" min="0" value="0">
-                                                                            <input *ngIf="game.score1 == -999 || (game.game_id.hasStarted && game.score1 == -1)" value="" disabled>
-                                                                        </div>
-                                                                    
-                                                                        <div class="col-sm-2 text-center d-none d-sm-block">
-                                                                            <span>VS</span>
-                                                                        </div>
-                                                                        <div class="col-sm-5 team2-div text-sm-start text-center align-items-center">                                                                        
-                                                                                <input class="score2" *ngIf="game.score2 != -1 && game.score2 != -999" value="{{ game.score2 }}" disabled>
-                                                                                <input class="score2" *ngIf="game.score2 == -1 && !game.game_id.hasStarted" id="{{game.game_id._id + ':team2'}}" type="number" min="0" value="0">
-                                                                                <input class="score2" *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)" value="" disabled>
-                                                                                <p class="team2" style="margin: 0px 9px 0px 9px;">{{game.game_id.team2.toUpperCase()}}</p>
-                                                                                <img class="flag2" [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + game.game_id.team2 + '.png'" class="flag">                                                                        
-                                                                        </div>
-                                                                </div>
-    
-                                                                    <div class="row text-center">
-                                                                        <div class="col">
-                                                                            <button [ngClass]="game.score1 != -1 || game.game_id.hasStarted ? 'predicted-button' : ''"  type="submit" id="{{game.game_id._id + ':submit'}}" class="btn btn-primary" (click)="onPrediction(game.game_id._id)">Save</button>
-                                                                            <fa-icon [ngClass]="game.score1 != -1 || game.game_id.hasStarted ? '' : 'predicted-button'" class="eye" [icon]="eyeIcon" (click)="getFriendsPredictions('game', index, game.game_id._id, game.game_id.team1.toUpperCase() + ' vs ' + game.game_id.team2.toUpperCase());" style="font-size: 23px;"></fa-icon>
-                                                                        </div>
+                                                                    <div
+                                                                        class="col-sm-5 text-sm-end text-center team1-div">
+                                                                        <img [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + game.game_id.team1 + '.png'"
+                                                                            class="flag">
+                                                                        {{game.game_id.team1.toUpperCase()}}
+                                                                        <input
+                                                                            *ngIf="game.score1 != -1 && game.score1 != -999"
+                                                                            value="{{ game.score1 }}" disabled>
+                                                                        <input
+                                                                            *ngIf="game.score1 == -1 && !game.game_id.hasStarted"
+                                                                            id="{{game.game_id._id + ':team1'}}"
+                                                                            type="number" min="0" value="0">
+                                                                        <input
+                                                                            *ngIf="game.score1 == -999 || (game.game_id.hasStarted && game.score1 == -1)"
+                                                                            value="" disabled>
                                                                     </div>
-    
-                                                                
+
+                                                                    <div class="col-sm-2 text-center d-none d-sm-block">
+                                                                        <span>VS</span>
+                                                                    </div>
+                                                                    <div
+                                                                        class="col-sm-5 team2-div text-sm-start text-center align-items-center">
+                                                                        <input class="score2"
+                                                                            *ngIf="game.score2 != -1 && game.score2 != -999"
+                                                                            value="{{ game.score2 }}" disabled>
+                                                                        <input class="score2"
+                                                                            *ngIf="game.score2 == -1 && !game.game_id.hasStarted"
+                                                                            id="{{game.game_id._id + ':team2'}}"
+                                                                            type="number" min="0" value="0">
+                                                                        <input class="score2"
+                                                                            *ngIf="game.score2 == -999 || (game.game_id.hasStarted && game.score2 == -1)"
+                                                                            value="" disabled>
+                                                                        <p class="team2"
+                                                                            style="margin: 0px 9px 0px 9px;">
+                                                                            {{game.game_id.team2.toUpperCase()}}</p>
+                                                                        <img class="flag2"
+                                                                            [src]="'https://raw.githubusercontent.com/khholst/flags/main/alpha-3/100px/' + game.game_id.team2 + '.png'"
+                                                                            class="flag">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row text-center">
+                                                                    <div class="col">
+                                                                        <button
+                                                                            [ngClass]="game.score1 != -1 || game.game_id.hasStarted ? 'predicted-button' : ''"
+                                                                            type="submit"
+                                                                            id="{{game.game_id._id + ':submit'}}"
+                                                                            class="btn btn-primary"
+                                                                            (click)="onPrediction(game.game_id._id)">Save</button>
+                                                                        <fa-icon
+                                                                            [ngClass]="game.score1 != -1 || game.game_id.hasStarted ? '' : 'predicted-button'"
+                                                                            class="eye" [icon]="eyeIcon"
+                                                                            (click)="getFriendsPredictions('game', index, game.game_id._id, game.game_id.team1.toUpperCase() + ' vs ' + game.game_id.team2.toUpperCase());"
+                                                                            style="font-size: 23px;"></fa-icon>
+                                                                    </div>
+                                                                </div>
+
+
                                                             </form>
                                                             <div *ngIf="game.points != -1 && game.points != -999">
                                                                 <hr>
-                                                                    <div class="row text-center">
-                                                                        <p class="result">Result:
-                                                                        <b>{{ game.game_id.score1 }} : {{ game.game_id.score2 }}</b>
+                                                                <div class="row text-center">
+                                                                    <p class="result">Result:
+                                                                        <b>{{ game.game_id.score1 }} : {{
+                                                                            game.game_id.score2 }}</b>
                                                                         <br>
-                                                                        <span *ngIf="game.points == 1; else notOne" class="badge rounded-pill bg-warning">{{ game.points }} POINT</span>
-                                                                        <ng-template #notOne><span [ngClass]="badgeClasses[game.points]" class="badge rounded-pill">{{ game.points }} POINTS</span> </ng-template>
-                                                                    </div>
+                                                                        <span *ngIf="game.points == 1; else notOne"
+                                                                            class="badge rounded-pill bg-warning">{{
+                                                                            game.points }} POINT</span>
+                                                                        <ng-template #notOne><span
+                                                                                [ngClass]="badgeClasses[game.points]"
+                                                                                class="badge rounded-pill">{{
+                                                                                game.points }} POINTS</span>
+                                                                        </ng-template>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -154,8 +242,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                  </ng-template>
-                                </li>
+                                </ng-template>
+                            </li>
                         </ng-container>
                     </ul>
                 </div>
@@ -167,33 +255,32 @@
 
 
 <ng-template #modalContent let-modal>
-	<div class="modal-header">
-		<h4 class="modal-title">Predictions for {{friendsPredictionsHeader}}</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<table class="table">
+    <div class="modal-header">
+        <h4 class="modal-title">Predictions for {{friendsPredictionsHeader}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <table class="table">
             <thead class="table-dark">
-              <tr>
-                <th scope="col" style="text-align: center;">#</th>
-                <th scope="col" style="text-align: center;">User</th>
-                <th scope="col" style="text-align: center;">Prediction</th>
-                <th scope="col" style="text-align: center;">Points</th>
-              </tr>
+                <tr>
+                    <th scope="col" style="text-align: center;">#</th>
+                    <th scope="col" style="text-align: center;">User</th>
+                    <th scope="col" style="text-align: center;">Prediction</th>
+                    <th scope="col" style="text-align: center;">Points</th>
+                </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let prediction of friendsPredictions; let i = index">
-                <th scope="row" style="text-align: center;">{{i + 1}}</th>
-                <td style="text-align: center;">{{ prediction.username }}</td>
-                <td style="text-align: center;">{{ prediction.prediction }}</td>
-                <td *ngIf="prediction.points != undefined" style="text-align: center;">{{ prediction.points }}</td>
-                <td *ngIf="prediction.points == undefined" style="text-align: center;">-</td>
-              </tr>
+                <tr *ngFor="let prediction of friendsPredictions; let i = index">
+                    <th scope="row" style="text-align: center;">{{i + 1}}</th>
+                    <td style="text-align: center;">{{ prediction.username }}</td>
+                    <td style="text-align: center;">{{ prediction.prediction }}</td>
+                    <td *ngIf="prediction.points != undefined" style="text-align: center;">{{ prediction.points }}</td>
+                    <td *ngIf="prediction.points == undefined" style="text-align: center;">-</td>
+                </tr>
             </tbody>
-          </table>
-	</div>
-	<div class="modal-footer">
-		<button type="button" class="btn btn-dark" (click)="modal.close('Close click')">Close</button>
-	</div>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-dark" (click)="modal.close('Close click')">Close</button>
+    </div>
 </ng-template>
-  
